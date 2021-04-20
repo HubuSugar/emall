@@ -16,24 +16,50 @@
 
     <name>Maven</name>
 
-  <properties>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <hutool.version>5.1.0</hutool.version>
-    <lombok.version>1.18.2</lombok.version>
-  </properties>
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <hutool.version>5.1.0</hutool.version>
+        <lombok.version>1.18.2</lombok.version>
+        <mysql.version>8.0.17</mysql.version>
+        <mybatisplus.version>3.2.0</mybatisplus.version>
+        <springcloud.alibaba.version>2.1.0.RELEASE</springcloud.alibaba.version>
+    </properties>
 
     <dependencyManagement>
         <dependencies>
+            <!--    集中管理lombok的版本   -->
             <dependency>
                 <groupId>org.projectlombok</groupId>
                 <artifactId>lombok</artifactId>
                 <version>${lombok.version}</version>
                 <optional>true</optional>
             </dependency>
+            <!--    管理hutool工具包的版本   -->
             <dependency>
                 <groupId>cn.hutool</groupId>
                 <artifactId>hutool-all</artifactId>
                 <version>${hutool.version}</version>
+            </dependency>
+            <!--    管理mybatis-plus的版本   -->
+            <dependency>
+                <groupId>com.baomidou</groupId>
+                <artifactId>mybatis-plus-boot-starter</artifactId>
+                <version>${mybatisplus.version}</version>
+            </dependency>
+            <!--    管理mysql驱动的版本   -->
+            <dependency>
+                <groupId>mysql</groupId>
+                <artifactId>mysql-connector-java</artifactId>
+                <version>${mysql.version}</version>
+            </dependency>
+
+            <!--  统一管理springcloudalibaba版本-->
+            <dependency>
+                <groupId>com.alibaba.cloud</groupId>
+                <artifactId>spring-cloud-alibaba-dependencies</artifactId>
+                <version>${springcloud.alibaba.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
             </dependency>
         </dependencies>
     </dependencyManagement>

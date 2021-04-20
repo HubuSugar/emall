@@ -26,6 +26,21 @@
             <artifactId>snakeyaml</artifactId>
             <version>1.25</version>
         </dependency>
+        <!--引入通用的common组件 -->
+        <dependency>
+            <groupId>edu.hubu.mall</groupId>
+            <artifactId>mall-common</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <!--引入lombok简化set、get -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <optional>true</optional>
+        </dependency>
+
+
+
     </dependencies>
 
     <properties>

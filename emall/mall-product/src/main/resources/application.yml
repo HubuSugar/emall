@@ -1,0 +1,23 @@
+server:
+  port: 10000
+
+spring:
+  application:
+    name: mall-product
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://:3306/emall_pms?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
+    username: huxiaoge
+    password:
+
+  cloud:
+    nacos:
+      discovery:
+        server-addr: http://
+
+mybatis-plus:
+  mapper-locations: classpath:/mapper/**/*.xml
+
+  global-config:
+    db-config:
+      id-type: auto
