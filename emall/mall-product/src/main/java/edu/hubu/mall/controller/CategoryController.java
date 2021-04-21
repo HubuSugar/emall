@@ -24,7 +24,7 @@ public class CategoryController {
 
     @GetMapping("/list")
     public List<Category> list(){
-        List<Category> list = categoryService.listTree();
+        List<Category> list = categoryService.listWithTree();
         return list;
     }
 

@@ -1,6 +1,5 @@
 package edu.hubu.mall.service.impl;
 
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import edu.hubu.mall.dao.CategoryDao;
 import edu.hubu.mall.entity.Category;
@@ -8,6 +7,7 @@ import edu.hubu.mall.service.CategoryService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @Author: huxiaoge
@@ -18,7 +18,34 @@ import java.util.List;
 public class CategoryServiceImpl extends ServiceImpl<CategoryDao, Category> implements CategoryService {
 
     @Override
-    public List<Category> listTree() {
-        return this.baseMapper.selectList(null);
+    public List<Category> listWithTree() {
+        //查出所有的分类数据
+        List<Category> categories = baseMapper.selectList(null);
+
+        //将查询出的菜单数据包装成树形结构
+        List<Category> categoryList = categories.stream().filter(category -> category.getParentCid() == 0).peek(menu -> {
+            menu.setChildren(getChildrens(menu, categories));
+        }).sorted((menu1, menu2) -> {
+            return (menu1.getSort() == null ? 0 : menu1.getSort()) - (menu2.getSort() == null ? 0 : menu2.getSort());
+        }).collect(Collectors.toList());
+
+        return categoryList;
+    }
+
+
+    /**
+     * 根据一个分类查找子分类
+     * @param root 当前菜单节点
+     * @param categories 所有分类数据
+     * @return 子节点结果集
+     */
+    private List<Category> getChildrens(Category root,List<Category> categories){
+        List<Category> childrens = categories.stream()
+                .filter(category -> category.getParentCid().equals(root.getCatId()))
+                .peek(menu -> menu.setChildren(getChildrens(menu, categories)))
+                .sorted((menu1, menu2) -> {
+                    return (menu1.getSort() == null ? 0 : menu1.getSort()) - (menu2.getSort() == null ? 0 : menu2.getSort());
+                }).collect(Collectors.toList());
+        return childrens;
     }
 }

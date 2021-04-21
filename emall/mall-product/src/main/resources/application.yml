@@ -1,5 +1,5 @@
 server:
-  port: 10000
+  port: 10001
 
 spring:
   application:
@@ -8,7 +8,7 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://:3306/emall_pms?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
     username:
-    password:
+    password: ZWZmMGFmMmI0MGEwMGQ4MzQ2MTU4OTAw
 
 #  cloud:
 #    nacos:

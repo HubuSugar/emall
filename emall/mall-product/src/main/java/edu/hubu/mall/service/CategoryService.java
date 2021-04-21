@@ -11,5 +11,10 @@ import java.util.List;
  * @Description:
  **/
 public interface CategoryService extends IService<Category> {
-    List<Category> listTree();
+
+    /**
+     * 查询商品分类数据，按树形结构展示
+     * @return
+     */
+    List<Category> listWithTree();
 }
