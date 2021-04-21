@@ -23,6 +23,8 @@
         <mysql.version>8.0.17</mysql.version>
         <mybatisplus.version>3.2.0</mybatisplus.version>
         <springcloud.alibaba.version>2.1.0.RELEASE</springcloud.alibaba.version>
+        <springboot.version>2.2.2.RELEASE</springboot.version>
+        <springcloud.version>Hoxton.SR1</springcloud.version>
     </properties>
 
     <dependencyManagement>
@@ -61,7 +63,35 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
+
+            <!-- 统一管理springcloud的版本 -->
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-dependencies</artifactId>
+                <version>${springcloud.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
+            <!-- 统一管理spring boot版本 -->
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-dependencies</artifactId>
+                <version>${springboot.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
         </dependencies>
     </dependencyManagement>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
 
 </project>

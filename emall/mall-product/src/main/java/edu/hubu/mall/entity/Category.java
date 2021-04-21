@@ -3,6 +3,7 @@ package edu.hubu.mall.entity;
 
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableLogic;
+import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -13,6 +14,7 @@ import java.io.Serializable;
  * @Description: 三级分类实体
  **/
 @Data
+@TableName(value = "pms_category")
 public class Category implements Serializable {
 
     private static final Long serialVersionUID = 1L;

@@ -1,0 +1,10 @@
+spring:
+  application:
+    name: mall-product
+
+  cloud:
+    nacos:
+      discovery:
+        server-addr: :8060
+      config:
+        server-addr: :8060

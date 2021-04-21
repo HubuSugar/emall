@@ -7,13 +7,13 @@ spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://:3306/emall_pms?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
-    username: huxiaoge
+    username:
     password:
 
-  cloud:
-    nacos:
-      discovery:
-        server-addr: http://
+#  cloud:
+#    nacos:
+#      discovery:
+#        server-addr: :8060
 
 mybatis-plus:
   mapper-locations: classpath:/mapper/**/*.xml
@@ -21,3 +21,4 @@ mybatis-plus:
   global-config:
     db-config:
       id-type: auto
+    banner: false
