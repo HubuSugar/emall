@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.*;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
 import java.util.concurrent.TimeUnit;
@@ -51,4 +52,27 @@ public class RedisUtil {
         set(key, value, DEFAULT_EXPIRE);
     }
 
+    /**
+     * 通过指定键获取值
+     * @param key
+     * @return
+     */
+    public Object get(String key) {
+        return key == null ? null : valueOperations.get(key);
+    }
+
+    /**
+     * 删除缓存 可以传一个值 或多个
+     * @param key
+     */
+    @SuppressWarnings("unchecked")
+    public void del(String... key) {
+        if (key != null && key.length > 0) {
+            if (key.length == 1) {
+                redisTemplate.delete(key[0]);
+            } else {
+                redisTemplate.delete(CollectionUtils.arrayToList(key));
+            }
+        }
+    }
 }
