@@ -7,12 +7,25 @@ spring:
     host: #
     port: 6379
 
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://#:3306/emall_admin?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
+    username: huxiaoge
+    password: ZWZmMGFmMmI0MGEwMGQ4MzQ2MTU4OTAw
+
   application:
     name: mall-fast
 
   cloud:
     nacos:
       discovery:
-        server-addr: ##:8060
+        server-addr: #:8060
 
+mybatis-plus:
+  mapper-locations: classpath:/mapper/**/*.xml
+
+  global-config:
+    db-config:
+      id-type: auto
+    banner: false
 

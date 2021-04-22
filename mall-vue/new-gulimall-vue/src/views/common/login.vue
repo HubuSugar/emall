@@ -77,6 +77,7 @@
                 'username': this.dataForm.userName,
                 'password': this.dataForm.password,
                 'uuid': this.dataForm.uuid,
+
                 'captcha': this.dataForm.captcha
               })
             }).then(({data}) => {
@@ -94,7 +95,7 @@
       // 获取验证码
       getCaptcha () {
         this.$http({
-          url: this.$http.adornUrl('/getDynamicCaptcha'),
+          url: this.$http.adornUrl('/sys/getDynamicCaptcha'),
           method: 'get'
         }).then(data => {
           if(!data || !data.data.success){

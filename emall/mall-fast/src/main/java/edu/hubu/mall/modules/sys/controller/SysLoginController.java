@@ -2,6 +2,7 @@ package edu.hubu.mall.modules.sys.controller;
 
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.crypto.SecureUtil;
+import cn.hutool.crypto.digest.DigestUtil;
 import com.wf.captcha.SpecCaptcha;
 import edu.hubu.mall.common.Result;
 import edu.hubu.mall.common.utils.RedisUtil;
@@ -79,9 +80,9 @@ public class SysLoginController {
      */
     @PostMapping("/sys/login")
     public Result<String> login(@RequestParam(value = "username", required = false) String username,
-                                             @RequestParam(value = "password", required = false) String password,
-                                             @RequestParam(value = "keycode", required = false) String keycode,
-                                             @RequestParam(value = "verCodeKey", required = false) String verCodeKey) throws Exception {
+                                 @RequestParam(value = "password", required = false) String password,
+                                 @RequestParam(value = "keycode", required = false) String keycode,
+                                 @RequestParam(value = "verCodeKey", required = false) String verCodeKey) throws Exception {
         Result<String> result = new Result<>(false,1,"登录失败请重试！");
         if(StringUtils.isBlank(username) || StringUtils.isBlank(password)){
             result.setMsg("输入的账号密码有误！");
@@ -101,9 +102,9 @@ public class SysLoginController {
         redisUtil.del(verCodeKey);
         //判断用户名和密码是否正确
         SysUserEntity sysUserEntity = userService.queryByUsername(username);
-
+        System.out.println("===" + DigestUtil.md5Hex(password + sysUserEntity.getSalt()));
         if(sysUserEntity == null ||
-                !sysUserEntity.getPassword().equals(SecureUtil.sha256().digestHex(password + sysUserEntity.getSalt()))) {
+                !sysUserEntity.getPassword().equals(DigestUtil.md5Hex(password + sysUserEntity.getSalt()))) {
             result.setMsg("账号或者密码错误");
             return result;
         }
