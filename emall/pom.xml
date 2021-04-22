@@ -12,6 +12,7 @@
         <module>mall-common</module>
         <module>mall-search</module>
         <module>mall-gateway</module>
+        <module>mall-fast</module>
     </modules>
 
     <name>Maven</name>
@@ -22,6 +23,7 @@
         <lombok.version>1.18.2</lombok.version>
         <mysql.version>8.0.17</mysql.version>
         <mybatisplus.version>3.2.0</mybatisplus.version>
+        <captcha.version>1.6.2</captcha.version>
         <springcloud.alibaba.version>2.1.0.RELEASE</springcloud.alibaba.version>
         <springboot.version>2.2.2.RELEASE</springboot.version>
         <springcloud.version>Hoxton.SR1</springcloud.version>
@@ -53,6 +55,13 @@
                 <groupId>mysql</groupId>
                 <artifactId>mysql-connector-java</artifactId>
                 <version>${mysql.version}</version>
+            </dependency>
+
+            <!--    管理验证码服务的版本   -->
+            <dependency>
+                <groupId>com.github.whvcse</groupId>
+                <artifactId>easy-captcha</artifactId>
+                <version>1.6.2</version>
             </dependency>
 
             <!--  统一管理springcloudalibaba版本-->

@@ -5,6 +5,6 @@ spring:
   cloud:
     nacos:
       discovery:
-        server-addr: :8060
+        server-addr: #:8060
       config:
-        server-addr: :8060
+        server-addr: #:8060
