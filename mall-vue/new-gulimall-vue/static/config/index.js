@@ -12,3 +12,4 @@
   window.SITE_CONFIG['version'] = '';   // 版本号(年月日时分)
   window.SITE_CONFIG['cdnUrl'] = window.SITE_CONFIG.domain + window.SITE_CONFIG.version;
 })();
+lo

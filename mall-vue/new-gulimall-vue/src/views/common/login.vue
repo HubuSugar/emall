@@ -74,19 +74,19 @@
               url: this.$http.adornUrl('/sys/login'),
               method: 'post',
               data: this.$http.adornData({
-                'username': this.dataForm.userName,
-                'password': this.dataForm.password,
-                'uuid': this.dataForm.uuid,
-
-                'captcha': this.dataForm.captcha
+                username: this.dataForm.userName,
+                password: this.dataForm.password,
+                verCodeKey: this.verCodeKey,
+                keyCode: this.dataForm.captcha
               })
             }).then(({data}) => {
+              console.log("data",data);
               if (data && data.code === 0) {
                 this.$cookie.set('token', data.token)
                 this.$router.replace({ name: 'home' })
               } else {
                 this.getCaptcha()
-                this.$message.error(data.msg)
+                this.$message.error(data.data.msg)
               }
             })
           }

@@ -9,13 +9,12 @@ import edu.hubu.mall.common.utils.RedisUtil;
 import edu.hubu.mall.modules.sys.entity.SysUserEntity;
 import edu.hubu.mall.modules.sys.service.CaptchaService;
 import edu.hubu.mall.modules.sys.service.UserService;
+import edu.hubu.mall.modules.sys.service.UserTokenService;
+import edu.hubu.mall.modules.sys.vo.LoginFormVo;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -35,6 +34,9 @@ public class SysLoginController {
 
     @Autowired
     private CaptchaService captchaService;
+
+    @Autowired
+    private UserTokenService userTokenService;
 
     @Autowired
     private RedisUtil redisUtil;
@@ -71,46 +73,49 @@ public class SysLoginController {
 
     /**
      * 后台管理系统登录接口
-     * @param username 用户名
-     * @param password 密码
-     * @param keycode 验证码
-     * @param verCodeKey 验证码对应的键
+     * @param loginFormVo 登录信息
      * @return
      * @throws Exception
      */
     @PostMapping("/sys/login")
-    public Result<String> login(@RequestParam(value = "username", required = false) String username,
-                                 @RequestParam(value = "password", required = false) String password,
-                                 @RequestParam(value = "keycode", required = false) String keycode,
-                                 @RequestParam(value = "verCodeKey", required = false) String verCodeKey) throws Exception {
+    public Result<String> login(@RequestBody LoginFormVo loginFormVo) throws Exception {
         Result<String> result = new Result<>(false,1,"登录失败请重试！");
-        if(StringUtils.isBlank(username) || StringUtils.isBlank(password)){
+        if(loginFormVo == null || StringUtils.isBlank(loginFormVo.getUsername()) || StringUtils.isBlank(loginFormVo.getPassword())){
             result.setMsg("输入的账号密码有误！");
             return result;
         }
-        if(StringUtils.isBlank(keycode) || StringUtils.isBlank(verCodeKey)){
+        if(StringUtils.isBlank(loginFormVo.getKeyCode()) || StringUtils.isBlank(loginFormVo.getVerCodeKey())){
             result.setMsg("输入的验证码有误！");
             return result;
         }
         //判断验证码是否正确
-        Object o = redisUtil.get(verCodeKey);
-        if(null == o || !o.toString().equalsIgnoreCase(keycode)){
+        Object o = redisUtil.get(loginFormVo.getVerCodeKey());
+        if(null == o || !o.toString().equalsIgnoreCase(loginFormVo.getKeyCode())){
             result.setMsg("验证码输入错误！");
             return result;
         }
         //比较完成删除验证码
-        redisUtil.del(verCodeKey);
+        redisUtil.del(loginFormVo.getVerCodeKey());
         //判断用户名和密码是否正确
-        SysUserEntity sysUserEntity = userService.queryByUsername(username);
-        System.out.println("===" + DigestUtil.md5Hex(password + sysUserEntity.getSalt()));
-        if(sysUserEntity == null ||
-                !sysUserEntity.getPassword().equals(DigestUtil.md5Hex(password + sysUserEntity.getSalt()))) {
+        SysUserEntity sysUserEntity = userService.queryByUsername(loginFormVo.getUsername());
+        String md5EncryptPwd = DigestUtil.md5Hex(loginFormVo.getPassword() + sysUserEntity.getSalt());
+        log.info("加密后的密码为：" + md5EncryptPwd);
+        if(null == sysUserEntity ||
+                !sysUserEntity.getPassword().equals(md5EncryptPwd)) {
             result.setMsg("账号或者密码错误");
             return result;
         }
 
+        //生成或者更新token
+        String userToken = userTokenService.createUserToken(sysUserEntity.getUserId());
+        if(StringUtils.isBlank(userToken)){
+            return result;
+        }
 
-
+        result.setData(userToken);
+        result.setSuccess(true);
+        result.setMsg("成功");
+        result.setCode(0);
         return result;
     }
 
