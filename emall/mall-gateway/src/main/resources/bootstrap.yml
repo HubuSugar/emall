@@ -1,0 +1,8 @@
+spring:
+  application:
+    name: mall-fast
+
+  cloud:
+    nacos:
+      config:
+        server-addr: #
