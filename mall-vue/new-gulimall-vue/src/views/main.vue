@@ -78,6 +78,7 @@
           method: 'get',
           params: this.$http.adornParams()
         }).then(({data}) => {
+          console.log("data",data);
           if (data && data.code === 0) {
             this.loading = false
             this.userId = data.user.userId

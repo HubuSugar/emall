@@ -3,6 +3,8 @@ package edu.hubu.mall.modules.sys.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import edu.hubu.mall.modules.sys.entity.SysUserEntity;
 
+import java.util.List;
+
 /**
  * @Author: huxiaoge
  * @Date: 2021/4/23
@@ -16,4 +18,9 @@ public interface UserService extends IService<SysUserEntity> {
      * @return
      */
     SysUserEntity queryByUsername(String username);
+
+    /**
+     * 查询用户的所有菜单ID
+     */
+    List<Long> queryAllMenuId(Long userId);
 }

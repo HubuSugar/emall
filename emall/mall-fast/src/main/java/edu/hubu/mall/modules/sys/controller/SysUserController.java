@@ -1,6 +1,10 @@
 package edu.hubu.mall.modules.sys.controller;
 
+import edu.hubu.mall.common.Result;
+import edu.hubu.mall.modules.sys.entity.SysUserEntity;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -9,9 +13,16 @@ import org.springframework.web.bind.annotation.RestController;
  * @Description:
  **/
 @RestController
+@RequestMapping("sys/user/")
 @Slf4j
-public class SysUserController {
+public class SysUserController extends AbstractController{
 
 
-
+    @GetMapping("info")
+    public Result<SysUserEntity> getUserInfo(){
+        Result<SysUserEntity> result = Result.ok();
+        SysUserEntity loginUser = getUser();
+        result.setData(loginUser);
+        return result;
+    }
 }

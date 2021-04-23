@@ -67,11 +67,12 @@ router.beforeEach((to, from, next) => {
       method: 'get',
       params: http.adornParams()
     }).then(({data}) => {
+      console.log("data",data);
       if (data && data.code === 0) {
-        fnAddDynamicMenuRoutes(data.menuList)
+        fnAddDynamicMenuRoutes(data.data)
         router.options.isAddDynamicMenuRoutes = true
-        sessionStorage.setItem('menuList', JSON.stringify(data.menuList || '[]'))
-        sessionStorage.setItem('permissions', JSON.stringify(data.permissions || '[]'))
+        sessionStorage.setItem('menuList', JSON.stringify(data.data || '[]'))
+        sessionStorage.setItem('permissions', JSON.stringify(data.extendMap.permissions || '[]'))
         next({ ...to, replace: true })
       } else {
         sessionStorage.setItem('menuList', '[]')

@@ -7,6 +7,8 @@ import edu.hubu.mall.modules.sys.entity.SysUserEntity;
 import edu.hubu.mall.modules.sys.service.UserService;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 /**
  * @Author: huxiaoge
  * @Date: 2021/4/23
@@ -25,5 +27,10 @@ public class UserServiceImpl extends ServiceImpl<UserDao, SysUserEntity> impleme
         LambdaQueryWrapper<SysUserEntity> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(SysUserEntity::getUsername,username);
         return baseMapper.selectOne(queryWrapper);
+    }
+
+    @Override
+    public List<Long> queryAllMenuId(Long userId) {
+        return baseMapper.queryAllMenuId(userId);
     }
 }

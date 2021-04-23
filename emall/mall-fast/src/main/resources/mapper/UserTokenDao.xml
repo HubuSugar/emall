@@ -3,5 +3,8 @@
 
 <mapper namespace="edu.hubu.mall.modules.sys.dao.UserTokenDao">
 
+    <select id="queryByToken" resultType="edu.hubu.mall.modules.sys.entity.SysUserTokenEntity">
+        select * from sys_user_token where token = #{value}
+    </select>
 
 </mapper>

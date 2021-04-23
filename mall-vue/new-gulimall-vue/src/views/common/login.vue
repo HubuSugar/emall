@@ -80,13 +80,12 @@
                 keyCode: this.dataForm.captcha
               })
             }).then(({data}) => {
-              console.log("data",data);
               if (data && data.code === 0) {
-                this.$cookie.set('token', data.token)
+                this.$cookie.set('token', data.data)
                 this.$router.replace({ name: 'home' })
               } else {
                 this.getCaptcha()
-                this.$message.error(data.data.msg)
+                this.$message.error(data.data.msg || "登录失败,请重试！")
               }
             })
           }

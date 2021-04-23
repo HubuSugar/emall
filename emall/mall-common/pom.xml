@@ -26,6 +26,10 @@
             <artifactId>lombok</artifactId>
             <optional>true</optional>
         </dependency>
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient</artifactId>
+        </dependency>
 
         <!--    统一引入nacos服务注册与发现-->
         <dependency>
