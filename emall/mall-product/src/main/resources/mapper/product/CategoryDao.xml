@@ -4,7 +4,7 @@
 <mapper namespace="edu.hubu.mall.dao.CategoryDao">
 
 	<!-- 可根据自己的需求，是否要使用 -->
-    <resultMap type="edu.hubu.mall.entity.Category" id="categoryMap">
+    <resultMap type="edu.hubu.mall.entity.CategoryEntity" id="categoryMap">
         <result property="catId" column="cat_id"/>
         <result property="name" column="name"/>
         <result property="parentCid" column="parent_cid"/>

@@ -8,13 +8,19 @@ spring:
   cloud:
     gateway:
       routes:
+        - id: mall-product
+          uri: lb://mall-product
+          predicates:
+            - Path=/api/product/**
+          filters:
+            - RewritePath=/api/(?<segment>.*),/$\{segment}
+
         - id: mall-fast
           uri: lb://mall-fast
           predicates:
             - Path=/api/**
           filters:
-            - RewritePath=/api/()
-
+            - RewritePath=/api/(?<segment>.*), /mall-fast/$\{segment}
 
     nacos:
       discovery:

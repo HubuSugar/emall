@@ -1,7 +1,7 @@
 package edu.hubu.mall.dao;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import edu.hubu.mall.entity.Category;
+import edu.hubu.mall.entity.CategoryEntity;
 import org.apache.ibatis.annotations.Mapper;
 
 /**
@@ -10,5 +10,5 @@ import org.apache.ibatis.annotations.Mapper;
  * @Description: 商品分类数据库操作
  **/
 @Mapper
-public interface CategoryDao extends BaseMapper<Category> {
+public interface CategoryDao extends BaseMapper<CategoryEntity> {
 }

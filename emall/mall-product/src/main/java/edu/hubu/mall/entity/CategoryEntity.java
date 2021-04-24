@@ -17,7 +17,7 @@ import java.util.List;
  **/
 @Data
 @TableName(value = "pms_category")
-public class Category implements Serializable {
+public class CategoryEntity implements Serializable {
 
     private static final Long serialVersionUID = 1L;
     /**
@@ -71,5 +71,5 @@ public class Category implements Serializable {
      * 每个分类下的子分类
      */
     @TableField(exist = false)
-    private List<Category> children;
+    private List<CategoryEntity> children;
 }

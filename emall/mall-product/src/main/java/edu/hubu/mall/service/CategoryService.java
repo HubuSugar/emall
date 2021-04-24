@@ -1,7 +1,7 @@
 package edu.hubu.mall.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import edu.hubu.mall.entity.Category;
+import edu.hubu.mall.entity.CategoryEntity;
 
 import java.util.List;
 
@@ -10,11 +10,11 @@ import java.util.List;
  * @Date: 2021/4/21
  * @Description:
  **/
-public interface CategoryService extends IService<Category> {
+public interface CategoryService extends IService<CategoryEntity> {
 
     /**
      * 查询商品分类数据，按树形结构展示
      * @return
      */
-    List<Category> listWithTree();
+    List<CategoryEntity> listWithTree();
 }
