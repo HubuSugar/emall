@@ -18,7 +18,7 @@ import java.util.Map;
  * @Description:
  **/
 @RestController
-@RequestMapping("product/spuInfo")
+@RequestMapping("/product/spuInfo")
 public class SpuInfoController {
 
     @Autowired

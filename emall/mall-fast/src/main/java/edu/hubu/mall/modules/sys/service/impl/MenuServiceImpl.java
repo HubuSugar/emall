@@ -1,7 +1,7 @@
 package edu.hubu.mall.modules.sys.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import edu.hubu.mall.common.Constant;
+import edu.hubu.mall.common.constant.Constant;
 import edu.hubu.mall.modules.sys.dao.MenuDao;
 import edu.hubu.mall.modules.sys.entity.SysMenuEntity;
 import edu.hubu.mall.modules.sys.service.MenuService;

@@ -1,6 +1,6 @@
 package edu.hubu.mall.modules.sys.service.impl;
 
-import edu.hubu.mall.common.Constant;
+import edu.hubu.mall.common.constant.Constant;
 import edu.hubu.mall.modules.sys.dao.MenuDao;
 import edu.hubu.mall.modules.sys.dao.UserDao;
 import edu.hubu.mall.modules.sys.dao.UserTokenDao;

@@ -106,17 +106,18 @@
         this.dataListLoading = true;
         let param = {};
         Object.assign(param, this.dataForm, {
-          page: this.pageIndex,
-          limit: this.pageSize
+          pageNo: this.pageIndex,
+          pageSize: this.pageSize
         });
         this.$http({
-          url: this.$http.adornUrl("/product/spuinfo/list"),
+          url: this.$http.adornUrl("/product/spuInfo/list"),
           method: "get",
           params: this.$http.adornParams(param)
         }).then(({data}) => {
+          console.log("data",data);
           if (data && data.code === 0) {
-            this.dataList = data.page.list;
-            this.totalPage = data.page.totalCount;
+            this.dataList = data.data;
+            this.totalPage = data.extendMap.totalCount;
           } else {
             this.dataList = [];
             this.totalPage = 0;
