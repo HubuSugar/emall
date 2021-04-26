@@ -1,0 +1,15 @@
+server:
+  port: 9201
+
+elastic:
+  host: #
+  port: 9200
+
+spring:
+  application:
+    name: mall-search
+
+  cloud:
+    nacos:
+      discovery:
+        server-addr: #:8060
