@@ -360,7 +360,6 @@
     },
     //生命周期 - 挂载完成（可以访问DOM元素）
     mounted() {
-      this.getMenus();
     },
     beforeCreate() {
     }, //生命周期 - 创建之前
@@ -375,12 +374,10 @@
     destroyed() {
     }, //生命周期 - 销毁完成
     activated() {
+      this.getMenus();
+
     } //如果页面有keep-alive缓存功能，这个函数会触发
   };
 </script>
-<style scoped>
-</
-
-style
-
->
+<style scoped>
+</style>

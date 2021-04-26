@@ -1,4 +1,4 @@
-package edu.hubu.mall.common;
+package edu.hubu.mall.common.constant;
 
 /**
  * @Author: huxiaoge

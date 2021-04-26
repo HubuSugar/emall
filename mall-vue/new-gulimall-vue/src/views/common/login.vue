@@ -27,7 +27,7 @@
               </el-row>
             </el-form-item>
             <el-form-item>
-              <el-button class="login-btn-submit" type="primary" @click="dataFormSubmit()">登录</el-button>
+              <el-button class="login-btn-submit" type="primary" @click="dataFormSubmit()" :loading="loginLoading">登录</el-button>
             </el-form-item>
           </el-form>
         </div>
@@ -59,7 +59,8 @@
           ]
         },
         captchaPath: '',
-        verCodeKey: ''
+        verCodeKey: '',
+        loginLoading:false,
       }
     },
     created () {
@@ -70,6 +71,7 @@
       dataFormSubmit () {
         this.$refs['dataForm'].validate((valid) => {
           if (valid) {
+            this.loginLoading = true;
             this.$http({
               url: this.$http.adornUrl('/sys/login'),
               method: 'post',
@@ -80,6 +82,7 @@
                 keyCode: this.dataForm.captcha
               })
             }).then(({data}) => {
+              this.loginLoading = false;
               if (data && data.code === 0) {
                 this.$cookie.set('token', data.data)
                 this.$router.replace({ name: 'home' })
