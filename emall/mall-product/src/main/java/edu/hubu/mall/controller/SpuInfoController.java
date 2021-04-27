@@ -38,9 +38,12 @@ public class SpuInfoController {
      */
     @PostMapping("/{spuId}/up")
     public Result spuUp(@PathVariable(value = "spuId") String spuId){
-        Result result  = Result.error(1, "商品上架失败");
         Boolean upResult = spuInfoService.spuUp(Long.valueOf(spuId));
-        return result;
+        if(upResult){
+            return Result.ok();
+        }else{
+            return Result.error(1,"商品上架失败");
+        }
     }
 
 }

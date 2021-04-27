@@ -27,6 +27,9 @@ public class WareSkuServiceImpl extends ServiceImpl<WareSkuDao, WareSkuEntity> i
     @Override
     public Map<Long, Boolean> getSkuHasStockBySkuIds(List<Long> skuIds) {
         List<WareSkuStockVo> wareSkuStockVos = baseMapper.queryStockCountBySkuIds(skuIds);
-        return wareSkuStockVos.stream().collect(Collectors.toMap(WareSkuStockVo::getSkuId, item -> item.getSkuStockCount() != null && item.getSkuStockCount() > 0));
+        return wareSkuStockVos.stream().collect(Collectors.toMap(WareSkuStockVo::getSkuId,
+                item -> {
+                    return item.getSkuStockCount() != null && item.getSkuStockCount() > 0;
+        }));
     }
 }

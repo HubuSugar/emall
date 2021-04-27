@@ -9,7 +9,3 @@ spring:
   application:
     name: mall-search
 
-  cloud:
-    nacos:
-      discovery:
-        server-addr: #:8060

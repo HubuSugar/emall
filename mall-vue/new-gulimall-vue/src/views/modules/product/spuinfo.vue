@@ -77,7 +77,7 @@
     methods: {
       productUp(id) {
         this.$http({
-          url: this.$http.adornUrl("/product/spuinfo/" + id + "/up"),
+          url: this.$http.adornUrl("/product/spuInfo/" + id + "/up"),
           method: "post"
         }).then(({data}) => {
           if (data && data.code === 0) {

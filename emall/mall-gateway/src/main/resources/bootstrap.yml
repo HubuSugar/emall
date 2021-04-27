@@ -1,8 +1,10 @@
 spring:
   application:
-    name: mall-fast
+    name: mall-gateway
 
   cloud:
     nacos:
       config:
-        server-addr: #
+        server-addr: #:8060
+      discovery:
+        server-addr: #:8060

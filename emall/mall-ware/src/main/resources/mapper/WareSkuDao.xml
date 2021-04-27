@@ -3,7 +3,7 @@
 <mapper namespace="edu.hubu.mall.ware.dao.WareSkuDao">
 
     <select id="queryStockCountBySkuIds" resultType="edu.hubu.mall.ware.WareSkuStockVo">
-        select sku_id,sum(stock - stock_locked) from wms_ware_sku where 1 = 1
+        select sku_id,sum(stock - stock_locked) as skuStockCount  from wms_ware_sku where 1 = 1
         <if test="skuIds != null and skuIds.size() > 0">
            AND sku_id in
            <foreach collection="skuIds" item="sku" index="index" open="(" close=")" separator=",">

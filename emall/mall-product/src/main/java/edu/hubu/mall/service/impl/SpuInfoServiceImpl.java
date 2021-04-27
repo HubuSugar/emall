@@ -4,11 +4,14 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import edu.hubu.mall.common.Result;
+import edu.hubu.mall.common.constant.ProductConstant;
 import edu.hubu.mall.common.to.es.SkuEsModel;
 import edu.hubu.mall.common.utils.PageUtil;
 import edu.hubu.mall.common.utils.Query;
 import edu.hubu.mall.dao.SpuInfoDao;
 import edu.hubu.mall.entity.*;
+import edu.hubu.mall.feign.SearchFeignService;
 import edu.hubu.mall.feign.WareFeignService;
 import edu.hubu.mall.service.*;
 import lombok.Data;
@@ -49,6 +52,9 @@ public class SpuInfoServiceImpl extends ServiceImpl<SpuInfoDao, SpuInfoEntity> i
 
     @Autowired
     private AttrService attrService;
+
+    @Autowired
+    private SearchFeignService searchFeignService;
 
     /**
      * 根据条件查询分页信息
@@ -165,9 +171,14 @@ public class SpuInfoServiceImpl extends ServiceImpl<SpuInfoDao, SpuInfoEntity> i
             return esModel;
         }).collect(Collectors.toList());
 
-        //通过搜索服务将商品上架
-
-
-        return null;
+        //通过搜索服务将商品上架到es
+        Result result = searchFeignService.productSpuInfoUp(esModelList);
+        if(result.getSuccess()){
+            //保存到es成功，修改spu的状态
+            Integer count = baseMapper.updateSpuInfoStatusById(spuId, ProductConstant.ProductStatusEnum.SPU_UP.getCode());
+            return count > 0;
+        }else{
+            return false;
+        }
     }
 }

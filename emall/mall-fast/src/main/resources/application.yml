@@ -24,10 +24,6 @@ spring:
   application:
     name: mall-fast
 
-  cloud:
-    nacos:
-      discovery:
-        server-addr: #:8060
 
 mybatis-plus:
   mapper-locations: classpath:/mapper/**/*.xml
