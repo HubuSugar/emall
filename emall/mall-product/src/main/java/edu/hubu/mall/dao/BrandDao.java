@@ -1,14 +1,14 @@
 package edu.hubu.mall.dao;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import edu.hubu.mall.entity.SpuInfoEntity;
+import edu.hubu.mall.entity.BrandEntity;
 import org.apache.ibatis.annotations.Mapper;
 
 /**
  * @Author: huxiaoge
- * @Date: 2021/4/26
- * @Description: 操作spuInfo
+ * @Date: 2021/4/27
+ * @Description:
  **/
 @Mapper
-public interface SpuInfoDao extends BaseMapper<SpuInfoEntity> {
+public interface BrandDao extends BaseMapper<BrandEntity> {
 }

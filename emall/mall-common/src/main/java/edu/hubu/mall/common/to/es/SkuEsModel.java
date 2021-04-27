@@ -8,7 +8,7 @@ import java.util.List;
 /**
  * @Author: huxiaoge
  * @Date: 2021/4/26
- * @Description: 商品上架模型
+ * @Description: 商品上架到es的数据模型
  **/
 @Data
 public class SkuEsModel {
@@ -25,8 +25,14 @@ public class SkuEsModel {
 
     private Long saleCount;
 
+    /**
+     * sku是否有存库
+     */
     private Boolean hasStock;
 
+    /**
+     * 热度评分
+     */
     private Long hotScore;
 
     private Long brandId;
@@ -41,6 +47,9 @@ public class SkuEsModel {
 
     private List<Attrs> attrs;
 
+    /**
+     * 检索属性
+     */
     @Data
     public static class Attrs{
         private Long attrId;

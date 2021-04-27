@@ -17,4 +17,11 @@ public interface CategoryService extends IService<CategoryEntity> {
      * @return
      */
     List<CategoryEntity> listWithTree();
+
+    /**
+     * 根据id批量查询分类数据
+     * @param cataLogIds
+     * @return
+     */
+    List<CategoryEntity> queryCategoriesByIds(List<Long> cataLogIds);
 }

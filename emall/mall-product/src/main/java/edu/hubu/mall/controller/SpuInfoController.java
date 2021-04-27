@@ -4,10 +4,7 @@ import edu.hubu.mall.common.Result;
 import edu.hubu.mall.entity.SpuInfoEntity;
 import edu.hubu.mall.service.SpuInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
@@ -33,6 +30,16 @@ public class SpuInfoController {
         List<SpuInfoEntity> spuInfoEntities = spuInfoService.querySpuInfoPageByCondition(paramMap);
         Result<List<SpuInfoEntity>> result = Result.ok();
         result.setData(spuInfoEntities);
+        return result;
+    }
+
+    /**
+     * 根据spuId进行商品上架
+     */
+    @PostMapping("/{spuId}/up")
+    public Result spuUp(@PathVariable(value = "spuId") String spuId){
+        Result result  = Result.error(1, "商品上架失败");
+        Boolean upResult = spuInfoService.spuUp(Long.valueOf(spuId));
         return result;
     }
 

@@ -1,5 +1,6 @@
 package edu.hubu.mall.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import edu.hubu.mall.common.Result;
 import edu.hubu.mall.dao.CategoryDao;
@@ -31,6 +32,18 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
         }).collect(Collectors.toList());
 
         return categoryList;
+    }
+
+    /**
+     * 根据分类Id批量查询分类数据
+     * @param cataLogIds
+     * @return
+     */
+    @Override
+    public List<CategoryEntity> queryCategoriesByIds(List<Long> cataLogIds) {
+        LambdaQueryWrapper<CategoryEntity> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.in(CategoryEntity::getCatId,cataLogIds);
+        return this.list(queryWrapper);
     }
 
 

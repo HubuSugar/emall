@@ -1,13 +1,11 @@
 package edu.hubu.mall.common.utils;
 
-import com.alibaba.fastjson.JSON;
 import com.google.gson.Gson;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.*;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
-import javax.annotation.Resource;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -18,6 +16,9 @@ import java.util.concurrent.TimeUnit;
 @Component
 public class RedisUtil {
 
+    /**
+     * 导入spring-boot-data-redis注入到容器中（下同）
+     */
     @Autowired
     private RedisTemplate<String,Object> redisTemplate;
 

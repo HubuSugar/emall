@@ -2,6 +2,7 @@ package edu.hubu.mall;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 
 /**
  * @Author: huxiaoge
@@ -9,6 +10,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * @Description: 后台管理系统
  **/
 @SpringBootApplication
+@EnableDiscoveryClient
 public class MallFastApplication {
 
     public static void main(String[] args) {

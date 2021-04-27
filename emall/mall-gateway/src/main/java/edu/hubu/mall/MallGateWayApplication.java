@@ -3,6 +3,7 @@ package edu.hubu.mall;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
+import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 
 /**
  * @Author: huxiaoge
@@ -13,6 +14,7 @@ import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
  * 但是springboot项目启动时会首先检查数据源的自动注入，所以需要先排除数据源注入
  */
 @SpringBootApplication(exclude = DataSourceAutoConfiguration.class)
+@EnableDiscoveryClient
 public class MallGateWayApplication {
 
     public static void main(String[] args) {

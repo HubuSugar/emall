@@ -1,4 +1,4 @@
-package edu.hubu.mall.search;
+package edu.hubu.mall.ware;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -6,15 +6,13 @@ import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 
 /**
  * @Author: huxiaoge
- * @Date: 2021/4/26
- * @Description: 搜索服务
+ * @Date: 2021/4/27
+ * @Description: 库存服务
  **/
 @SpringBootApplication
 @EnableDiscoveryClient
-public class MallSearchApplication {
-
+public class MallWareApplication {
     public static void main(String[] args) {
-        SpringApplication.run(MallSearchApplication.class,args);
+        SpringApplication.run(MallWareApplication.class,args);
     }
-
 }
