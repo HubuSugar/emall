@@ -1,6 +1,5 @@
 package edu.hubu.mall.ware.controller;
 
-import edu.hubu.mall.ware.WareSkuStockVo;
 import edu.hubu.mall.ware.service.WareSkuService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;

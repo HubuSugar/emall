@@ -1,4 +1,4 @@
-package edu.hubu.mall.ware;
+package edu.hubu.mall.ware.vo;
 
 import lombok.Data;
 

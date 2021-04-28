@@ -1,7 +1,7 @@
 package edu.hubu.mall.ware.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import edu.hubu.mall.ware.WareSkuStockVo;
+import edu.hubu.mall.ware.vo.WareSkuStockVo;
 import edu.hubu.mall.ware.dao.WareSkuDao;
 import edu.hubu.mall.ware.entity.WareSkuEntity;
 import edu.hubu.mall.ware.service.WareSkuService;

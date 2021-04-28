@@ -90,8 +90,10 @@
               }
             });
           } else {
-            this.$message.error(data.msg);
+            this.$message.error(data.msg || '商品上架失败');
           }
+        }).catch(error => {
+          this.$message.error("商品上架失败,请重试！");
         });
       },
       attrUpdateShow(row) {

@@ -1,7 +1,6 @@
 package edu.hubu.mall.ware.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import edu.hubu.mall.ware.WareSkuStockVo;
 import edu.hubu.mall.ware.entity.WareSkuEntity;
 
 import java.util.List;

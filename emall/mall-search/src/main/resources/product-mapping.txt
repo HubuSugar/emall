@@ -1,6 +1,13 @@
-//-- 1, PUT product 2, PUT product/_mapping/_doc
+/**
+*创建商品索引与映射关系
+*elasticsearch-version:6.6.0
+*rest-high-level-client:6.8.5
+**/
+PUT product
+
+POST product/skuInfo/_mapping
 {
-  "mappings": {
+  "skuInfo": {
     "properties": {
       "skuId": {
         "type": "long"

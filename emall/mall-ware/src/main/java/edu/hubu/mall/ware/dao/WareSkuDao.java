@@ -1,7 +1,7 @@
 package edu.hubu.mall.ware.dao;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import edu.hubu.mall.ware.WareSkuStockVo;
+import edu.hubu.mall.ware.vo.WareSkuStockVo;
 import edu.hubu.mall.ware.entity.WareSkuEntity;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
