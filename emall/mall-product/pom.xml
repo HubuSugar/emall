@@ -33,6 +33,12 @@
             <artifactId>spring-boot-starter-actuator</artifactId>
         </dependency>
 
+        <!--引入thymeleaf模板引擎        -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-thymeleaf</artifactId>
+        </dependency>
+
         <!--  引入feign客户端   -->
         <dependency>
             <groupId>org.springframework.cloud</groupId>

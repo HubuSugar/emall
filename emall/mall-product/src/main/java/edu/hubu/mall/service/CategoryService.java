@@ -2,8 +2,10 @@ package edu.hubu.mall.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import edu.hubu.mall.entity.CategoryEntity;
+import edu.hubu.mall.vo.Catalog2Vo;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @Author: huxiaoge
@@ -24,4 +26,14 @@ public interface CategoryService extends IService<CategoryEntity> {
      * @return
      */
     List<CategoryEntity> queryCategoriesByIds(List<Long> cataLogIds);
+
+    /**
+     * 查询所有的顶级分类
+     */
+    List<CategoryEntity> queryTopCategories();
+
+    /**
+     * 查询前端分类数据
+     */
+    Map<String,List<Catalog2Vo>> queryCatalogJson();
 }
