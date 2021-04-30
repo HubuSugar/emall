@@ -77,43 +77,67 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
      */
     @Override
     public Map<String, List<Catalog2Vo>> queryCatalogJson() {
+        /**
+         * 1.空结果缓存，解决缓存穿透
+         * 2.设置过期时间（加随机值）：解决缓存雪崩
+         * 3。加锁：解决缓存击穿
+         */
 
         //加入缓存逻辑，请求过来先查询缓存，没有查到数据然后再去查询数据库(还要序列化与反序列化)
         String catalogJson = redisTemplate.opsForValue().get(ProductConstant.PRODUCT_CATALOG_KEY);
         if(StringUtils.isEmpty(catalogJson)){
             //如果缓存中的数据为空,查询数据库并缓存
             Map<String, List<Catalog2Vo>> catalogJsonMap = getCatalogJsonFromDB();
-            catalogJson = JSON.toJSONString(catalogJsonMap);
-            redisTemplate.opsForValue().set(ProductConstant.PRODUCT_CATALOG_KEY,catalogJson);
             return catalogJsonMap;
         }
+        System.out.println("缓存命中，直接返回......");
         return JSON.parseObject(catalogJson, new TypeReference<Map<String, List<Catalog2Vo>>>() {});
     }
 
     /**
-     * 封装从数据查询分类数据
+     * 封装从数据查询分类数据,进入查数据库的方法，开始竞争锁
+     * 两种加锁方式，第一种，对当前实例对象加锁，第二种，直接对当前方法加锁
      * @return
      */
-    private Map<String, List<Catalog2Vo>> getCatalogJsonFromDB(){
+    public Map<String, List<Catalog2Vo>> getCatalogJsonFromDB() {
 
-        //1.只查询一次数据库，一次将所有分类数据查询过来
-        List<CategoryEntity> categories = baseMapper.selectList(null);
-        //2.1 筛选出所有的一级分类节点
-        List<CategoryEntity> topCategories = getChildrens (categories, ProductConstant.PRODUCT_TOP_CATALOGID);
 
-        //2.2 封装数据
-        return topCategories.stream().collect(Collectors.toMap(k -> String.valueOf(k.getCatId()), v -> {
-            //2.3 查询二级菜单数据
-            return getChildrens(categories, v.getCatId()).stream().map(l2 -> {
+        /**
+         * 锁住当前对象的实例，因为在spring容器中，所有对象都是单例的
+         */
+        synchronized (this) {
+            String s = redisTemplate.opsForValue().get(ProductConstant.PRODUCT_CATALOG_KEY);
+            if (!StringUtils.isEmpty(s)) {
+                return JSON.parseObject(s, new TypeReference<Map<String, List<Catalog2Vo>>>() {
+                });
+            }
+            System.out.println("查询数据库......");
+            //1.只查询一次数据库，一次将所有分类数据查询过来
+            List<CategoryEntity> categories = baseMapper.selectList(null);
+            //2.1 筛选出所有的一级分类节点
+            List<CategoryEntity> topCategories = getChildrens(categories, ProductConstant.PRODUCT_TOP_CATALOGID);
 
-                //2.4 查询三级菜单列表
-                List<Catalog2Vo.CatalogLeaf> catalogLeafList = getChildrens(categories, l2.getCatId()).stream().map(l3 -> {
-                    return  new Catalog2Vo.CatalogLeaf(String.valueOf(l2.getCatId()),String.valueOf(l3.getCatId()),l3.getName());
+            //2.2 封装数据
+            Map<String, List<Catalog2Vo>> catalogJsonMap = topCategories.stream().collect(Collectors.toMap(k -> String.valueOf(k.getCatId()), v -> {
+                //2.3 查询二级菜单数据
+                return getChildrens(categories, v.getCatId()).stream().map(l2 -> {
+
+                    //2.4 查询三级菜单列表
+                    List<Catalog2Vo.CatalogLeaf> catalogLeafList = getChildrens(categories, l2.getCatId()).stream().map(l3 -> {
+                        return new Catalog2Vo.CatalogLeaf(String.valueOf(l2.getCatId()), String.valueOf(l3.getCatId()), l3.getName());
+                    }).collect(Collectors.toList());
+
+                    return new Catalog2Vo(String.valueOf(v.getCatId()), catalogLeafList, String.valueOf(l2.getCatId()), l2.getName());
                 }).collect(Collectors.toList());
+            }));
 
-                return new Catalog2Vo(String.valueOf(v.getCatId()),catalogLeafList,String.valueOf(l2.getCatId()),l2.getName());
-            }).collect(Collectors.toList());
-        }));
+
+            String catalogJson = JSON.toJSONString(catalogJsonMap);
+            redisTemplate.opsForValue().set(ProductConstant.PRODUCT_CATALOG_KEY, catalogJson);
+            return catalogJsonMap;
+        }
+
+
     }
 
     private List<CategoryEntity> getChildrens(List<CategoryEntity> allCategories,Long pid){
