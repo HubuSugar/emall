@@ -15,7 +15,12 @@ public class ProductConstant {
     /**
      * 商品服务redis服务对应的键
      */
-    public static final String PRODUCT_CATALOG_KEY = "product_catalogJson_key";
+    public static final String PRODUCT_CATALOG_KEY = "product_catalog_key";
+
+    /**
+     * 商品分类数据分布式锁对应的键
+     */
+    public static final String PRODUCT_CATALOG_LOCK_KEY = "product_catagory_lock_key";
 
     public enum AttrEnum {
         ATTR_TYPE_BASE(1,"基本属性"),
