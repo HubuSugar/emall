@@ -5,6 +5,7 @@ import cn.hutool.core.util.IdUtil;
 import edu.hubu.mall.MallProductApplication;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.redisson.api.RedissonClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -23,9 +24,17 @@ public class RedisApplicationTest {
     @Autowired
     private StringRedisTemplate redisTemplate;
 
+    @Autowired
+    private RedissonClient redissonClient;
+
     @Test
     public void redisOps(){
         redisTemplate.opsForValue().set("hello","world" + IdUtil.simpleUUID());
         System.out.println("hello对应的值{}" + redisTemplate.opsForValue().get("hello"));
+    }
+
+    @Test
+    public void redissonCli(){
+        System.out.println(redissonClient);
     }
 }

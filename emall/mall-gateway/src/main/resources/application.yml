@@ -29,6 +29,10 @@ spring:
           filters:
             - RewritePath=/api/(?<segment>.*), /mall-fast/$\{segment}
 
+        - id: mall-product-web
+          uri: lb://mall-product
+          predicates:
+            - Path=/index/**
 
 
 

@@ -10,6 +10,8 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
  * @Date: 2021/4/20
  * @Description: 商品服务
  * 开启feign的自动注入
+ *
+ * 7.整合redisson作为分布式的框架
  **/
 @SpringBootApplication
 @EnableDiscoveryClient

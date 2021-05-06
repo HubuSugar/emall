@@ -24,6 +24,7 @@
         <lombok.version>1.18.2</lombok.version>
         <mysql.version>8.0.17</mysql.version>
         <mybatisplus.version>3.2.0</mybatisplus.version>
+        <redisson.version>3.14.1</redisson.version>
         <captcha.version>1.6.2</captcha.version>
         <shiro.version>1.6.0</shiro.version>
         <springcloud.alibaba.version>2.1.0.RELEASE</springcloud.alibaba.version>
@@ -57,6 +58,12 @@
                 <groupId>mysql</groupId>
                 <artifactId>mysql-connector-java</artifactId>
                 <version>${mysql.version}</version>
+            </dependency>
+            <!--   管理redis分布式锁redisson的版本  -->
+            <dependency>
+                <groupId>org.redisson</groupId>
+                <artifactId>redisson</artifactId>
+                <version>${redisson.version}</version>
             </dependency>
 
             <!--    管理验证码服务的版本   -->
