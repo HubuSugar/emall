@@ -17,6 +17,7 @@ import org.springframework.util.StringUtils;
 
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 /**
@@ -75,19 +76,20 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
      * 2，引入基于redis的缓存
      * @return
      */
+    /**
+     * 1.空结果缓存，解决缓存穿透
+     * 2.设置过期时间（加随机值）：解决缓存雪崩
+     * 3。加锁：解决缓存击穿
+     */
     @Override
     public Map<String, List<Catalog2Vo>> queryCatalogJson() {
-        /**
-         * 1.空结果缓存，解决缓存穿透
-         * 2.设置过期时间（加随机值）：解决缓存雪崩
-         * 3。加锁：解决缓存击穿
-         */
-
         //加入缓存逻辑，请求过来先查询缓存，没有查到数据然后再去查询数据库(还要序列化与反序列化)
         String catalogJson = redisTemplate.opsForValue().get(ProductConstant.PRODUCT_CATALOG_KEY);
         if(StringUtils.isEmpty(catalogJson)){
             //如果缓存中的数据为空,查询数据库并缓存
+            System.out.println("缓存未命中......");
             Map<String, List<Catalog2Vo>> catalogJsonMap = getCatalogJsonFromDB();
+
             return catalogJsonMap;
         }
         System.out.println("缓存命中，直接返回......");
@@ -99,12 +101,11 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
      * 两种加锁方式，第一种，对当前实例对象加锁，第二种，直接对当前方法加锁
      * @return
      */
+    /**
+     * 锁住当前对象的实例，因为在spring容器中，所有对象都是单例的
+     */
+    //TODO 是本地锁，只能锁住当前进程，synchronized,JUC（lock）
     public Map<String, List<Catalog2Vo>> getCatalogJsonFromDB() {
-
-
-        /**
-         * 锁住当前对象的实例，因为在spring容器中，所有对象都是单例的
-         */
         synchronized (this) {
             String s = redisTemplate.opsForValue().get(ProductConstant.PRODUCT_CATALOG_KEY);
             if (!StringUtils.isEmpty(s)) {
@@ -116,7 +117,6 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
             List<CategoryEntity> categories = baseMapper.selectList(null);
             //2.1 筛选出所有的一级分类节点
             List<CategoryEntity> topCategories = getChildrens(categories, ProductConstant.PRODUCT_TOP_CATALOGID);
-
             //2.2 封装数据
             Map<String, List<Catalog2Vo>> catalogJsonMap = topCategories.stream().collect(Collectors.toMap(k -> String.valueOf(k.getCatId()), v -> {
                 //2.3 查询二级菜单数据
@@ -130,14 +130,10 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
                     return new Catalog2Vo(String.valueOf(v.getCatId()), catalogLeafList, String.valueOf(l2.getCatId()), l2.getName());
                 }).collect(Collectors.toList());
             }));
-
-
             String catalogJson = JSON.toJSONString(catalogJsonMap);
-            redisTemplate.opsForValue().set(ProductConstant.PRODUCT_CATALOG_KEY, catalogJson);
+            redisTemplate.opsForValue().set(ProductConstant.PRODUCT_CATALOG_KEY, catalogJson,30, TimeUnit.MINUTES);
             return catalogJsonMap;
         }
-
-
     }
 
     private List<CategoryEntity> getChildrens(List<CategoryEntity> allCategories,Long pid){
