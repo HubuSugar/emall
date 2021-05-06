@@ -70,13 +70,11 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
     }
 
     /**
-     * 查询前端需要的分类json数据
-     * 1.使用HashMap进行本地缓存,但是在分布式环境下（比如商品服务在对台机器上部署时）
-     * 基于本地缓存在分布式问题下到的诸多问题，所以不采用
-     * 2，引入基于redis的缓存
-     * @return
-     */
-    /**
+     *  查询前端需要的分类json数据
+     *  1.使用HashMap进行本地缓存,但是在分布式环境下（比如商品服务在对台机器上部署时）
+     *  基于本地缓存在分布式问题下到的诸多问题，所以不采用
+     *  2，引入基于redis的缓存
+     *  @return
      * 1.空结果缓存，解决缓存穿透
      * 2.设置过期时间（加随机值）：解决缓存雪崩
      * 3。加锁：解决缓存击穿
@@ -88,9 +86,7 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
         if(StringUtils.isEmpty(catalogJson)){
             //如果缓存中的数据为空,查询数据库并缓存
             System.out.println("缓存未命中......");
-            Map<String, List<Catalog2Vo>> catalogJsonMap = getCatalogJsonFromDB();
-
-            return catalogJsonMap;
+            return getCatalogJsonFromDB();
         }
         System.out.println("缓存命中，直接返回......");
         return JSON.parseObject(catalogJson, new TypeReference<Map<String, List<Catalog2Vo>>>() {});
@@ -104,7 +100,7 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
     /**
      * 锁住当前对象的实例，因为在spring容器中，所有对象都是单例的
      */
-    //TODO 是本地锁，只能锁住当前进程，synchronized,JUC（lock）
+    //TODO 是本地锁，只能锁住当前进程，synchronized,JUC（Lock）
     public Map<String, List<Catalog2Vo>> getCatalogJsonFromDB() {
         synchronized (this) {
             String s = redisTemplate.opsForValue().get(ProductConstant.PRODUCT_CATALOG_KEY);
@@ -130,6 +126,7 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
                     return new Catalog2Vo(String.valueOf(v.getCatId()), catalogLeafList, String.valueOf(l2.getCatId()), l2.getName());
                 }).collect(Collectors.toList());
             }));
+            //在同一把锁内完成数据库的查询和写缓存
             String catalogJson = JSON.toJSONString(catalogJsonMap);
             redisTemplate.opsForValue().set(ProductConstant.PRODUCT_CATALOG_KEY, catalogJson,30, TimeUnit.MINUTES);
             return catalogJsonMap;
