@@ -11,7 +11,11 @@ import edu.hubu.mall.dao.CategoryDao;
 import edu.hubu.mall.entity.CategoryEntity;
 import edu.hubu.mall.service.CategoryService;
 import edu.hubu.mall.vo.Catalog2Vo;
+import org.redisson.api.RLock;
+import org.redisson.api.RReadWriteLock;
+import org.redisson.api.RedissonClient;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.script.DefaultRedisScript;
 import org.springframework.stereotype.Service;
@@ -33,6 +37,9 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
 
     @Autowired
     private StringRedisTemplate redisTemplate;
+
+    @Autowired
+    private RedissonClient redisson;
 
     @Override
     public List<CategoryEntity> listWithTree() {
@@ -63,10 +70,13 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
 
     /**
      * 查询所有的顶级分类
+     * @Cacheable 表示返回的数据是可以缓存的，如果缓存中有，那么不会再调用方法
      * @return
      */
+    @Cacheable(value={"catalog"},key="#root.methodName")
     @Override
     public List<CategoryEntity> queryTopCategories() {
+        System.out.println("queryTopCategories....");
         LambdaQueryWrapper<CategoryEntity> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(CategoryEntity::getParentCid, ProductConstant.PRODUCT_TOP_CATALOGID);
         return list(queryWrapper);
@@ -74,7 +84,7 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
 
     /**
      *  查询前端需要的分类json数据
-     *  1.使用HashMap进行本地缓存,但是在分布式环境下（比如商品服务在对台机器上部署时）
+     *  1.使用HashMap进行本地缓存,但是在分布式环境下（比如商品服务在多台机器上部署时）
      *  基于本地缓存在分布式问题下到的诸多问题，所以不采用
      *  2，引入基于redis的缓存
      *  @return
@@ -89,10 +99,30 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
         if(StringUtils.isEmpty(catalogJson)){
             //如果缓存中的数据为空,查询数据库并缓存
             System.out.println("缓存未命中......");
-            return getCatalogJsonWithRedisLock();
+            return getCatalogJsonWithRedissonLock();
         }
         System.out.println("缓存命中，直接返回......");
         return JSON.parseObject(catalogJson, new TypeReference<Map<String, List<Catalog2Vo>>>() {});
+    }
+
+    /**
+     * 使用redisson作为分布式锁
+     * 缓存数据的一致性
+     * 1.双写（改完数据库，更新缓存），2.失效(改完数据库，使缓存失效)
+     * 使用读写锁，保证数据一致性
+     */
+    public Map<String,List<Catalog2Vo>> getCatalogJsonWithRedissonLock(){
+        RReadWriteLock rwLock = redisson.getReadWriteLock(ProductConstant.PRODUCT_CATALOG_LOCK_KEY);
+        RLock rLock = rwLock.writeLock();
+        Map<String, List<Catalog2Vo>> catalogMap;
+        try{
+            rLock.lock();
+            //查数据的时候缓存了redis
+            catalogMap = getCatalogJsonFromDb();
+        }finally {
+            rLock.unlock();
+        }
+        return catalogMap;
     }
 
     /**

@@ -9,6 +9,22 @@ spring:
     url: jdbc:mysql://#:3306/emall_pms?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
     username: huxiaoge
     password: ZWZmMGFmMmI0MGEwMGQ4MzQ2MTU4OTAw
+  redis:
+    host: 127.0.0.1
+    port: 6379
+    password:
+    lettuce:
+      pool:
+        max-idle: 30
+        max-active: 8
+        max-wait: 10000
+        min-idle: 10
+  cache:
+    type: redis
+    redis:
+      time-to-live: 3600000
+
+
 
 
 mybatis-plus:
