@@ -2,7 +2,8 @@
 *创建商品索引与映射关系
 *elasticsearch-version:6.6.0
 *rest-high-level-client:6.8.5
-**/
+**属性中还包括属性，所以定义为nested
+/
 PUT product
 
 POST product/skuInfo/_mapping

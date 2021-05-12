@@ -15,7 +15,7 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
  * @Author: huxiaoge
  * @Date: 2021-05-08
  * @Description: 自定义redis缓存配置类
- * 使用EnableConfigurationProperties注解加载容器中已经存在的配置
+ * 使用EnableConfigurationProperties注解加载容器中已经存在的配置(绑定一个配置文件类)
  **/
 @EnableCaching
 @Configuration

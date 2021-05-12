@@ -109,11 +109,11 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
      * 使用redisson作为分布式锁
      * 缓存数据的一致性
      * 1.双写（改完数据库，更新缓存），2.失效(改完数据库，使缓存失效)
-     * 使用读写锁，保证数据一致性
+     * 使用读写锁，保证数据一致性(读数据时加读锁)
      */
     public Map<String,List<Catalog2Vo>> getCatalogJsonWithRedissonLock(){
         RReadWriteLock rwLock = redisson.getReadWriteLock(ProductConstant.PRODUCT_CATALOG_LOCK_KEY);
-        RLock rLock = rwLock.writeLock();
+        RLock rLock = rwLock.readLock();
         Map<String, List<Catalog2Vo>> catalogMap;
         try{
             rLock.lock();

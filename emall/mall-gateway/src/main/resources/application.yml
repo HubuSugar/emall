@@ -29,10 +29,18 @@ spring:
           filters:
             - RewritePath=/api/(?<segment>.*), /mall-fast/$\{segment}
 
+        - id: mall-search-web
+          uri: lb://mall-search
+          predicates:
+            - Host=search.emall.com
+
         - id: mall-product-web
           uri: lb://mall-product
           predicates:
-            - Path=/index/**
+            - Host=**.emall.com, emall.com
+
+
+
 
 
 
