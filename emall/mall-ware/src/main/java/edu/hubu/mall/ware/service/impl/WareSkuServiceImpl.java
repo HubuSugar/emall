@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 /**
  * @Author: huxiaoge
  * @Date: 2021/4/27
- * @Description:
+ * @Description: sku库存服务
  **/
 @Service
 public class WareSkuServiceImpl extends ServiceImpl<WareSkuDao, WareSkuEntity> implements WareSkuService {

@@ -13,7 +13,7 @@ import java.util.Map;
 /**
  * @Author: huxiaoge
  * @Date: 2021/4/27
- * @Description:
+ * @Description: sku库存
  **/
 @RestController
 @RequestMapping("/ware/wareSku")

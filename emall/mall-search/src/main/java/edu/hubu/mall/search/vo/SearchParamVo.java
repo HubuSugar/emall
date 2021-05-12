@@ -21,12 +21,12 @@ public class SearchParamVo {
     /**
      * 商品服务首页传递的商品分类id
      */
-    private String catalog3Id;
+    private Long catalog3Id;
 
     /**
      * 仅显示有货(0 -- 无货；1--有货)
      */
-    private Integer hasStock;
+    private Integer hasStock = 1;
 
     /**
      * sku价格区间查询条件
@@ -39,7 +39,7 @@ public class SearchParamVo {
      * 支持多选：多个品牌
      * brandId=1
      */
-    private List<Long> brandIds;
+    private List<Long> brands;
 
     /**
      * 属性查询
