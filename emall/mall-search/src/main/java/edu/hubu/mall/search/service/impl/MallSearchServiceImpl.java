@@ -294,6 +294,15 @@ public class MallSearchServiceImpl implements MallSearchService {
         }
         result.setAttrs(attrs);
 
+        /**
+         * 添加可分页的页码信息
+         */
+        List<Integer> pages = new ArrayList<>();
+        for(int i =1; i <totalPages;i++){
+            pages.add(i);
+        }
+        result.setPageNavs(pages);
+
         return result;
     }
 
