@@ -856,7 +856,7 @@
                     </div>
                     <div class="sl_value">
                         <ul>
-                            <li th:each="attrValue : ${attr.attrValue}">
+                            <li th:each="attrValue : ${attr.attrValues}">
                                 <a href="search/#"
                                    th:href="${'javascript:searchProducts(&quot;attrs&quot;,&quot;'+attr.attrId+'_'+attrValue+'&quot;)'}"
                                    th:text="${attrValue}">5.56英寸及以上
@@ -1216,7 +1216,7 @@
                             </div>
                             <p class="da">
                                 <a th:href="|http://item.emall.com/${product.skuId}.html|" >
-                                    <img   class="dim" th:src="${product.skuImg}">
+                                    <img  class="dim" th:src="${product.skuImg}">
                                 </a>
                             </p>
                             <ul class="tab_im">
