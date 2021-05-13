@@ -58,6 +58,6 @@ public class SearchParamVo {
     /**
      * 分页属性
      */
-    private Integer pageNum;
+    private Integer pageNum = 1;
 
 }

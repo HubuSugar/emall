@@ -49,7 +49,7 @@ public class SearchSaveServiceImpl implements SearchSaveService {
             indexRequest.source(esModelStr,XContentType.JSON);
             bulkRequest.add(indexRequest);
         }
-        System.out.println(bulkRequest);
+//        System.out.println(bulkRequest);
         BulkResponse bulkResponse = restHighLevelClient.bulk(bulkRequest, MallElasticConfig.COMMON_OPTIONS);
 
         boolean b = bulkResponse.hasFailures();

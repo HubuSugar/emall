@@ -29,7 +29,7 @@ POST product/skuInfo/_mapping
       "saleCount": {
         "type": "long"
       },
-      "hosStock": {
+      "hasStock": {
         "type": "boolean"
       },
       "hotScore": {

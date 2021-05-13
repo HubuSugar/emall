@@ -150,7 +150,7 @@ public class SpuInfoServiceImpl extends ServiceImpl<SpuInfoDao, SpuInfoEntity> i
             if(finalStockMap == null){
                 esModel.setHasStock(true);
             }else{
-                esModel.setHasStock(finalStockMap.get(skuInfo.getSkuId()));
+                esModel.setHasStock(finalStockMap.get(skuInfo.getSkuId()) != null && finalStockMap.get(skuInfo.getSkuId()));
             }
             //设置品牌和分类信息
             List<BrandEntity> brandList = brandEntities.stream().filter(item -> skuInfo.getBrandId().equals(item.getBrandId())).collect(Collectors.toList());
