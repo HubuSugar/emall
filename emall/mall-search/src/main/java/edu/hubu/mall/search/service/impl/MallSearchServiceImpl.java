@@ -191,10 +191,6 @@ public class MallSearchServiceImpl implements MallSearchService {
         nested.subAggregation(attr_id_agg);
         sourceBuilder.aggregation(nested);
 
-
-        String s = sourceBuilder.toString();
-        System.out.println(s);
-
         return new SearchRequest(new String[]{ElasticConstant.PRODUCT_ES_INDEX},sourceBuilder);
     }
 
@@ -298,10 +294,38 @@ public class MallSearchServiceImpl implements MallSearchService {
          * 添加可分页的页码信息
          */
         List<Integer> pages = new ArrayList<>();
-        for(int i =1; i <totalPages;i++){
+        for(int i =1; i <= totalPages;i++){
             pages.add(i);
         }
         result.setPageNavs(pages);
+
+        /**
+         * 添加面包屑的导航功能
+         */
+        List<SearchResultVo.BreadVo> breads;
+        if(!CollectionUtils.isEmpty(searchParam.getAttrs())){
+//            searchParam.getAttrs().stream().map()
+
+
+            breads = searchParam.getAttrs().stream().map(attr -> {
+                SearchResultVo.BreadVo breadVo = new SearchResultVo.BreadVo();
+                String[] s = attr.split("_");
+                //属性的值
+                breadVo.setBreadValue(s[1]);
+
+
+//                breadVo.setBreadName();
+
+                return breadVo;
+            }).collect(Collectors.toList());
+
+        }
+
+
+
+
+
+//        result.setBreads(breads);
 
         return result;
     }

@@ -60,4 +60,9 @@ public class SearchParamVo {
      */
     private Integer pageNum = 1;
 
+    /**
+     * 请求链接上的所有参数
+     */
+    private String _queryString;
+
 }

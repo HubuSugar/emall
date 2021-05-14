@@ -48,6 +48,18 @@ public class SearchResultVo {
     private List<AttrVo> attrs;
 
 
+    /**
+     * 选中属性的面包屑
+     */
+    private List<BreadVo> breads;
+
+    @Data
+    public static class BreadVo{
+        private String breadName;
+        private String breadValue;
+        private String link;
+    }
+
     @Data
     public static class BrandVo{
         private Long brandId;
