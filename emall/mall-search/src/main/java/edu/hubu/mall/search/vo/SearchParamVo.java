@@ -26,7 +26,7 @@ public class SearchParamVo {
     /**
      * 仅显示有货(0 -- 无货；1--有货)
      */
-    private Integer hasStock = 1;
+    private Integer hasStock;
 
     /**
      * sku价格区间查询条件
@@ -39,7 +39,7 @@ public class SearchParamVo {
      * 支持多选：多个品牌
      * brandId=1
      */
-    private List<Long> brands;
+    private List<Long> brandId;
 
     /**
      * 属性查询

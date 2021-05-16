@@ -7,8 +7,8 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="stylesheet" href="search/css/index.css">
     <link rel="stylesheet" type="text/css" href="search/font/iconfont.css">
-    <!--<script src="search/./js/jquery-3.2.1.min.js"></script>-->
-    <script src="search/./js/jquery-1.12.4.js"></script>
+<!--    <script src="search/js/jquery-3.2.1.min.js" type="text/javascript"></script>-->
+    <script src="search/js/jquery-1.12.4.js" type="text/javascript" charset="utf-8"></script>
     <title>商城搜索</title>
 </head>
 <body>
@@ -405,7 +405,6 @@
     <div class="header_form">
        <input id="keyword_input" type="text" placeholder="手机" th:value="${param.keyword}"/>
         <a href="javascript:searchByKeyword();">搜索</a>
-<!--      <a href="javascript:void(0);" onclick="searchByKeyword()">搜索</a>-->
     </div>
     <div class="header_ico">
         <div class="header_gw">
@@ -767,11 +766,12 @@
                 <a href="search/#">游戏手机</a>
             </div>
         </div>
+        <i><img src="search/image/right-@1x.png" alt=""></i>
         <div class="JD_ipone_one c">
             <!-- 遍历面包屑功能 -->
-            <a th:href="${nav.link}" th:each="nav:${result.breads}"><span th:text="${nav.navName}"></span>：<span th:text="${nav.navValue}"></span> x</a>
+            <a th:href="${bread.link}" th:each="bread:${result.breads}"><span th:text="${bread.breadName}"></span>：<span th:text="${bread.breadValue}"></span> ×</a>
         </div>
-        <i><img src="search/image/right-@1x.png" alt=""></i>
+<!--        <i><img src="search/image/right-@1x.png" alt=""></i>-->
     </div>
 </div>
 
@@ -784,9 +784,9 @@
                 <h3><b>手机</b><em>商品筛选</em></h3>
                 <div class="st-ext">共&nbsp;<span>10135</span>个商品</div>
             </div>
-            <div class="JD_nav_logo">
+            <div class="JD_nav_logo" th:with="brandid = ${param.brandId}">
                 <!--品牌-->
-                <div class="JD_nav_wrap">
+                <div th:if="${#strings.isEmpty(brandid)}" class="JD_nav_wrap">
                     <div class="sl_key">
                         <span><b>品牌：</b></span>
                     </div>
@@ -850,7 +850,7 @@
                 </div>
 
                 <!--其它的所有需要展示的属性-->
-                <div class="JD_pre" th:each="attr : ${result.attrs}">
+                <div class="JD_pre" th:each="attr : ${result.attrs}" th:if="${!#lists.contains(result.attrIds, attr.attrId)}">
                     <div class="sl_key">
                         <span th:text="${attr.attrName}">屏幕尺寸：</span>
                     </div>
@@ -1207,9 +1207,9 @@
                         </div>
 
                     </div>
-                    <!--排序内容，每四个是一组-->
+                    <!--搜索到的内容，每四个是一组-->
                     <div class="rig_tab">
-                        <div th:each="product : ${result.getProduct()}">
+                        <div th:each="product : ${result.products}">
                             <div class="ico">
                                 <i class="iconfont icon-weiguanzhu"></i>
                                 <a href="search/#">关注</a>
@@ -1234,7 +1234,7 @@
                             <p class="tab_PI">已有<span>11万+</span>热门评价
                                 <a href="search/#">二手有售</a>
                             </p>
-                            <p class="tab_CP"><a href="search/#" title="谷粒商城Apple产品专营店">谷粒商城Apple产品...</a>
+                            <p class="tab_CP"><a href="search/#" title="格子商城Apple产品专营店">谷粒商城Apple产品...</a>
                                 <a href='#' title="联系供应商进行咨询">
                                     <img src="search/img/xcxc.png">
                                 </a>
@@ -1886,267 +1886,269 @@
     </div>
 </div>
 
-<script>
-  <!--仅显示有货-->
-  $("#showHasStock").click(function () {
-    let checked = $(this).prop("checked");
-    console.log(checked);
-    location.href=replaceParamVal(location.href,"hasStock",checked?1:0,false)
-  })
+<script type="text/javascript">
 
-  <!--价格区间-->
-  $("#skuPriceSearchBtn").click(function () {
-    var skuPriceFrom = $("#skuPriceFrom").val();
-    var skuPriceTo = $("#skuPriceTo").val();
-    location.href = replaceParamVal(location.href, "skuPrice", skuPriceFrom + "_" + skuPriceTo, false);
-  })
-
-  <!--排序-->
-  // $(".sort_a").click(function () {
-  //     //3 通过修改url排序
-  //     var sort = $(this).attr("sort");
-  //     sort = $(this).hasClass("desc") ? sort + "_desc" : sort + "_asc";
-  //     location.href=replaceParamVal(location.href,"sort",sort+"_desc",false)
-  //     // changeStyle(this);
-  //     return false;
-  // });
-  //
-  // function changeStyle(ele){
-  //     //1. 点击后清除兄弟按钮样式，并添加当前节点样式
-  //     $(".sort_a").css({"color": "#333","border-color": "#CCC","background": "#FFF"});
-  //     $(ele).css({"color": "#FFF","border-color": "#e4393c","background": "#e4393c"});
-  //     //2. 改变升降序符号
-  //     //2.1 清除兄弟节点符号和排序样式
-  //     $(".sort_a").each(function () {
-  //         $(this).removeClass("desc")
-  //         $(this).text($(this).text().replace("↑","").replace("↓",""))
-  //     })
-  //     //2.2 替换当前节点文本
-  //     var text= $(ele).text().replace("↑","").replace("↓","");
-  //     $(ele).toggleClass("desc");
-  //     if ($(ele).hasClass("desc")){
-  //         //替换文本
-  //         $(ele).text(text+"↓");
-  //     }else {
-  //         $(ele).text(text+"↑");
-  //     }
-  // }
-
-  $(".sort_a").click(function () {
-    // changeStyle(this);
-    $(this).toggleClass("desc");
-    let sort = $(this).attr("sort");
-    sort = $(this).hasClass("desc") ? sort + "_desc" : sort + "_asc";
-    location.href = replaceParamVal(location.href, "sort", sort,false);
-    return false;
-  });
-
-  function changeStyle(ele) {
-    // location.href = replaceParamVal(href, "pageNum", pn,flase);
-    // color: #333; border-color: #ccc; background: #fff
-    // color: #fff; border-color: #e4393c; background: #e4393c
-    $(".sort_a").css({"color": "#333", "border-color": "#ccc", "background": "#fff"});
-    $(".sort_a").each(function () {
-      let text = $(this).text().replace("↓", "").replace("↑", "");
-      $(this).text(text);
+    <!--仅显示有货-->
+    $("#showHasStock").click(function () {
+        let checked = $(this).prop("checked");
+        console.log(checked);
+        location.href=replaceParamVal(location.href,"hasStock",checked?1:0,false)
     })
 
-    $(ele).css({"color": "#FFF", "border-color": "#e4393c", "background": "#e4393c"});
-    $(ele).toggleClass("desc");
+    <!--价格区间-->
+    $("#skuPriceSearchBtn").click(function () {
+        var skuPriceFrom = $("#skuPriceFrom").val();
+        var skuPriceTo = $("#skuPriceTo").val();
+        location.href = replaceParamVal(location.href, "skuPrice", skuPriceFrom + "_" + skuPriceTo, false);
+    })
 
-    if ($(ele).hasClass("desc")) {
-      let text = $(ele).text().replace("↓", "").replace("↑", "");
-      text = text + "↓";
-      $(ele).text(text);
-    } else {
-      let text = $(ele).text().replace("↓", "").replace("↑", "");
-      text = text + "↑";
-      $(ele).text(text);
-    }
-  };
+    <!--排序-->
+    // $(".sort_a").click(function () {
+    //     //3 通过修改url排序
+    //     var sort = $(this).attr("sort");
+    //     sort = $(this).hasClass("desc") ? sort + "_desc" : sort + "_asc";
+    //     location.href=replaceParamVal(location.href,"sort",sort+"_desc",false)
+    //     // changeStyle(this);
+    //     return false;
+    // });
+    //
+    // function changeStyle(ele){
+    //     //1. 点击后清除兄弟按钮样式，并添加当前节点样式
+    //     $(".sort_a").css({"color": "#333","border-color": "#CCC","background": "#FFF"});
+    //     $(ele).css({"color": "#FFF","border-color": "#e4393c","background": "#e4393c"});
+    //     //2. 改变升降序符号
+    //     //2.1 清除兄弟节点符号和排序样式
+    //     $(".sort_a").each(function () {
+    //         $(this).removeClass("desc")
+    //         $(this).text($(this).text().replace("↑","").replace("↓",""))
+    //     })
+    //     //2.2 替换当前节点文本
+    //     var text= $(ele).text().replace("↑","").replace("↓","");
+    //     $(ele).toggleClass("desc");
+    //     if ($(ele).hasClass("desc")){
+    //         //替换文本
+    //         $(ele).text(text+"↓");
+    //     }else {
+    //         $(ele).text(text+"↑");
+    //     }
+    // }
 
-  <!--分页函数-->
-  $(".page_a").click(function () {
-    var pn=$(this).attr("pn");
-    location.href=replaceParamVal(location.href,"pageNum",pn,false);
-    console.log(replaceParamVal(location.href,"pageNum",pn,false))
-  })
-  <!--替换网址相关函数-->
-  <!--搜索框-->
-  function searchByKeyword() {
-    location.href = replaceParamVal(location.href,"keyword", $("#keyword_input").val(),false);
-  };
-
-  function searchProducts(name, value) {
-    //原來的页面
-    location.href = replaceParamVal(location.href,name,value,true)
-  };
-
-  /**
-   * @param url 目前的url
-   * @param paramName 需要替换的参数属性名
-   * @param replaceVal 需要替换的参数的新属性值
-   * @param forceAdd 该参数是否可以重复查询(attrs=1_3G:4G:5G&attrs=2_骁龙845&attrs=4_高清屏)
-   * @returns {string} 替换或添加后的url
-   */
-  function replaceParamVal(url, paramName, replaceVal,forceAdd) {
-    var oUrl = url.toString();
-    var nUrl;
-    if (oUrl.indexOf(paramName) != -1) {
-      if( forceAdd && oUrl.indexOf(paramName+"="+replaceVal)==-1) {
-        if (oUrl.indexOf("?") != -1) {
-          nUrl = oUrl + "&" + paramName + "=" + replaceVal;
-        } else {
-          nUrl = oUrl + "?" + paramName + "=" + replaceVal;
-        }
-      } else {
-        var re = eval('/(' + paramName + '=)([^&]*)/gi');
-        nUrl = oUrl.replace(re, paramName + '=' + replaceVal);
-      }
-    } else {
-      if (oUrl.indexOf("?") != -1) {
-        nUrl = oUrl + "&" + paramName + "=" + replaceVal;
-      } else {
-        nUrl = oUrl + "?" + paramName + "=" + replaceVal;
-      }
-    }
-    return nUrl;
-  };
-
-
-  $(".sl_ext a:nth-child(1)").hover(function(){
-    $(this).children("b").stop(true).animate({top:"3px"},50);
-    $(this).children("i").stop(true).animate({top:"-23px"},50)
-  },function(){
-    $(this).children("b").stop(true).animate({top:"24px"},50);
-    $(this).children("i").stop(true).animate({top:"3px"},50)
-  });
-  $(".sl_ext a:nth-child(2)").hover(function(){
-    $(this).children("span").stop(true).animate({top:"-1px"},100);
-    $(this).children("i").stop(true).animate({top:"-14px"},100).css({display:"none"})
-  },function(){
-    $(this).children("span").stop(true).animate({top:"14px"},100);
-    $(this).children("i").stop(true).animate({top:"-1px"},100).css({display:"block"})
-  });
-  $('.tab_im img').hover(function(){
-    var a=$(this).prop('src');
-    var index=$(this).parents('li').index();
-    $(this).parents('li').css('border','2px solid red').siblings('li').css('border','1px solid #ccc');
-    $(this).parents('ul').prev().find('img').prop('src',a);
-    $(this).parents('ul').siblings('.tab_JE').find('a').eq(list).css('display','block').siblings('a').css('display','none');
-    $(this).parents('ul').siblings('.tab_R').find('span').eq(list).css('display','block').siblings('span').css('display','none')
-  });
-
-  $(".JD_ipone_one").hover(function(){
-    $(this).children("div").css({display:"block"})
-  },function(){
-    $(this).children("div").css({display:"none"})
-  });
-
-  $("#tab>li").click(function() {
-    var i = $(this).index();
-    $("#container>div").hide().eq(i).show()
-  });
-  $(".dizhi_show").hover(function(){
-    $(".dizhi_con").css({display:"block"})
-  },function(){
-    $(".dizhi_con").css({display:"none"})
-  });
-  $(".dizhi_con").hover(function(){
-    $(this).css({display:"block"})
-  },function(){
-    $(this).css({display:"none"})
-  });
-  //显示隐藏
-  var $li = $(".JD_nav_logo>div:gt(3)").hide();
-  $('.JD_show span').click(function(){
-    if($li.is(':hidden')){
-      $li.show();
-      $(this).css({width:"86px"}).text('收起 ^');
-    }else{
-      $li.hide();
-      $('.JD_show span').css({width:"291px"}).text('更多选项（ CPU核数、网络、机身颜色 等）');
-    }
-    return false;
-  });
-
-
-
-  $(".rig_tab>div").hover(function(){
-    var i = $(this).index();
-    $(this).find('.ico').css({display:'block'}).stop(true).animate({top:"190px"},300)
-  },function(){
-    var i = $(this).index();
-    $(this).find('.ico').css({display:'none'}).stop(true).animate({top:"230px"})
-  });
-
-  $('.header_main_left>ul>li').hover(function() {
-    $(this).css({
-      background: "#f0f0f0"
-    }).find('.header_main_left_main').stop(true).fadeIn(300)
-  }, function() {
-    $(this).css({
-      background: "#fff"
-    }).find(".header_main_left_a").css({
-      color: "#000"
+    $(".sort_a").click(function () {
+        // changeStyle(this);
+        $(this).toggleClass("desc");
+        let sort = $(this).attr("sort");
+        sort = $(this).hasClass("desc") ? sort + "_desc" : sort + "_asc";
+        location.href = replaceParamVal(location.href, "sort", sort,false);
+        return false;
     });
-    $(this).find('.header_main_left_main').stop(true).fadeOut(100)
-  });
-  $(".header_sj a").hover(function() {
-    $(this).css({
-      background: "#444"
+
+    function changeStyle(ele) {
+        // location.href = replaceParamVal(href, "pageNum", pn,flase);
+        // color: #333; border-color: #ccc; background: #fff
+        // color: #fff; border-color: #e4393c; background: #e4393c
+        $(".sort_a").css({"color": "#333", "border-color": "#ccc", "background": "#fff"});
+        $(".sort_a").each(function () {
+            let text = $(this).text().replace("↓", "").replace("↑", "");
+            $(this).text(text);
+        })
+
+        $(ele).css({"color": "#FFF", "border-color": "#e4393c", "background": "#e4393c"});
+        $(ele).toggleClass("desc");
+
+        if ($(ele).hasClass("desc")) {
+            let text = $(ele).text().replace("↓", "").replace("↑", "");
+            text = text + "↓";
+            $(ele).text(text);
+        } else {
+            let text = $(ele).text().replace("↓", "").replace("↑", "");
+            text = text + "↑";
+            $(ele).text(text);
+        }
+    };
+
+    <!--分页函数-->
+    $(".page_a").click(function () {
+        var pn=$(this).attr("pn");
+        location.href=replaceParamVal(location.href,"pageNum",pn,false);
+        console.log(replaceParamVal(location.href,"pageNum",pn,false))
     })
-  }, function() {
-    $(this).css({
-      background: "#6e6568"
+    <!--替换网址相关函数-->
+    <!--搜索框-->
+    function searchByKeyword() {
+        location.href = replaceParamVal(location.href,"keyword", $("#keyword_input").val(),false);
+    };
+
+    function searchProducts(name, value) {
+        //原來的页面
+        location.href = replaceParamVal(location.href,name,value,true)
+    };
+
+    /**
+     * @param url 目前的url
+     * @param paramName 需要替换的参数属性名
+     * @param replaceVal 需要替换的参数的新属性值
+     * @param forceAdd 该参数是否可以重复查询(attrs=1_3G:4G:5G&attrs=2_骁龙845&attrs=4_高清屏)
+     * @returns {string} 替换或添加后的url
+     */
+    function replaceParamVal(url, paramName, replaceVal,forceAdd) {
+        let oUrl = url.toString();
+        let nUrl;
+        if (oUrl.indexOf(paramName) != -1) {
+            if( forceAdd && oUrl.indexOf(paramName+"="+replaceVal)==-1) {
+                if (oUrl.indexOf("?") != -1) {
+                    nUrl = oUrl + "&" + paramName + "=" + replaceVal;
+                } else {
+                    nUrl = oUrl + "?" + paramName + "=" + replaceVal;
+                }
+            } else {
+                var re = eval('/(' + paramName + '=)([^&]*)/gi');
+                nUrl = oUrl.replace(re, paramName + '=' + replaceVal);
+            }
+        } else {
+            if (oUrl.indexOf("?") != -1) {
+                nUrl = oUrl + "&" + paramName + "=" + replaceVal;
+            } else {
+                nUrl = oUrl + "?" + paramName + "=" + replaceVal;
+            }
+        }
+        return nUrl;
+    };
+
+
+    $(".sl_ext a:nth-child(1)").hover(function(){
+        $(this).children("b").stop(true).animate({top:"3px"},50);
+        $(this).children("i").stop(true).animate({top:"-23px"},50)
+    },function(){
+        $(this).children("b").stop(true).animate({top:"24px"},50);
+        $(this).children("i").stop(true).animate({top:"3px"},50)
+    });
+    $(".sl_ext a:nth-child(2)").hover(function(){
+        $(this).children("span").stop(true).animate({top:"-1px"},100);
+        $(this).children("i").stop(true).animate({top:"-14px"},100).css({display:"none"})
+    },function(){
+        $(this).children("span").stop(true).animate({top:"14px"},100);
+        $(this).children("i").stop(true).animate({top:"-1px"},100).css({display:"block"})
+    });
+    $('.tab_im img').hover(function(){
+        var a=$(this).prop('src');
+        var index=$(this).parents('li').index();
+        $(this).parents('li').css('border','2px solid red').siblings('li').css('border','1px solid #ccc');
+        $(this).parents('ul').prev().find('img').prop('src',a);
+        $(this).parents('ul').siblings('.tab_JE').find('a').eq(list).css('display','block').siblings('a').css('display','none');
+        $(this).parents('ul').siblings('.tab_R').find('span').eq(list).css('display','block').siblings('span').css('display','none')
+    });
+
+    $(".JD_ipone_one").hover(function(){
+        $(this).children("div").css({display:"block"})
+    },function(){
+        $(this).children("div").css({display:"none"})
+    });
+
+    $("#tab>li").click(function() {
+        var i = $(this).index();
+        $("#container>div").hide().eq(i).show()
+    });
+    $(".dizhi_show").hover(function(){
+        $(".dizhi_con").css({display:"block"})
+    },function(){
+        $(".dizhi_con").css({display:"none"})
+    });
+    $(".dizhi_con").hover(function(){
+        $(this).css({display:"block"})
+    },function(){
+        $(this).css({display:"none"})
+    });
+    //显示隐藏
+    var $li = $(".JD_nav_logo>div:gt(3)").hide();
+    $('.JD_show span').click(function(){
+        if($li.is(':hidden')){
+            $li.show();
+            $(this).css({width:"86px"}).text('收起 ^');
+        }else{
+            $li.hide();
+            $('.JD_show span').css({width:"291px"}).text('更多选项（ CPU核数、网络、机身颜色 等）');
+        }
+        return false;
+    });
+
+
+
+    $(".rig_tab>div").hover(function(){
+        var i = $(this).index();
+        $(this).find('.ico').css({display:'block'}).stop(true).animate({top:"190px"},300)
+    },function(){
+        var i = $(this).index();
+        $(this).find('.ico').css({display:'none'}).stop(true).animate({top:"230px"})
+    });
+
+    $('.header_main_left>ul>li').hover(function() {
+        $(this).css({
+            background: "#f0f0f0"
+        }).find('.header_main_left_main').stop(true).fadeIn(300)
+    }, function() {
+        $(this).css({
+            background: "#fff"
+        }).find(".header_main_left_a").css({
+            color: "#000"
+        });
+        $(this).find('.header_main_left_main').stop(true).fadeOut(100)
+    });
+    $(".header_sj a").hover(function() {
+        $(this).css({
+            background: "#444"
+        })
+    }, function() {
+        $(this).css({
+            background: "#6e6568"
+        })
+    });
+
+
+    $(".nav_li1 a").hover(function(){
+        $(".header_main_left").stop(true).fadeIn()
+    },function(){
+        $(".header_main_left").stop(true).fadeOut()
+    });
+    $(".header_main_left").hover(function(){
+        $(this).stop(true).fadeIn()
+    },function(){
+        $(this).stop(true).fadeOut()
+    });
+
+
+    //右侧侧边栏
+    $(".header_bar_box ul li").hover(function() {
+        $(this).css({
+            background: "#7A6E6E"
+        }).children(".div").css({
+            display: "block"
+        }).stop(true).animate({
+            left: "-60px"
+        }, 300)
+    }, function() {
+        $(this).css({
+            background: "#7A6E6E"
+        }).children(".div").css({
+            display: "none"
+        }).stop(true).animate({
+            left: "0"
+        }, 300)
+    });
+
+
+    //底部
+    $(".footer_foot .p1 a").hover(function(){
+        $(this).css("color","#D70B1C")
+    },function(){
+        $(this).css("color","#727272")
+    });
+
+    $(".footer .footer_center ol li a").hover(function(){
+        $(this).css("color","#D70B1C")
+    },function(){
+        $(this).css("color","#727272")
     })
-  });
-
-
-  $(".nav_li1 a").hover(function(){
-    $(".header_main_left").stop(true).fadeIn()
-  },function(){
-    $(".header_main_left").stop(true).fadeOut()
-  });
-  $(".header_main_left").hover(function(){
-    $(this).stop(true).fadeIn()
-  },function(){
-    $(this).stop(true).fadeOut()
-  });
-
-
-  //右侧侧边栏
-  $(".header_bar_box ul li").hover(function() {
-    $(this).css({
-      background: "#7A6E6E"
-    }).children(".div").css({
-      display: "block"
-    }).stop(true).animate({
-      left: "-60px"
-    }, 300)
-  }, function() {
-    $(this).css({
-      background: "#7A6E6E"
-    }).children(".div").css({
-      display: "none"
-    }).stop(true).animate({
-      left: "0"
-    }, 300)
-  });
-
-
-  //底部
-  $(".footer_foot .p1 a").hover(function(){
-    $(this).css("color","#D70B1C")
-  },function(){
-    $(this).css("color","#727272")
-  });
-
-  $(".footer .footer_center ol li a").hover(function(){
-    $(this).css("color","#D70B1C")
-  },function(){
-    $(this).css("color","#727272")
-  })
 </script>
+
 </body>
 </html>

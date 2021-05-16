@@ -3,9 +3,13 @@ package edu.hubu.mall.search.service.impl;
 import com.alibaba.fastjson.JSON;
 import edu.hubu.mall.common.to.es.SkuEsModel;
 import edu.hubu.mall.search.constant.ElasticConstant;
+import edu.hubu.mall.search.entity.AttrEntity;
+import edu.hubu.mall.search.entity.BrandEntity;
+import edu.hubu.mall.search.feign.ProductFiegnService;
 import edu.hubu.mall.search.service.MallSearchService;
 import edu.hubu.mall.search.vo.SearchParamVo;
 import edu.hubu.mall.search.vo.SearchResultVo;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.lucene.search.join.ScoreMode;
 import org.apache.lucene.util.CollectionUtil;
@@ -39,9 +43,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static edu.hubu.mall.search.config.MallElasticConfig.COMMON_OPTIONS;
 
@@ -51,10 +58,14 @@ import static edu.hubu.mall.search.config.MallElasticConfig.COMMON_OPTIONS;
  * @Description: 搜索服务
  **/
 @Service
+@Slf4j
 public class MallSearchServiceImpl implements MallSearchService {
 
     @Autowired
     private RestHighLevelClient restHighLevelClient;
+
+    @Autowired
+    private ProductFiegnService productFiegnService;
 
     /**
      * 根据参数查询商品搜索结果
@@ -93,8 +104,8 @@ public class MallSearchServiceImpl implements MallSearchService {
         }
 
         //1.3 filterQuery 根据多个品牌id查询
-        if(!CollectionUtils.isEmpty(param.getBrands())){
-            boolQuery.filter(QueryBuilders.termsQuery("brandId",param.getBrands()));
+        if(!CollectionUtils.isEmpty(param.getBrandId())){
+            boolQuery.filter(QueryBuilders.termsQuery("brandId",param.getBrandId()));
         }
 
         // 1.4 filterQuery 根据属性attrs查询 nestQuery  格式attrs=1_ios:android
@@ -116,7 +127,9 @@ public class MallSearchServiceImpl implements MallSearchService {
         }
 
         //1.5 filterQuery 根据是否有存库
-        boolQuery.filter(QueryBuilders.termQuery("hasStock",param.getHasStock() == 1));
+        if(null != param.getHasStock()){
+            boolQuery.filter(QueryBuilders.termQuery("hasStock",param.getHasStock() == 1));
+        }
 
         //1.6 filterQuery 价格区间
         if(StringUtils.isNotEmpty(param.getSkuPrice())){
@@ -190,6 +203,9 @@ public class MallSearchServiceImpl implements MallSearchService {
         attr_id_agg.subAggregation(AggregationBuilders.terms("attr_value_agg").field("attrs.attrValue").size(50));
         nested.subAggregation(attr_id_agg);
         sourceBuilder.aggregation(nested);
+
+        String dslStr = sourceBuilder.toString();
+        log.info("构建的dsl语句为：{}",dslStr);
 
         return new SearchRequest(new String[]{ElasticConstant.PRODUCT_ES_INDEX},sourceBuilder);
     }
@@ -281,7 +297,7 @@ public class MallSearchServiceImpl implements MallSearchService {
             String attrName = attr_name_agg.getBuckets().get(0).getKeyAsString();
             attrVo.setAttrName(attrName);
             //属性值
-            ParsedStringTerms attr_value_agg = bucket.getAggregations().get("attr_name_agg");
+            ParsedStringTerms attr_value_agg = bucket.getAggregations().get("attr_value_agg");
             List<? extends Terms.Bucket> attrValue = attr_value_agg.getBuckets();
             List<String> attrValues = attrValue.stream().map(MultiBucketsAggregation.Bucket::getKeyAsString).collect(Collectors.toList());
             attrVo.setAttrValues(attrValues);
@@ -301,34 +317,87 @@ public class MallSearchServiceImpl implements MallSearchService {
 
         /**
          * 添加面包屑的导航功能
+         * 属性部分
          */
-        List<SearchResultVo.BreadVo> breads;
+        List<SearchResultVo.BreadVo> breads = new ArrayList<>();
         if(!CollectionUtils.isEmpty(searchParam.getAttrs())){
-//            searchParam.getAttrs().stream().map()
+            List<Long> attrIds = searchParam.getAttrs().stream().map(attr -> {
+                String[] attrStr = attr.split("_");
+                return Long.parseLong(attrStr[0]);
+            }).collect(Collectors.toList());
 
+            //设置当期哪些属性的id
+            result.setAttrIds(attrIds);
+
+            List<AttrEntity> attrEntities = productFiegnService.queryAttrsByIds(attrIds);
 
             breads = searchParam.getAttrs().stream().map(attr -> {
                 SearchResultVo.BreadVo breadVo = new SearchResultVo.BreadVo();
                 String[] s = attr.split("_");
                 //属性的值
                 breadVo.setBreadValue(s[1]);
+                //属性名
+                List<AttrEntity> filterAttr = attrEntities.stream().filter(item -> item.getAttrId().equals(Long.parseLong(s[0]))).collect(Collectors.toList());
+                breadVo.setBreadName(CollectionUtils.isEmpty(filterAttr) ? "" : filterAttr.get(0).getAttrName());
 
-
-//                breadVo.setBreadName();
+                //点击删除面包屑之后需要跳转的地址
+                //拿到导航的参数，将当期遍历的属性替换
+                String replace = replaceQueryString(searchParam, "attrs", attr, s[0]);
+                breadVo.setLink("http://search.emall.com/list.html?" + replace);
 
                 return breadVo;
             }).collect(Collectors.toList());
-
         }
 
+        /**
+         * 添加面包屑的导航功能
+         * 品牌部分
+         */
+        if(!CollectionUtils.isEmpty(searchParam.getBrandId())){
+            //品牌信息
+            List<BrandEntity> brandEntities = productFiegnService.queryBrandByIds(searchParam.getBrandId());
+            String brandStr = brandEntities.stream().map(BrandEntity::getName).collect(Collectors.joining(";"));
 
-
-
-
-//        result.setBreads(breads);
+            SearchResultVo.BreadVo breadVo = new SearchResultVo.BreadVo();
+            breadVo.setBreadName("品牌");
+            breadVo.setBreadValue(brandStr);
+            String replace = "";
+            for(BrandEntity brand:brandEntities){
+               replace =  replaceQueryString(searchParam,"brandId",brand.getBrandId() + "",brand.getBrandId() + "");
+            }
+            breadVo.setLink("http://search.emall.com/list.html?" + replace);
+            breads.add(breadVo);
+        }
+        result.setBreads(breads);
 
         return result;
     }
 
+    /**
+     * 替换请求地址上的参数
+     * @param param
+     * @param key
+     * @param value
+     * @param flag 如果是参数有多个值，只用关键值判断，比如属性15_CPU品牌，那么只用15
+     * @return
+     */
+    private String replaceQueryString(SearchParamVo param,String key,String value,String flag){
+        String encode = null;
+        try {
+            encode = URLEncoder.encode(value, "UTF-8");
+            encode = encode.replace("+", "%20");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        //判断当前删掉的属性是否是直接在请求后的参数
+        int i = param.get_queryString().indexOf(key + "=" + flag);
+        String replace = "";
+        if(i == 0){
+            replace = param.get_queryString().replace(key + "=" + encode, "");
+        }else{
+            replace = param.get_queryString().replace("&" + key + "=" + encode, "");
+        }
+        return replace;
+    }
 
 }

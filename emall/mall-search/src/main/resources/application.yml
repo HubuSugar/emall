@@ -9,3 +9,21 @@ spring:
   application:
     name: mall-search
 
+  hystrix:
+    command:
+      default:
+        execution:
+          isolation:
+            thread:
+              timeoutInMilliseconds: 6000
+
+  cloud:
+    loadbalancer:
+      retry:
+        enabled: true
+
+ribbon:
+  ReadTimeout: 60000
+  ConnectTimeout : 60000
+
+

@@ -3,10 +3,7 @@ package edu.hubu.mall.controller;
 import edu.hubu.mall.entity.AttrEntity;
 import edu.hubu.mall.service.AttrService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -22,8 +19,13 @@ public class AttrController {
     @Autowired
     private AttrService attrService;
 
-    @GetMapping("/getAttrInfos")
-    public List<AttrEntity> queryAttrInfosByIds(@RequestParam List<Long> ids){
+    /**
+     * 根据属性ids查询属性集合
+     * @param ids
+     * @return
+     */
+    @PostMapping("/getAttrInfos")
+    public List<AttrEntity> queryAttrInfosByIds(@RequestBody List<Long> ids){
         return attrService.queryAttrsByIds(ids);
     }
 

@@ -3,6 +3,7 @@ package edu.hubu.mall.search.vo;
 import edu.hubu.mall.common.to.es.SkuEsModel;
 import lombok.Data;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -46,6 +47,11 @@ public class SearchResultVo {
      * 当前查询到的结果所涉及到的所有属性
      */
     private List<AttrVo> attrs;
+
+    /**
+     * 当前请求查询了哪些属性的id
+     */
+    private List<Long> attrIds = new ArrayList<>();
 
 
     /**

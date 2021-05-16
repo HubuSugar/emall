@@ -582,8 +582,12 @@
 </body>
 <script type="text/javascript">
   function search() {
-    var keyword=$("#searchText").val()
-    window.location.href="http://search.emall.com/list.html?keyword="+keyword;
+    let keyword=$("#searchText").val()
+    if(!keyword){
+      window.location.href="http://search.emall.com/list.html";
+    }else {
+      window.location.href="http://search.emall.com/list.html?keyword="+keyword;
+    }
   }
 
   $.get("http://seckill.emall.com/getCurrentSeckillSkus", function (res) {
