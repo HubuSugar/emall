@@ -2,6 +2,7 @@ package edu.hubu.mall.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import edu.hubu.mall.entity.SkuInfoEntity;
+import edu.hubu.mall.vo.SkuItemVo;
 
 import java.util.List;
 
@@ -17,4 +18,10 @@ public interface SkuInfoService extends IService<SkuInfoEntity> {
      */
     List<SkuInfoEntity> querySkuInfoListBySpuId(Long spuId);
 
+    /**
+     * 根据skuId查询商品详情页需要返回的数据
+     * @param skuId
+     * @return
+     */
+    SkuItemVo querySkuDetailById(Long skuId);
 }

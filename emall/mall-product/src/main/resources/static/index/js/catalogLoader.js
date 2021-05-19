@@ -1,5 +1,6 @@
 $(function(){
     $.getJSON("index/catalog.json",function (data) {
+      console.log(data);
         var ctgall=data;
         $(".header_main_left_a").each(function(){
             var ctgnums= $(this).attr("ctg-data");
@@ -34,7 +35,7 @@ $(function(){
                 panel.append(panelol);
                 $(this).after(panel);
                 $(this).parent().addClass("header_li2");
-                // console.log($(".header_main_left").html());
+                console.log($(".header_main_left").html());
             }
         });
     });
