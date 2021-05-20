@@ -8,6 +8,8 @@ elastic:
 spring:
   application:
     name: mall-search
+  thymeleaf:
+    cache: true
 
   hystrix:
     command:

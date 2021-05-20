@@ -64,10 +64,17 @@
             <artifactId>spring-boot-starter-cache</artifactId>
         </dependency>
 
-        <!--  引入feign客户端   -->
+        <!--  引入feign客户端 远程调用其他服务  -->
         <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-openfeign</artifactId>
+        </dependency>
+
+        <!-- springboot 自动配置属性提示     -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-configuration-processor</artifactId>
+            <optional>true</optional>
         </dependency>
 
         <dependency>

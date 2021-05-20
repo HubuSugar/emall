@@ -23,9 +23,19 @@ spring:
     type: redis
     redis:
       time-to-live: 3600000
-      use-key-prefix: true
       key-prefix: cache_
+      use-key-prefix: true
       cache-null-values: true
+  thymeleaf:
+    cache: true
+
+  mythread:
+    core-size: 20
+    max-size: 200
+    keep-alive-time: 10
+
+
+
 
 
 mybatis-plus:

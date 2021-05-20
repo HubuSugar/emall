@@ -8,6 +8,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
+import java.util.concurrent.ExecutionException;
+
 /**
  * @Description: 商品详情
  * @Author: huxiaoge
@@ -26,8 +28,8 @@ public class ItemController {
      * @return
      */
     @GetMapping("/{skuId}.html")
-    public String item(@PathVariable("skuId") Long skuId, Model model){
-        SkuItemVo skuItemVo = skuInfoService.querySkuDetailById(skuId);
+    public String item(@PathVariable("skuId") Long skuId, Model model) throws ExecutionException, InterruptedException {
+        SkuItemVo skuItemVo = skuInfoService.querySkuDetailByIdAsync(skuId);
         model.addAttribute("item",skuItemVo);
         return "item";
     }

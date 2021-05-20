@@ -5,6 +5,7 @@ import edu.hubu.mall.entity.SkuInfoEntity;
 import edu.hubu.mall.vo.SkuItemVo;
 
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 /**
  * @Author: huxiaoge
@@ -23,5 +24,5 @@ public interface SkuInfoService extends IService<SkuInfoEntity> {
      * @param skuId
      * @return
      */
-    SkuItemVo querySkuDetailById(Long skuId);
+    SkuItemVo querySkuDetailByIdAsync(Long skuId) throws ExecutionException, InterruptedException;
 }
