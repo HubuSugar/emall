@@ -3,6 +3,7 @@ package edu.hubu.mall.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import edu.hubu.mall.entity.SkuSaleAttrValueEntity;
 import edu.hubu.mall.vo.AttrVo;
+import edu.hubu.mall.vo.SkuItemSaleAttrVo;
 
 import java.util.List;
 
@@ -13,5 +14,5 @@ import java.util.List;
  **/
 public interface SkuSaleAttrValueService extends IService<SkuSaleAttrValueEntity> {
 
-    List<AttrVo> getSkuItemSaleAttrValuesBySpuId(Long spuId);
+    List<SkuItemSaleAttrVo> getSkuItemSaleAttrValuesBySpuId(Long spuId);
 }

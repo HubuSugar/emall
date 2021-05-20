@@ -523,17 +523,8 @@
                             <span>￥</span>
                             <span th:text="${#numbers.formatDecimal(item.info.price,3,2)}">4499.00</span>
                         </li>
-                        <li style="color: red" th:if="${item.seckillSkuVo != null}">
+                        <!--      先注释然后做到秒杀再开启                -->
 
-                            <span th:if="${#dates.createNow().getTime() < item.seckillSkuVo.startTime}">
-                                商品将会在[[${#dates.format(new java.util.Date(item.seckillSkuVo.startTime),"yyyy-MM-dd HH:mm:ss")}]]进行秒杀
-                            </span>
-
-                            <span th:if="${#dates.createNow().getTime() >= item.seckillSkuVo.startTime && #dates.createNow().getTime() <= item.seckillSkuVo.endTime}">
-                                秒杀价  [[${#numbers.formatDecimal(item.seckillSkuVo.seckillPrice,1,2)}]]
-                            </span>
-
-                        </li>
                         <li>
                             <a href="item/">
                                 预约说明
@@ -621,7 +612,7 @@
                     </ul>
                 </div>
                 <div class="box-attr-3">
-                    <div class="box-attr clear" th:each="attr : ${item.saleAttr}">
+                    <div class="box-attr clear" th:each="attr : ${item.saleAttrs}">
                         <dl>
                             <dt>选择[[${attr.attrName}]]</dt>
                             <dd th:each="val : ${attr.attrValues}">
@@ -629,7 +620,7 @@
                                    ? 'sku_attr_value checked': 'sku_attr_value'}, skus=${val.skuIds} "
                                 >
                                     [[${val.attrValue}]]
-                                    <!--											<img src="item/img/59ddfcb1Nc3edb8f1.jpg" /> -->
+                                    <!--	<img src="item/img/59ddfcb1Nc3edb8f1.jpg" /> -->
                                 </a>
                             </dd>
                         </dl>
@@ -677,21 +668,11 @@
 
                         </div>
                     </div>
-
-                    <div class="box-btns-two"
-                         th:if="${item.seckillSkuVo == null }">
-                        <a class="addToCart" href="#" th:attr="skuId=${item.info.skuId}">
-                            加入购物车
-                        </a>
-                    </div>
-
-                    <div class="box-btns-two"
-                         th:if="${item.seckillSkuVo != null && (#dates.createNow().getTime() >= item.seckillSkuVo.startTime && #dates.createNow().getTime() <= item.seckillSkuVo.endTime)}">
-                        <a class="seckill" href="#"
-                           th:attr="skuId=${item.info.skuId},sessionId=${item.seckillSkuVo.promotionSessionId},code=${item.seckillSkuVo.randomCode}">
-                            立即抢购
-                        </a>
-                    </div>
+                  <div class="box-btns-two">
+                    <a class="addToCart" href="#" th:attr="skuId=${item.info.skuId}">
+                      加入购物车
+                    </a>
+                  </div>
 
                     <div class="box-btns-three">
                         <img src="item/img/e4ed3606843f664591ff1f68f7fda12d.png" alt=""/> 分享
@@ -725,7 +706,7 @@
     <!--欲约抢购流程-->
     <div class="qianggoulioucheng">
         <div class="lioucheng">
-            <h3>欲约抢购流程</h3>
+            <h3>预约抢购流程</h3>
         </div>
         <!--抢购步骤-->
         <ul class="qianggoubuzhao">
@@ -854,10 +835,10 @@
         <div class="allquanbushop">
             <ul class="shopjieshao">
                 <li class="jieshoa" style="background: #e4393c;">
-                    <a href="item/##" style="color: white;">商品介绍</a>
+                    <a style="color: white;">商品介绍</a>
                 </li>
                 <li class="baozhuang">
-                    <a href="item/##">规格与包装</a>
+                    <a>规格与包装</a>
                 </li>
                 <li class="baozhang">
                     <a href="item/##">售后保障</a>
@@ -875,10 +856,10 @@
             </button>
             <ul class="shopjieshaos posi" style="display: none;">
                 <li class="jieshoa" style="background: #e4393c;">
-                    <a href="item/#li1" style="color: white;">商品介绍</a>
+                    <a href="#" style="color: white;">商品介绍</a>
                 </li>
                 <li class="baozhuang">
-                    <a href="item/#li2">规格与包装</a>
+                    <a>规格与包装</a>
                 </li>
                 <li class="baozhang">
                     <a href="item/#li3">售后保障</a>
@@ -935,7 +916,7 @@
                             <!--										</tr>-->
                             <!--									</table>-->
                             <img class="xiaoguo" th:src="${descp}"
-                                 th:each="descp : ${#strings.listSplit(item.desc.decript,',')}"/>
+                                 th:each="descp : ${#strings.listSplit(item.spuDesc.descript,',')}"/>
                             <!--                            <div class="guiGebox guiGebox1">-->
                             <!--                                <div class="guiGe">-->
                             <!--                                    <h3 th:text="guige.groupName"></h3>-->
@@ -966,7 +947,6 @@
                             <!--                            </div>-->
                         </div>
                     </li>
-                    <li class="baozhuang actives" id="li2">
                     <li class="baozhuang actives" id="li2">
                         <div class="guiGebox">
                             <div class="guiGe" th:each="group : ${item.groupAttrs}">

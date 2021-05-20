@@ -13,7 +13,7 @@ import java.io.Serializable;
  * @Date: 2021-05-19
  **/
 @Data
-@TableName("pms_sku_imgs")
+@TableName("pms_sku_images")
 public class SkuImgEntity implements Serializable {
     private static final long serialVersionUID = 1L;
 

@@ -33,7 +33,7 @@ public class SkuItemVo {
     /**
      * spu的销售属性组合 其中AttrVo(表示每个属性下的所有属性值)
      */
-    private List<AttrVo> saleAttrs;
+    private List<SkuItemSaleAttrVo> saleAttrs;
 
     /**
      * sku对应的spu介绍信息
@@ -45,7 +45,6 @@ public class SkuItemVo {
      */
     private List<SpuItemAttrGroupVo> groupAttrs;
 
-
-
+    private SeckillSkuVo  seckillSkuVo;
 
 }

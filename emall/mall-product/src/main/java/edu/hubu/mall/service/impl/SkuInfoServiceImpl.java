@@ -9,10 +9,12 @@ import edu.hubu.mall.entity.SkuInfoEntity;
 import edu.hubu.mall.entity.SpuInfoDescEntity;
 import edu.hubu.mall.service.*;
 import edu.hubu.mall.vo.AttrVo;
+import edu.hubu.mall.vo.SkuItemSaleAttrVo;
 import edu.hubu.mall.vo.SkuItemVo;
 import edu.hubu.mall.vo.SpuItemAttrGroupVo;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -55,8 +57,10 @@ public class SkuInfoServiceImpl extends ServiceImpl<SkuInfoDao, SkuInfoEntity> i
      * @param skuId
      * @return
      */
+    @Cacheable(value = {"skuDetail"},key = "'product_skuDetail_' + #root.args[0]")
     @Override
     public SkuItemVo querySkuDetailById(Long skuId) {
+        System.out.println("缓存未命中，查询数据库：skuId -->" + skuId);
         SkuItemVo skuItemVo = new SkuItemVo();
         //1.查询skuInfo基本信息
         SkuInfoEntity skuInfo = getById(skuId);
@@ -67,7 +71,7 @@ public class SkuInfoServiceImpl extends ServiceImpl<SkuInfoDao, SkuInfoEntity> i
         skuItemVo.setImages(skuImgs);
 
         //3.获取spu的销售属性组合
-        List<AttrVo> saleAttrs =  saleAttrValueService.getSkuItemSaleAttrValuesBySpuId(skuInfo.getSpuId());
+        List<SkuItemSaleAttrVo> saleAttrs =  saleAttrValueService.getSkuItemSaleAttrValuesBySpuId(skuInfo.getSpuId());
         skuItemVo.setSaleAttrs(saleAttrs);
 
         //4.获取spu的介绍

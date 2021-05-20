@@ -5,6 +5,7 @@ import edu.hubu.mall.dao.SkuSaleAttrValueDao;
 import edu.hubu.mall.entity.SkuSaleAttrValueEntity;
 import edu.hubu.mall.service.SkuSaleAttrValueService;
 import edu.hubu.mall.vo.AttrVo;
+import edu.hubu.mall.vo.SkuItemSaleAttrVo;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -22,7 +23,7 @@ public class SkuSaleAttrValueServiceImpl extends ServiceImpl<SkuSaleAttrValueDao
      * @return
      */
     @Override
-    public List<AttrVo> getSkuItemSaleAttrValuesBySpuId(Long spuId) {
+    public List<SkuItemSaleAttrVo> getSkuItemSaleAttrValuesBySpuId(Long spuId) {
         return this.baseMapper.getSkuItemSaleAttrValuesBySpuId(spuId);
     }
 }

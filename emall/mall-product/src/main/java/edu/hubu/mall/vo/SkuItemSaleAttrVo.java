@@ -2,6 +2,8 @@ package edu.hubu.mall.vo;
 
 import lombok.Data;
 
+import java.util.List;
+
 /**
  * @Description: 每个sku的销售属性(表示每个属性下的所有属性值)
  * @Author: huxiaoge
@@ -13,8 +15,8 @@ public class SkuItemSaleAttrVo {
     private Long attrId;
     private String attrName;
     /**
-     *
+     *属性的聚合值
      */
-    private String attrValue;
+    private List<AttrValuesWithSkuIdsVo> attrValues;
 
 }
