@@ -1,7 +1,7 @@
 package edu.hubu.mall.search.service.impl;
 
 import com.alibaba.fastjson.JSON;
-import edu.hubu.mall.common.to.es.SkuEsModel;
+import edu.hubu.mall.common.es.SkuEsModel;
 import edu.hubu.mall.search.config.MallElasticConfig;
 import edu.hubu.mall.search.constant.ElasticConstant;
 import edu.hubu.mall.search.service.SearchSaveService;
