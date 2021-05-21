@@ -17,10 +17,4 @@ public class IndexController {
         return "login";
     }
 
-    @GetMapping("/reg.html")
-    public String registerPage(){
-
-        return "reg";
-    }
-
 }

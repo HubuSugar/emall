@@ -1,7 +1,7 @@
 package edu.hubu.mall.search.service.impl;
 
 import com.alibaba.fastjson.JSON;
-import edu.hubu.mall.common.to.es.SkuEsModel;
+import edu.hubu.mall.common.es.SkuEsModel;
 import edu.hubu.mall.search.constant.ElasticConstant;
 import edu.hubu.mall.search.entity.AttrEntity;
 import edu.hubu.mall.search.entity.BrandEntity;
@@ -12,11 +12,8 @@ import edu.hubu.mall.search.vo.SearchResultVo;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.lucene.search.join.ScoreMode;
-import org.apache.lucene.util.CollectionUtil;
-import org.apache.lucene.util.QueryBuilder;
 import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.search.SearchResponse;
-import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.NestedQueryBuilder;
@@ -24,7 +21,6 @@ import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.index.query.RangeQueryBuilder;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.SearchHits;
-import org.elasticsearch.search.aggregations.Aggregation;
 import org.elasticsearch.search.aggregations.AggregationBuilders;
 import org.elasticsearch.search.aggregations.Aggregations;
 import org.elasticsearch.search.aggregations.bucket.MultiBucketsAggregation;
@@ -48,7 +44,6 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import static edu.hubu.mall.search.config.MallElasticConfig.COMMON_OPTIONS;
 

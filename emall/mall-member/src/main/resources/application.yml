@@ -1,0 +1,17 @@
+server:
+  port: 10007
+spring:
+  application:
+    name: mall-member
+
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://#:3306/emall_ums?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
+    username: huxiaoge
+    password: ZWZmMGFmMmI0MGEwMGQ4MzQ2MTU4OTAw
+
+mybatis-plus:
+  global-config:
+    banner: false
+
+

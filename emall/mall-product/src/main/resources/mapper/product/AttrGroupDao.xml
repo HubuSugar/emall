@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="edu.hubu.mall.dao.AttrGroupDao">
+<mapper namespace="edu.hubu.mall.product.dao.AttrGroupDao">
 
-    <resultMap id="spuItemAttrGroupVoMap" type="edu.hubu.mall.vo.SpuItemAttrGroupVo">
+    <resultMap id="spuItemAttrGroupVoMap" type="edu.hubu.mall.product.vo.SpuItemAttrGroupVo">
         <result column="attr_group_name" property="groupName"></result>
-        <collection property="attrs" ofType="edu.hubu.mall.vo.AttrVo">
+        <collection property="attrs" ofType="edu.hubu.mall.product.vo.AttrVo">
             <result column="attr_name" property="attrName"></result>
             <result column="attr_value" property="attrValue"></result>
         </collection>
@@ -17,9 +17,9 @@
                c.attr_name,
                d.attr_value
         from pms_attr_group a
-                 LEFT JOIN pms_attr_attrgroup_relation b on a.attr_group_id = b.attr_group_id
-                 left join pms_attr c on b.attr_id = c.attr_id
-                 LEFT JOIN pms_product_attr_value d on d.attr_id = c.attr_id
+        LEFT JOIN pms_attr_attrgroup_relation b on a.attr_group_id = b.attr_group_id
+        left join pms_attr c on b.attr_id = c.attr_id
+        LEFT JOIN pms_product_attr_value d on d.attr_id = c.attr_id
         where a.catelog_id = #{catalogId} and d.spu_id = #{spuId}
         order by a.sort,b.attr_sort
     </select>

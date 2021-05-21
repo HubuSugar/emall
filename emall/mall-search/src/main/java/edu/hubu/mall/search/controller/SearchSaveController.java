@@ -2,7 +2,7 @@ package edu.hubu.mall.search.controller;
 
 import edu.hubu.mall.common.Result;
 import edu.hubu.mall.common.exception.BizCodeEnum;
-import edu.hubu.mall.common.to.es.SkuEsModel;
+import edu.hubu.mall.common.es.SkuEsModel;
 import edu.hubu.mall.search.service.SearchSaveService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;

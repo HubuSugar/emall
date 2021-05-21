@@ -1,6 +1,6 @@
 package edu.hubu.mall.search.vo;
 
-import edu.hubu.mall.common.to.es.SkuEsModel;
+import edu.hubu.mall.common.es.SkuEsModel;
 import lombok.Data;
 
 import java.util.ArrayList;

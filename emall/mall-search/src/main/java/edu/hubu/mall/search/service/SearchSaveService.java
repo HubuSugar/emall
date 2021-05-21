@@ -1,6 +1,6 @@
 package edu.hubu.mall.search.service;
 
-import edu.hubu.mall.common.to.es.SkuEsModel;
+import edu.hubu.mall.common.es.SkuEsModel;
 
 import java.io.IOException;
 import java.util.List;

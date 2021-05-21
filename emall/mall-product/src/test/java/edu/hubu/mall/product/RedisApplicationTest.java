@@ -1,15 +1,12 @@
 package edu.hubu.mall.product;
 
-import cn.hutool.core.lang.UUID;
 import cn.hutool.core.util.IdUtil;
-import edu.hubu.mall.MallProductApplication;
-import edu.hubu.mall.service.AttrGroupService;
-import edu.hubu.mall.vo.SpuItemAttrGroupVo;
+import edu.hubu.mall.product.service.AttrGroupService;
+import edu.hubu.mall.product.vo.SpuItemAttrGroupVo;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.redisson.api.RedissonClient;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.test.context.junit4.SpringRunner;

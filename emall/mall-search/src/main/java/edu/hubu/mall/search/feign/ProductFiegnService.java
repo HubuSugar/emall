@@ -1,9 +1,7 @@
 package edu.hubu.mall.search.feign;
 
-import edu.hubu.mall.common.Result;
 import edu.hubu.mall.search.entity.AttrEntity;
 import edu.hubu.mall.search.entity.BrandEntity;
-import edu.hubu.mall.search.vo.SearchResultVo;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;

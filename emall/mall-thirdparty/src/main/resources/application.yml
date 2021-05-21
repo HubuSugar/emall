@@ -1,0 +1,5 @@
+server:
+  port: 12222
+spring:
+  application:
+    name: mall-thirdparty

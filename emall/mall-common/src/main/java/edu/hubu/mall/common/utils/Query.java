@@ -3,7 +3,7 @@ package edu.hubu.mall.common.utils;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.metadata.OrderItem;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import edu.hubu.mall.common.config.filter.SQLFilter;
+import edu.hubu.mall.common.filter.SQLFilter;
 import edu.hubu.mall.common.constant.Constant;
 import org.apache.commons.lang.StringUtils;
 
