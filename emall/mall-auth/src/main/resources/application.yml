@@ -1,9 +1,43 @@
 server:
   port: 13520
+  servlet:
+    session:
+      timeout: 30m
 
 spring:
   application:
     name: mall-auth
   thymeleaf:
     cache: false
+  redis:
+    host: 127.0.0.1
+    port: 6379
+    lettuce:
+      pool:
+        max-idle: 30
+        max-active: 8
+        max-wait: 10000
+        min-idle: 10
+
+  hystrix:
+    command:
+      default:
+        execution:
+          isolation:
+            thread:
+              timeoutInMilliseconds: 6000
+
+  cloud:
+    loadbalancer:
+      retry:
+        enabled: true
+
+  session:
+    store-type: redis
+    redis:
+      namespace: spring:sessions
+
+ribbon:
+  ReadTimeout: 60000
+  ConnectTimeout : 60000
 

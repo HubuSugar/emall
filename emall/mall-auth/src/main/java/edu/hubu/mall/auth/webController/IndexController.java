@@ -13,7 +13,6 @@ public class IndexController {
 
     @GetMapping("/login.html")
     public String loginPage(){
-
         return "login";
     }
 
