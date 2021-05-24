@@ -17,6 +17,9 @@
         <module>mall-auth</module>
         <module>mall-thirdparty</module>
         <module>mall-member</module>
+        <module>mall-test-ssoserver</module>
+        <module>mall-test-ssoclient1</module>
+        <module>mall-test-ssoclient2</module>
     </modules>
 
     <name>Maven</name>

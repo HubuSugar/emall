@@ -1,0 +1,168 @@
+html, body{
+    height: 100%;
+}
+body{
+    margin:0;
+    padding:0;
+    background-size: 100% 100%;
+}
+
+.main-page {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+.header-box{
+    margin-top: 50px;
+    width:100%;
+    height:60px;
+    display: flex;
+}
+.header-left-box{
+    width: 80%;
+}
+.header-right-box{
+    width: 20%;
+    text-align: center;
+}
+.header-img-box{
+    width:130px;
+    /*height: 60px;*/
+    margin: 0 auto;
+}
+.header-img-box img{
+    width:100%;
+    height: 100%;
+}
+
+.login-box{
+    position: absolute;
+    top: 40%;
+    left: 50%;
+    width: 415px;
+    padding: 20px 30px;
+    transform: translate(-50%, -50%);   /*居中*/
+    /*background: rgba(44,71,120,.9);        !*div的背景色*!*/
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    /*box-shadow: 0 15px 25px rgba(44,71,120,.6);   !*div的阴影颜色透明度*!*/
+    border-radius: 10px;
+}
+.login-logo{
+    height: 60px;
+    margin: 0 10px;
+    display: flex
+}
+.login-img-box{
+    height: 60px;
+    width:60px;
+    padding:0;
+    margin:0;
+}
+.login-img-box img{
+    height: 100%;
+    width:100%;
+    vertical-align: middle;
+}
+.login-title-box{
+    margin-left: 10px;
+    line-height: 60px;
+    height: 100%
+}
+
+.login-title-box span{
+    color: rgb(0,190,253);
+    font-size: 32px;
+    /*font-weight: bold*/
+}
+.login-driver{
+    width: 100%;
+    height: 2px;
+    margin-top:15px;
+    background: rgba(25,145,201,.9);
+    /*box-shadow: 0 15px 25px rgba(0,190,253,.6);*/
+}
+.login-form{
+    margin-top:10px;
+    padding-top: 20px
+}
+.form-signin {
+    margin: 0 auto;
+}
+.login-common{
+    border:none;
+    outline: none;    /*去掉选中时的样式*/
+    width:315px;        /*设置样式为父元素的100%*/
+    height: 45px;
+    line-height: 45px;
+    border-radius: 10px;   /*边框圆角*/
+    padding-left: 40px;    /*增加左边距用来放图标*/
+    background-repeat: no-repeat;
+    background-position: center;
+    background-position-x: 10px;
+    background-color: #efefef;
+    /*letter-spacing: 1px;*/
+    font-size: 16px;
+}
+
+.account-user{
+    background-image: url("/sso/img/icon_account.png");
+}
+.account-pwd{
+    background-image: url("/sso/img/icon_password.png");
+}
+
+.select-wrapper{
+    border:none;
+    outline: none;    /*去掉选中时的样式*/
+    width:100%;        /*设置样式为父元素的100%*/
+    height: 45px;
+    line-height: 45px;
+    border-radius: 10px;   /*边框圆角*/
+    padding-left: 40px;    /*增加左边距用来放图标*/
+    padding-right: 15px;    /*增加左边距用来放图标*/
+    background-color: #efefef;
+}
+
+.account-project{
+    appearance:none;
+    -moz-appearance:none;
+    -webkit-appearance:none;
+    /*background:url("/sso/img/icon_arrow.png") no-repeat scroll right center transparent;*/
+    background-image: url("/img/icon_project.png"),url("/img/icon_arrow.png");
+    background-repeat: no-repeat,no-repeat;
+    background-position: center,center;
+    background-position-x: 10px,95%;
+}
+
+.btn-wrapper{
+    margin:40px 0 35px 0;
+    height: 40px;
+}
+.button-label{
+    height:100%;
+    width:100%;
+    background-color: rgba(0,190,253,0.9);
+    border:rgba(0,190,253,0.9);
+    color: white;
+    font-size: 16px;
+    border-radius: 8px;
+    outline: none;
+    cursor:pointer;
+}
+.keycode{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.r-code{
+    margin-left: 10px;
+}
+.r-code img{
+    height: 45px;
+    float: right;
+}
+

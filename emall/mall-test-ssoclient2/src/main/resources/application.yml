@@ -1,0 +1,8 @@
+server:
+  port: 8082
+  servlet:
+    context-path: /client
+
+sso:
+  sever:
+    url: http://ssosever.com:8080/sso/login.html

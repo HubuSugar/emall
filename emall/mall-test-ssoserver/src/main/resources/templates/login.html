@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="css/login.css" />
+  <title>统一认证登录页</title>
+</head>
+<body>
+<div>
+  <div id="login" class="main-page">
+    <div class="login-box">
+      <div class="login-logo">
+        <div class="login-img-box">
+          <img src="img/login_logo.png" />
+        </div>
+        <div class="login-title-box">
+          <span>单点登录认证系统</span>
+        </div>
+      </div>
+      <div class="login-driver"></div>
+      <div class="login-form">
+        <form class="form-signin" action="/sso/doLogin" method="get">
+          <div>
+            <input type="text" name="username" class="login-common account-user" autocomplete="off" placeholder="登录名" required="required" />
+          </div>
+
+          <div style="margin-top: 12px">
+            <input type="password" name="password" class="login-common account-pwd" autocomplete="off" placeholder="密码" required="required"  />
+          </div>
+          <input type="hidden" name="url" th:value="${url}" />
+          <div class="btn-wrapper">
+            <button class="button-label  btn-check" ref="loginBtn" data-loading-text="登录中..." type="submit"
+                    id="submit_btn">登录</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>
