@@ -20,6 +20,7 @@
         <module>mall-test-ssoserver</module>
         <module>mall-test-ssoclient1</module>
         <module>mall-test-ssoclient2</module>
+        <module>mall-cart</module>
     </modules>
 
     <name>Maven</name>

@@ -39,6 +39,11 @@ spring:
           predicates:
             - Host=search.emall.com
 
+        - id: mall-cart-web
+          uri: lb://mall-cart
+          predicates:
+            - Host=cart.emall.com
+
         - id: mall-product-web
           uri: lb://mall-product
           predicates:
