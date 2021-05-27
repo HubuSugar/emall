@@ -3,3 +3,5 @@ server:
 spring:
   application:
     name: mall-cart
+  thymeleaf:
+    cache: false
