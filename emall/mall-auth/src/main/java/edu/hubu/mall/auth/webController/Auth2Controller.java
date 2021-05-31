@@ -6,6 +6,7 @@ import edu.hubu.mall.auth.constant.GiteeAuthConstant;
 import edu.hubu.mall.auth.feign.MemberFeignService;
 import edu.hubu.mall.common.Result;
 import edu.hubu.mall.common.auth.SocialUser;
+import edu.hubu.mall.common.constant.AuthConstant;
 import edu.hubu.mall.member.entity.MemberVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.info.ProjectInfoProperties;
@@ -105,11 +106,9 @@ public class Auth2Controller {
             //子域名之间的session共享,设置session的时候指定为父域名
             //TODO 当前下发的session都是默认当前域名，所以下发时要放大session的作用域
             //TODO使用的JSON序列化机制
-            session.setAttribute("loginUser",result.getData());
+            session.setAttribute(AuthConstant.LOGIN_USER,result.getData());
 //            Cookie jsessionid = new Cookie("JSESSIONID", result.getData().toString());
 //            servletResponse.addCookie(jsessionid);
-
-
 
             return "redirect:http://emall.com";
         } else {
