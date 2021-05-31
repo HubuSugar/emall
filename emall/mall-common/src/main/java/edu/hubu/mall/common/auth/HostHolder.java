@@ -14,5 +14,5 @@ public class HostHolder {
     /**
      * 判断是否是临时用户
      */
-    private boolean tempUser;
+    private boolean tempUser = false;
 }

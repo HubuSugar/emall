@@ -11,7 +11,6 @@ import java.util.List;
  * @Author: huxiaoge
  * @Date: 2021-05-27
  **/
-@Data
 public class Cart {
     /**
      * 每个购物项
