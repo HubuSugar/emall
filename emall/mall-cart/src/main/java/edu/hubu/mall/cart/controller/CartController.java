@@ -63,8 +63,8 @@ public class CartController {
      * 设置购物项的选中与取消
      */
     @GetMapping("/checkItem")
-    public String checkCartItem(@RequestParam("skuId") Long skuId,@RequestParam("check") Integer check){
-        cartService.checkCartItem(skuId,check);
+    public String checkCartItem(@RequestParam("skuId") Long skuId,@RequestParam("checked") Integer checked){
+        cartService.checkCartItem(skuId,checked);
         return "redirect:http://cart.emall.com/cart.html";
     }
 

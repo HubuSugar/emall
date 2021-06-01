@@ -763,14 +763,14 @@
     $(".itemChecked").click(function () {
         const skuId = $(this).attr("skuId");
         const checked = $(this).prop("checked");
-        location.href = "http://cart.gulimall.com/checkItem?skuId=" + skuId + "&checked=" + (checked ? 1 : 0);
+        location.href = "http://cart.emall.com/checkItem?skuId=" + skuId + "&checked=" + (checked ? 1 : 0);
     });
 
 
     $(".countOpsBtn").click(function () {
         const skuId = $(this).parent().attr("skuId");
         const num = $(this).parent().find(".countOpsNum").text();
-        location.href = "http://cart.gulimall.com/countItem?skuId=" + skuId + "&num=" + num;
+        location.href = "http://cart.emall.com/countItem?skuId=" + skuId + "&num=" + num;
     });
 
 
@@ -781,7 +781,7 @@
 
     //删除购物车选项
     function deleteItem() {
-        location.href = "http://cart.gulimall.com/deleteItem?skuId=" + deleteId;
+        location.href = "http://cart.emall.com/deleteItem?skuId=" + deleteId;
     }
 
 
