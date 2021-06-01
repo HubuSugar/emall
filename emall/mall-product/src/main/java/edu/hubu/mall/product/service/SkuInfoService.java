@@ -1,6 +1,7 @@
 package edu.hubu.mall.product.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import edu.hubu.mall.common.product.SkuInfoVo;
 import edu.hubu.mall.product.entity.SkuInfoEntity;
 import edu.hubu.mall.product.vo.SkuItemVo;
 
@@ -25,4 +26,11 @@ public interface SkuInfoService extends IService<SkuInfoEntity> {
      * @return
      */
     SkuItemVo querySkuDetailByIdAsync(Long skuId) throws ExecutionException, InterruptedException;
+
+    /**
+     * 根据skuId查询skuInfo
+     * @param skuId
+     * @return
+     */
+    SkuInfoVo querySkuInfoById(Long skuId);
 }

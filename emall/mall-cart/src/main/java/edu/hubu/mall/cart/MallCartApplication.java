@@ -14,7 +14,7 @@ import org.springframework.session.data.redis.config.annotation.web.http.EnableR
  **/
 @EnableRedisHttpSession
 @EnableDiscoveryClient
-@EnableFeignClients
+@EnableFeignClients(basePackages = "edu.hubu.mall.cart.feign")
 @SpringBootApplication(exclude = DataSourceAutoConfiguration.class)
 public class MallCartApplication {
 

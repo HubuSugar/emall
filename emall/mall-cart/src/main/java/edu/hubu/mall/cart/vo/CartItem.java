@@ -13,6 +13,9 @@ import java.util.List;
 public class CartItem {
 
     private Long skuId;
+    /**
+     * 添加到购物车默认是选中状态
+     */
     private boolean check = true;
     /**
      * 商品的标题
@@ -97,15 +100,12 @@ public class CartItem {
         this.count = count;
     }
 
+    /**
+     * 自动计算每个购物项的价格
+     */
     public BigDecimal getTotalPrice() {
         return this.price.multiply(new BigDecimal(count));
     }
 
-    /**
-     * 自动计算每个购物项的价格
-     * @param totalPrice
-     */
-    public void setTotalPrice(BigDecimal totalPrice) {
-        this.totalPrice = totalPrice;
-    }
+
 }

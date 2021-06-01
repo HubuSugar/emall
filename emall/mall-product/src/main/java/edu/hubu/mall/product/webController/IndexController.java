@@ -23,7 +23,7 @@ public class IndexController {
     @Autowired
     private CategoryService categoryService;
 
-    @GetMapping({"/index.html"})
+    @GetMapping({"/index.html","/"})
     public String index(Model model){
         List<CategoryEntity> categoryEntities = categoryService.queryTopCategories();
         model.addAttribute("categories",categoryEntities);

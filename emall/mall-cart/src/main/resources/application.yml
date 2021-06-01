@@ -18,3 +18,7 @@ spring:
     store-type: redis
     redis:
       namespace: spring:cartsessions
+  mythread:
+    core-size: 20
+    max-size: 200
+    keep-alive-time: 10

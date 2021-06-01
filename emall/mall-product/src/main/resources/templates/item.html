@@ -1371,7 +1371,7 @@
     $(".addToCart").click(function () {
         let skuId = $(this).attr("skuId");
         let num = $("#productNum").val();
-        location.href = "http://cart.emall.com/addCartItem?skuId=" + skuId + "&num=" + num;
+        location.href = "http://cart.emall.com/addToCart?skuId=" + skuId + "&num=" + num;
         return false;
     });
 

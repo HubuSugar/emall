@@ -3,13 +3,13 @@
 <head>
     <meta charset="utf-8"/>
     <title>商品已成功加入购物车</title>
-    <script type="text/javascript" src="/static/cart/js/jquery-3.1.1.min.js"></script>
-    <script type="text/javascript" src="/static/cart/bootstrap/js/bootstrap.js"></script>
-    <script type="text/javascript" src="/static/cart/js/swiper.min.js"></script>
-    <script src="/static/cart/js/swiper.min.js"></script>
-    <link rel="stylesheet" type="text/css" href="/static/cart//css/swiper.min.css"/>
-    <link rel="stylesheet" type="text/css" href="/static/cart//bootstrap/css/bootstrap.css"/>
-    <link rel="stylesheet" type="text/css" href="/static/cart//css/success.css"/>
+    <script type="text/javascript" src="cart/js/jquery-3.1.1.min.js"></script>
+    <script type="text/javascript" src="cart/bootstrap/js/bootstrap.js"></script>
+    <script type="text/javascript" src="cart/js/swiper.min.js"></script>
+    <script src="cart/js/swiper.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="cart/css/swiper.min.css"/>
+    <link rel="stylesheet" type="text/css" href="cart/bootstrap/css/bootstrap.css"/>
+    <link rel="stylesheet" type="text/css" href="cart/css/success.css"/>
 
 </head>
 
@@ -26,11 +26,11 @@
 
         <ul class="hd_wrap_right">
             <li>
-                <a th:if="${session.loginUser == null}" href="http://auth.gulimall.com/login.html" class="li_2">请登录</a>
+                <a th:if="${session.loginUser == null}" href="http://auth.emall.com/login.html" class="li_2">请登录</a>
                 <a th:if="${session.loginUser != null}">欢迎, [[${session.loginUser.nickname}]]</a>
             </li>
             <li>
-                <a th:if="${session.loginUser == null}" href="http://auth.gulimall.com/reg.html" style="color: red;">免费注册</a>
+                <a th:if="${session.loginUser == null}" href="http://auth.emall.com/reg.html" style="color: red;">免费注册</a>
             </li>
 
             <li>
@@ -48,15 +48,12 @@
 
         <div class="nav_top">
             <div class="nav_top_one">
-                <a href="http://gulimall.com/"><img src="/static/cart/img/logo1.jpg" style="height: 60px;width:180px;"/></a>
+                <a href="http://emall.com/"><img src="cart/img/logo1.jpg" style="height: 60px;width:180px;"/></a>
             </div>
             <div class="nav_top_two"><input type="text"/>
                 <button>搜索</button>
             </div>
-
-
         </div>
-
     </div>
 </div>
 
@@ -76,7 +73,7 @@
                             </div>
                             <div class="p-info">
                                 <div class="p-name">
-                                    <a th:href="'http://item.gulimall.com/'+${cartItem.skuId}+'.html'"
+                                    <a th:href="'http://item.emall.com/'+${cartItem.skuId}+'.html'"
                                        th:text="${cartItem.title}">TCL 55A950C 55英寸32核人工智能 HDR曲面超薄4K电视金属机身（枪色）</a>
                                 </div>
                                 <div class="p-extra"><span class="txt" th:text="'数量：'+${cartItem.count}">  数量：1</span></div>
@@ -90,15 +87,15 @@
                         </div>
                         <div class="clr"></div>
                         <div class="bg_shop">
-                            <a class="btn-tobback" th:href="'http://item.gulimall.com/'+${cartItem.skuId}+'.html'">查看商品详情</a>
-                            <a class="btn-addtocart" href="http://cart.gulimall.com/cart.html"
+                            <a class="btn-tobback" th:href="'http://item.emall.com/'+${cartItem.skuId}+'.html'">查看商品详情</a>
+                            <a class="btn-addtocart" href="http://cart.emall.com/cart.html"
                                id="GotoShoppingCart"><b></b>去购物车结算</a>
                         </div>
                     </div>
                 </div>
                 <div th:if="${cartItem==null}" class="mc success-cont">
                     <h2>购物车中无此商品</h2>
-                    <a href="http://gulimall.com/">去购物</a>
+                    <a href="http://emall.com/">去购物</a>
                 </div>
             </div>
         </div>
@@ -106,6 +103,6 @@
 
 </div>
 </body>
-<script type="text/javascript" src="/static/cart/js/success.js"></script>
+<script type="text/javascript" src="cart/js/success.js"></script>
 
 </html>

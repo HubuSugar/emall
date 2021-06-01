@@ -1,7 +1,10 @@
 package edu.hubu.mall.product.service.impl;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.TypeReference;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import edu.hubu.mall.common.product.SkuInfoVo;
 import edu.hubu.mall.product.dao.SkuInfoDao;
 import edu.hubu.mall.product.entity.SkuImgEntity;
 import edu.hubu.mall.product.entity.SkuInfoEntity;
@@ -132,5 +135,17 @@ public class SkuInfoServiceImpl extends ServiceImpl<SkuInfoDao, SkuInfoEntity> i
         skuItemVo.setGroupAttrs(groupAttrs.get());
 
         return skuItemVo;
+    }
+
+    /**
+     * 根据skuId查询skuInfo信息
+     * @param skuId
+     * @return
+     */
+    @Override
+    public SkuInfoVo querySkuInfoById(Long skuId) {
+        SkuInfoEntity skuInfo = this.baseMapper.selectById(skuId);
+        String s = JSON.toJSONString(skuInfo);
+        return JSON.parseObject(s,new TypeReference<SkuInfoVo>(){});
     }
 }
