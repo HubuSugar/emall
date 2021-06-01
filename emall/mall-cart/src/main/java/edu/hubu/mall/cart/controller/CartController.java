@@ -62,23 +62,28 @@ public class CartController {
     /**
      * 设置购物项的选中与取消
      */
-    public String checkCartItem(Model model){
-
-        return "";
+    @GetMapping("/checkItem")
+    public String checkCartItem(@RequestParam("skuId") Long skuId,@RequestParam("check") Integer check){
+        cartService.checkCartItem(skuId,check);
+        return "redirect:http://cart.emall.com/cart.html";
     }
 
     /**
      * 修改购物项商品的数量
      */
-    public String changeCartItem(Model model){
-        return "";
+    @GetMapping("/countItem")
+    public String changeItemCount(@RequestParam("skuId") Long skuId,@RequestParam("num") Integer num){
+        cartService.changeItemCount(skuId,num);
+        return "redirect:http://cart.emall.com/cart.html";
     }
 
     /**
      * 删除购物的商品
      */
-    public String deleteCartItem(Model model){
-        return "";
+    @GetMapping("/deleteItem")
+    public String deleteCartItem(@RequestParam("skuId") Long skuId){
+        cartService.deleteItem(skuId);
+        return "redirect:http://cart.emall.com/cart.html";
     }
 
 }
