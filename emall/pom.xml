@@ -21,6 +21,7 @@
         <module>mall-test-ssoclient1</module>
         <module>mall-test-ssoclient2</module>
         <module>mall-cart</module>
+        <module>mall-order</module>
     </modules>
 
     <name>Maven</name>
