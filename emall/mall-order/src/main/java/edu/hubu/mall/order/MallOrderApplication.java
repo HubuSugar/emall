@@ -5,6 +5,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
+import org.springframework.session.data.redis.config.annotation.web.http.EnableRedisHttpSession;
 
 /**
  * @Author: huxiaoge
@@ -17,7 +18,8 @@ import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
  *              returnCallback   交换机未投递到队列
  * 消费端的ack
  **/
-@SpringBootApplication(exclude = DataSourceAutoConfiguration.class)
+@EnableRedisHttpSession
+@SpringBootApplication
 @EnableDiscoveryClient
 @EnableRabbit
 public class MallOrderApplication {

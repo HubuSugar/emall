@@ -33,12 +33,12 @@ public class RabbitController {
                 orderReturnReasonEntity.setOrderId(1L);
                 orderReturnReasonEntity.setId((long) i);
                 orderReturnReasonEntity.setName("哈哈" + i);
-                rabbitTemplate.convertAndSend("exchange.direct","hello.direct2",orderReturnReasonEntity);
+                rabbitTemplate.convertAndSend("exchange.direct","hello.direct",orderReturnReasonEntity);
             }else{
                 OrderEntity orderEntity = new OrderEntity();
                 orderEntity.setId((long)i);
                 orderEntity.setOrderSn(IdUtil.simpleUUID());
-                rabbitTemplate.convertAndSend("exchange.direct","hello.direct",orderEntity);
+                rabbitTemplate.convertAndSend("exchange.direct","hello2.direct",orderEntity);
             }
         }
         return "ok";

@@ -214,16 +214,16 @@
 <script src="cart/js/index.js" charset="utf-8"></script>
 <script type="text/javascript">
     function toTrade() {
-        window.location.href = "http://order.gulimall.com/toTrade";
+        window.location.href = "http://order.emall.com/toTrade";
     }
 
     function toItem(skuId) {
-        window.location.href = "http://item.gmall.com:8084/" + skuId + ".html";
+        window.location.href = "http://item.emall.com:8084/" + skuId + ".html";
     }
 
     function login() {
-        var s = encodeURIComponent("http://cart.gmall.com:8087/cartList");
-        window.location.href = "http://auth.gulimall.com/login.html";
+        var s = encodeURIComponent("http://cart.emall.com:8087/cartList");
+        window.location.href = "http://auth.emall.com/login.html";
     }
 
     function checkSku(chkbox) {
@@ -648,7 +648,6 @@
         var zzj = 0;
         $(".check").each(function () {
 
-
             if ($(this).prop("checked")) {
                 console.log("check!!" + $(this).parents("ol").find(".zj").html());
                 var zj = $(this).parents("ol").find(".zj").html().substring(1);
@@ -783,8 +782,6 @@
     function deleteItem() {
         location.href = "http://cart.emall.com/deleteItem?skuId=" + deleteId;
     }
-
-
 
 </script>
 </html>
