@@ -1,5 +1,15 @@
 server:
   port: 15999
+
 spring:
   application:
     name: mall-order
+  rabbitmq:
+    host: #
+    port: 5672
+    publisher-confirm-type: correlated
+    publisher-returns: on
+    template:
+      mandatory: true
+
+
