@@ -34,6 +34,16 @@ spring:
           predicates:
             - Host=auth.emall.com
 
+        - id: mall-order
+          uri: lb://mall-order
+          predicates:
+            - Host=order.emall.com
+
+        - id: mall-member
+          uri: lb://mall-member
+          predicates:
+            - Host=member.emall.com
+
         - id: mall-search-web
           uri: lb://mall-search
           predicates:
@@ -47,7 +57,7 @@ spring:
         - id: mall-product-web
           uri: lb://mall-product
           predicates:
-            - Host=**.emall.com, emall.com
+            - Host=item.emall.com, emall.com
 
 
 

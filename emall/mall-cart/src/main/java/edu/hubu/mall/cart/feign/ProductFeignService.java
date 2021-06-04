@@ -1,6 +1,5 @@
 package edu.hubu.mall.cart.feign;
 
-import edu.hubu.mall.common.Result;
 import edu.hubu.mall.common.product.SkuInfoVo;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;

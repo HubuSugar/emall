@@ -1,25 +1,30 @@
 package edu.hubu.mall.order.controller;
 
+import edu.hubu.mall.common.Result;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 /**
  * @Author: huxiaoge
  * @Date: 2021/6/3
  * @Description:
  **/
-@Controller
+@RestController
+@RequestMapping("/order")
 public class OrderController {
 
+    /**
+     * 查询我的订单
+     * @return
+     */
+    @PostMapping("/member/orderList")
+    public Result listMemberOrders(){
 
-    @GetMapping("/detail")
-    public String orderList(){
-
-        return "detail";
+        return null;
     }
 
-    @GetMapping("/toTrade")
-    public String tradeConfirm(){
-        return "confirm";
-    }
+
 }

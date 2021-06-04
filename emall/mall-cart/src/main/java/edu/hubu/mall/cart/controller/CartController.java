@@ -5,13 +5,17 @@ import edu.hubu.mall.cart.service.CartService;
 import edu.hubu.mall.cart.vo.Cart;
 import edu.hubu.mall.cart.vo.CartItem;
 import edu.hubu.mall.common.auth.HostHolder;
+import edu.hubu.mall.common.order.OrderItemVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 /**
@@ -84,6 +88,17 @@ public class CartController {
     public String deleteCartItem(@RequestParam("skuId") Long skuId){
         cartService.deleteItem(skuId);
         return "redirect:http://cart.emall.com/cart.html";
+    }
+
+    /**
+     *
+     * 订单服务 查询当前用户购物车的购物项
+     * 返回json数据
+     */
+    @GetMapping("/cart/CartItems")
+    @ResponseBody
+    public List<OrderItemVo> queryMemberCartItems(){
+        return cartService.queryMemberCartItems();
     }
 
 }

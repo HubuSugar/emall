@@ -23,7 +23,6 @@ public class CustomSessionConfig {
         DefaultCookieSerializer cookie = new DefaultCookieSerializer();
         cookie.setCookieName("ESESSIONID");
         cookie.setDomainName("emall.com");
-
         return cookie;
     }
 

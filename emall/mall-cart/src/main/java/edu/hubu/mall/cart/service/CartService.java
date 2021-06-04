@@ -2,7 +2,9 @@ package edu.hubu.mall.cart.service;
 
 import edu.hubu.mall.cart.vo.Cart;
 import edu.hubu.mall.cart.vo.CartItem;
+import edu.hubu.mall.common.order.OrderItemVo;
 
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 /**
@@ -58,4 +60,10 @@ public interface CartService {
      * @param skuId
      */
     void deleteItem(Long skuId);
+
+    /**
+     * 查询用户订单结算页的购物项信息
+     * @return
+     */
+    List<OrderItemVo> queryMemberCartItems();
 }

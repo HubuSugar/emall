@@ -24,6 +24,7 @@ public class MemberController {
     @Autowired
     private MemberService memberService;
 
+
     @PostMapping("/oauth2")
     public Result<MemberVo> oauthLogin(@RequestBody SocialUser socialUser){
         Result<MemberVo> ok = Result.ok();

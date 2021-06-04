@@ -9,6 +9,7 @@ import edu.hubu.mall.cart.vo.CartItem;
 import edu.hubu.mall.common.auth.HostHolder;
 import edu.hubu.mall.common.constant.CartConstant;
 import edu.hubu.mall.common.exception.MallException;
+import edu.hubu.mall.common.order.OrderItemVo;
 import edu.hubu.mall.common.product.SkuInfoVo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,7 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
@@ -56,9 +58,11 @@ public class CartServiceImpl implements CartService {
         BoundHashOperations<String, Object, Object> opsCart = getOpsCart();
 
         String redisSku = (String)opsCart.get(skuId.toString());
+        CartItem cartItem;
         if(StringUtils.isEmpty(redisSku)){
             //添加商品
-            CartItem cartItem = new CartItem();;
+            cartItem = new CartItem();
+            ;
             CompletableFuture<Void> skuInfoFuture = CompletableFuture.runAsync(() -> {
                 SkuInfoVo skuInfo = productFeignService.querySkuInfoById(skuId);
                 cartItem.setSkuId(skuId);
@@ -76,20 +80,18 @@ public class CartServiceImpl implements CartService {
                 //查询商品的销售属性信息
                 List<String> attrStr = productFeignService.querySkuSaleAttrValues(skuId);
                 cartItem.setSkuAttr(attrStr);
-            });
+            },executor);
 
             CompletableFuture.allOf(skuInfoFuture,saleAttrFuture).get();
-
             String s = JSON.toJSONString(cartItem);
             opsCart.put(skuId.toString(),s);
-            return cartItem;
         }else{
-            CartItem cartItem = JSON.parseObject(redisSku, CartItem.class);
+            cartItem = JSON.parseObject(redisSku, CartItem.class);
             cartItem.setCount(cartItem.getCount() +  num);
             String cartItemStr = JSON.toJSONString(cartItem);
             opsCart.put(skuId.toString(),cartItemStr);
-            return cartItem;
         }
+        return cartItem;
     }
 
     /**
@@ -179,6 +181,41 @@ public class CartServiceImpl implements CartService {
     public void deleteItem(Long skuId) {
         BoundHashOperations<String, Object, Object> opsCart = getOpsCart();
         opsCart.delete(skuId.toString());
+    }
+
+    /**
+     * 查询用户订单结算页的购物项信息
+     * 1.调用这个方法时用户肯定是登录状态
+     * 2.只需要用户选中的购物项
+     * 3.选中的购物项的价格应该是商品的实时价格
+     * @return
+     */
+    @Override
+    public List<OrderItemVo> queryMemberCartItems() {
+        //当前用户信息
+        HostHolder hostHolder = CartLoginInterceptor.threadLocal.get();
+        if(hostHolder.getUserId() == null){
+            return null;
+        }
+        String cartKey = CartConstant.CART_PREFIX + hostHolder.getUserId();
+        List<CartItem> cartItems = getCartItems(cartKey);
+        if(CollectionUtils.isEmpty(cartItems)){
+            return null;
+        }
+        List<CartItem> filterItems = cartItems.stream().filter(CartItem::isCheck).collect(Collectors.toList());
+        return filterItems.stream().map(item -> {
+            //实时查询商品的价格
+            SkuInfoVo skuInfo = productFeignService.querySkuInfoById(item.getSkuId());
+            OrderItemVo orderItem = new OrderItemVo();
+            orderItem.setPrice(skuInfo.getPrice());
+            orderItem.setSkuId(item.getSkuId());
+            orderItem.setTitle(item.getTitle());
+            orderItem.setSkuAttr(item.getSkuAttr());
+            orderItem.setCount(item.getCount());
+            orderItem.setImage(item.getImage());
+            return orderItem;
+        }).collect(Collectors.toList());
+
     }
 
 

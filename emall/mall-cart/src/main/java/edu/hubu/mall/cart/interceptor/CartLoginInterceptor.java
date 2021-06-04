@@ -16,7 +16,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 /**
- * @Description:
+ * @Description: 购物车用户登录状态拦截器（登录用户和临时用户）
  * @Author: huxiaoge
  * @Date: 2021-05-31
  **/
