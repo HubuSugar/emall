@@ -1,6 +1,8 @@
 package edu.hubu.mall.ware.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import edu.hubu.mall.common.ware.WareLockResultVo;
+import edu.hubu.mall.common.ware.WareSkuLockVo;
 import edu.hubu.mall.ware.entity.WareSkuEntity;
 
 import java.util.List;
@@ -18,4 +20,7 @@ public interface WareSkuService extends IService<WareSkuEntity> {
      * @return
      */
     Map<Long, Boolean> getSkuHasStockBySkuIds(List<Long> skuIds);
+
+    List<WareLockResultVo> orderLock(WareSkuLockVo skuLocks);
+
 }

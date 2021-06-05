@@ -1,5 +1,8 @@
 package edu.hubu.mall.ware.controller;
 
+import edu.hubu.mall.common.Result;
+import edu.hubu.mall.common.ware.WareLockResultVo;
+import edu.hubu.mall.common.ware.WareSkuLockVo;
 import edu.hubu.mall.ware.service.WareSkuService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -31,4 +34,14 @@ public class WareSkuController {
     public Map<Long,Boolean> getSkuHasStock(@RequestBody List<Long> skuIds){
         return wareSkuService.getSkuHasStockBySkuIds(skuIds);
     }
+
+    /**
+     * 为某一个订单锁定库存
+     * @reutrn 每一个商品的库存锁定结果
+     */
+    @PostMapping("/order/lockWare")
+    public WareLockResultVo orderLock(@RequestBody WareSkuLockVo skuLocks){
+        return  wareSkuService.orderLock(skuLocks);
+    }
+
 }

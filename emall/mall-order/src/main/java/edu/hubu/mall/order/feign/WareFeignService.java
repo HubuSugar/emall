@@ -1,6 +1,8 @@
 package edu.hubu.mall.order.feign;
 
 import edu.hubu.mall.common.ware.FareVo;
+import edu.hubu.mall.common.ware.WareLockResultVo;
+import edu.hubu.mall.common.ware.WareSkuLockVo;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -33,6 +35,12 @@ public interface WareFeignService {
      */
     @GetMapping("/ware/wareinfo/fare")
     FareVo getFare(@RequestParam("addrId") Long addrId);
+
+    /**
+     * 为订单项锁定库存
+     */
+    @PostMapping("/ware/wareSku/order/lockWare")
+    WareLockResultVo orderLock(@RequestBody WareSkuLockVo skuLocks);
 
 
 }

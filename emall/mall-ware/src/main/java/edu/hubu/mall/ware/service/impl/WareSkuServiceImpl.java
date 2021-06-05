@@ -1,6 +1,8 @@
 package edu.hubu.mall.ware.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import edu.hubu.mall.common.ware.WareLockResultVo;
+import edu.hubu.mall.common.ware.WareSkuLockVo;
 import edu.hubu.mall.ware.vo.WareSkuStockVo;
 import edu.hubu.mall.ware.dao.WareSkuDao;
 import edu.hubu.mall.ware.entity.WareSkuEntity;
@@ -31,5 +33,15 @@ public class WareSkuServiceImpl extends ServiceImpl<WareSkuDao, WareSkuEntity> i
                 item -> {
                     return item.getSkuStockCount() != null && item.getSkuStockCount() > 0;
         }));
+    }
+
+    /**
+     * 为某个订单锁定库存
+     * @param skuLocks 需要锁库存的订单项
+     * @return
+     */
+    @Override
+    public List<WareLockResultVo> orderLock(WareSkuLockVo skuLocks) {
+        return null;
     }
 }

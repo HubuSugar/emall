@@ -10,6 +10,8 @@ import edu.hubu.mall.common.member.MemberReceiveAddressVo;
 import edu.hubu.mall.common.order.OrderItemVo;
 import edu.hubu.mall.common.product.SpuInfoVo;
 import edu.hubu.mall.common.ware.FareVo;
+import edu.hubu.mall.common.ware.WareLockResultVo;
+import edu.hubu.mall.common.ware.WareSkuLockVo;
 import edu.hubu.mall.order.Interceptor.LoginRequireInterceptor;
 import edu.hubu.mall.order.dao.OrderDao;
 import edu.hubu.mall.order.entity.OrderEntity;
@@ -29,12 +31,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.script.DefaultRedisScript;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
 
 import java.math.BigDecimal;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
@@ -171,6 +175,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderDao,OrderEntity> implemen
      * @param to 订单提交数据
      * @return 提交成功之后返回数据
      */
+    @Transactional
     @Override
     public OrderSubmitResultVo submitOrder(OrderSubmitTo to) {
 
@@ -200,14 +205,38 @@ public class OrderServiceImpl extends ServiceImpl<OrderDao,OrderEntity> implemen
         //     //不通过
         // }
         if (res != 0) {
-            //创建订单
-            OrderCreatedTo creareOrder = creareOrder();
-            // 开始验价
+            //1、创建订单
+            OrderCreatedTo order = creareOrder();
+            //2、开始验价
             BigDecimal userTotalPrice = to.getPayPrice();
-            BigDecimal totalAmount = creareOrder.getOrder().getTotalAmount();
+            BigDecimal totalAmount = order.getOrder().getTotalAmount();
             if(Math.abs(totalAmount.subtract(userTotalPrice).doubleValue()) < OrderConstant.ORDER_PRICE_ALLOW_GAP){
-                //价格误差允许，保存订单数据
-               boolean result =  saveOrder(creareOrder);
+                //3、价格误差允许，保存订单数据
+               boolean result =  saveOrder(order);
+               //4、保存成功就开始锁定库存，只要有异常就回滚订单数据
+               //订单号，订单项，哪一个商品，需要锁住多少件库存
+                WareSkuLockVo lockVo = new WareSkuLockVo();
+                lockVo.setOrderSn(order.getOrder().getOrderSn());
+
+                List<OrderItemEntity> orderItems = order.getOrderItems();
+                List<OrderItemVo> collect = orderItems.stream().map(item -> {
+                    OrderItemVo itemVo = new OrderItemVo();
+                    itemVo.setCount(item.getSkuQuantity());
+                    itemVo.setSkuId(item.getSkuId());
+                    itemVo.setTitle(item.getSkuName());
+                    return itemVo;
+                }).collect(Collectors.toList());
+                lockVo.setLocks(collect);
+
+                WareLockResultVo lockResult = wareFeignService.orderLock(lockVo);
+                if(lockResult.getCode() == 0){
+                    //锁定成功
+                }else{
+                    //锁定失败
+
+                }
+
+
             }else{
                  submitResultVo.setCode(2);
             }
@@ -227,6 +256,8 @@ public class OrderServiceImpl extends ServiceImpl<OrderDao,OrderEntity> implemen
      */
     private boolean saveOrder(OrderCreatedTo creareOrder) {
         OrderEntity order = creareOrder.getOrder();
+        order.setModifyTime(new Date());
+        order.setCreateTime(new Date());
         this.save(order);
         List<OrderItemEntity> orderItems = creareOrder.getOrderItems();
         orderItemService.saveBatch(orderItems);
