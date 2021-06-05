@@ -1,4 +1,4 @@
-package edu.hubu.mall.member.entity;
+package edu.hubu.mall.common.auth;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;

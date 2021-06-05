@@ -1,6 +1,7 @@
 package edu.hubu.mall.member.service.impl;
 
 import com.alibaba.fastjson.JSON;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import edu.hubu.mall.common.member.MemberReceiveAddressVo;
@@ -34,4 +35,19 @@ public class MemberAddressServiceImpl extends ServiceImpl<MemberAddressDao, Memb
             return JSON.parseObject(s,MemberReceiveAddressVo.class);
         }).collect(Collectors.toList());
     }
+
+    /**
+     * 根据id查询地址信息
+     * @param addrId
+     * @return
+     */
+    @Override
+    public MemberReceiveAddressVo addrInfo(Long addrId) {
+        LambdaQueryWrapper<MemberReceiveAddressEntity> queryWrapper = new LambdaQueryWrapper<>();
+        MemberReceiveAddressEntity address = this.getOne(queryWrapper.eq(MemberReceiveAddressEntity::getId, addrId));
+        String s = JSON.toJSONString(address);
+        return JSON.parseObject(s, MemberReceiveAddressVo.class);
+    }
+
+
 }

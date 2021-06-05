@@ -2,6 +2,7 @@ package edu.hubu.mall.member.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import edu.hubu.mall.common.auth.MemberVo;
 import edu.hubu.mall.common.auth.SocialUser;
 import edu.hubu.mall.member.dao.MemberDao;
 import edu.hubu.mall.member.entity.MemberEntity;
@@ -50,4 +51,5 @@ public class MemberServiceImpl extends ServiceImpl<MemberDao, MemberEntity> impl
         return memberEntity;
 
     }
+
 }

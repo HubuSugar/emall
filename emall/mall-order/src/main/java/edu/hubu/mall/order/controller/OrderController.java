@@ -16,15 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/order")
 public class OrderController {
 
-    /**
-     * 查询我的订单
-     * @return
-     */
-    @PostMapping("/member/orderList")
-    public Result listMemberOrders(){
 
-        return null;
-    }
 
 
 }

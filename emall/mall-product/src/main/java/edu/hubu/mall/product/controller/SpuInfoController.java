@@ -1,6 +1,7 @@
 package edu.hubu.mall.product.controller;
 
 import edu.hubu.mall.common.Result;
+import edu.hubu.mall.common.product.SpuInfoVo;
 import edu.hubu.mall.product.entity.SpuInfoEntity;
 import edu.hubu.mall.product.service.SpuInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,6 +45,14 @@ public class SpuInfoController {
         }else{
             return Result.error(1,"商品上架失败");
         }
+    }
+
+    /**
+     * 根据skuId查询spuinfo信息
+     */
+    @GetMapping("/{id}/info")
+    public SpuInfoVo querySpuInfoBySkuId(@PathVariable("id") Long skuId){
+       return spuInfoService.querySpuInfoBySkuId(skuId);
     }
 
 }

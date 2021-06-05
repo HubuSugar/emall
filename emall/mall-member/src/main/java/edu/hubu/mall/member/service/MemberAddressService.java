@@ -1,6 +1,7 @@
 package edu.hubu.mall.member.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import edu.hubu.mall.common.auth.MemberVo;
 import edu.hubu.mall.common.member.MemberReceiveAddressVo;
 import edu.hubu.mall.member.entity.MemberReceiveAddressEntity;
 
@@ -18,4 +19,7 @@ public interface MemberAddressService extends IService<MemberReceiveAddressEntit
      * @return
      */
     List<MemberReceiveAddressVo> queryMemberReceiveAddressList(Long memberId);
+
+    MemberReceiveAddressVo addrInfo(Long addrId);
+
 }

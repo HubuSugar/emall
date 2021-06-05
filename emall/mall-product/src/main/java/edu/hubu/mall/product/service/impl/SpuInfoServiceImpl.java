@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import edu.hubu.mall.common.Result;
 import edu.hubu.mall.common.constant.ProductConstant;
 import edu.hubu.mall.common.es.SkuEsModel;
+import edu.hubu.mall.common.product.SpuInfoVo;
 import edu.hubu.mall.common.utils.PageUtil;
 import edu.hubu.mall.common.utils.Query;
 import edu.hubu.mall.product.dao.SpuInfoDao;
@@ -177,5 +178,20 @@ public class SpuInfoServiceImpl extends ServiceImpl<SpuInfoDao, SpuInfoEntity> i
         }else{
             return false;
         }
+    }
+
+    /**
+     * 根据skuId查询spuInfo
+     * @param skuId
+     * @return
+     */
+    @Override
+    public SpuInfoVo querySpuInfoBySkuId(Long skuId) {
+        SkuInfoEntity skuInfo = this.skuInfoService.getById(skuId);
+        Long spuId = skuInfo.getSpuId();
+        SpuInfoEntity spuInfoEntity = this.getById(spuId);
+        SpuInfoVo spuInfo = new SpuInfoVo();
+        BeanUtils.copyProperties(spuInfo,spuInfoEntity);
+        return spuInfo;
     }
 }

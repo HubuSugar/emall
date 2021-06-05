@@ -1,8 +1,8 @@
 package edu.hubu.mall.order.Interceptor;
 
 import edu.hubu.mall.common.auth.HostHolder;
+import edu.hubu.mall.common.auth.MemberVo;
 import edu.hubu.mall.common.constant.AuthConstant;
-import edu.hubu.mall.member.entity.MemberVo;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 

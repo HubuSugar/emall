@@ -1,8 +1,11 @@
 package edu.hubu.mall.order.feign;
 
+import edu.hubu.mall.common.ware.FareVo;
 import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 import java.util.Map;
@@ -22,4 +25,14 @@ public interface WareFeignService {
      */
     @PostMapping(value="/ware/wareSku/hasStock")
     Map<Long, Boolean> getSkuHasStock(@RequestBody List<Long> skuIds);
+
+    /**
+     * 查询邮寄费用
+     * @param addrId
+     * @return
+     */
+    @GetMapping("/ware/wareinfo/fare")
+    FareVo getFare(@RequestParam("addrId") Long addrId);
+
+
 }

@@ -3,7 +3,10 @@ package edu.hubu.mall.member.controller;
 import edu.hubu.mall.common.member.MemberReceiveAddressVo;
 import edu.hubu.mall.member.service.MemberAddressService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
@@ -28,5 +31,12 @@ public class MemberReceiveAddrController {
     public List<MemberReceiveAddressVo> queryMemberReceiveAddressList(@PathVariable("memberId") Long memberId){
         return  memberAddressService.queryMemberReceiveAddressList(memberId);
     }
+
+
+    @GetMapping("/{addrId}/info")
+    public MemberReceiveAddressVo addrInfo(@PathVariable("addrId") Long addrId){
+        return memberAddressService.addrInfo(addrId);
+    }
+
 
 }

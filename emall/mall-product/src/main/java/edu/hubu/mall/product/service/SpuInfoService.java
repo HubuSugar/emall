@@ -1,6 +1,7 @@
 package edu.hubu.mall.product.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import edu.hubu.mall.common.product.SpuInfoVo;
 import edu.hubu.mall.product.entity.SpuInfoEntity;
 import java.util.List;
 import java.util.Map;
@@ -19,4 +20,11 @@ public interface SpuInfoService extends IService<SpuInfoEntity> {
     List<SpuInfoEntity> querySpuInfoPageByCondition(Map<String, Object> paramMap);
 
     Boolean spuUp(Long spuId);
+
+    /**
+     * 根据skuId查询spuInfo
+     * @param skuId
+     * @return
+     */
+    SpuInfoVo querySpuInfoBySkuId(Long skuId);
 }
