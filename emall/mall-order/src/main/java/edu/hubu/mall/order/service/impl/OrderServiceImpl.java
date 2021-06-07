@@ -192,11 +192,11 @@ public class OrderServiceImpl extends ServiceImpl<OrderDao,OrderEntity> implemen
         String orderTokenKey = OrderConstant.ORDER_TOKEN_PREFIX + memberVo.getId();
         //用户提交的token和redis查到的token
         String orderToken = to.getOrderToken();
-        String redisToken = redisTemplate.opsForValue().get(orderTokenKey);
+//        String redisToken = redisTemplate.opsForValue().get(orderTokenKey);
 
         //原子验证令牌并删除的lua脚本,返回0 - 1，0 表示失败；1 -- 表示失败
         String redisScript = "if redis.call('get', KEYS[1]) == ARGV[1] then return redis.call('del', KEYS[1]) else return 0 end";
-        Long res = redisTemplate.execute(new DefaultRedisScript<>(redisScript, Long.class), Arrays.asList(orderToken, redisToken));
+        Long res = redisTemplate.execute(new DefaultRedisScript<>(redisScript, Long.class), Arrays.asList(orderTokenKey), orderToken);
         // TODO 未保证原子性
         // if(orderToken != null && orderToken.equals(redisToken)){
         //     //验证令牌通过
@@ -231,11 +231,13 @@ public class OrderServiceImpl extends ServiceImpl<OrderDao,OrderEntity> implemen
                 WareLockResultVo lockResult = wareFeignService.orderLock(lockVo);
                 if(lockResult.getCode() == 0){
                     //锁定成功
+                    submitResultVo.setCode(0);
+                    submitResultVo.setOrder(order.getOrder());
+                    return submitResultVo;
                 }else{
-                    //锁定失败
-
+                    //库存锁定失败
+                    submitResultVo.setCode(3);
                 }
-
 
             }else{
                  submitResultVo.setCode(2);

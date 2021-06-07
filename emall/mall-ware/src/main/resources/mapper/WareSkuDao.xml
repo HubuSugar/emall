@@ -13,4 +13,22 @@
         group by sku_id
     </select>
 
+    <select id="listWareSkuHashStock" resultType="edu.hubu.mall.ware.entity.WareSkuEntity">
+        select * from wms_ware_sku
+        <where>
+            stock > stock_locked
+            <if test="skuIds != null and skuIds.size() > 0">
+                AND sku_id in
+                <foreach collection="skuIds" item="sku" index="index" open="(" close=")" separator=",">
+                    #{sku}
+                </foreach>
+            </if>
+        </where>
+    </select>
+
+    <update id="lockSkuStock">
+        update wms_ware_sku set stock_locked = stock_locked + #{num}
+        where sku_id = #{skuId} and ware_id = #{wareId} and stock >= stock_locked + #{num}
+    </update>
+
 </mapper>

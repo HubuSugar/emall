@@ -1,8 +1,9 @@
 package edu.hubu.mall.ware.controller;
 
 import edu.hubu.mall.common.Result;
-import edu.hubu.mall.common.ware.WareLockResultVo;
+import edu.hubu.mall.common.exception.BizCodeEnum;
 import edu.hubu.mall.common.ware.WareSkuLockVo;
+import edu.hubu.mall.ware.exception.NoStockException;
 import edu.hubu.mall.ware.service.WareSkuService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -40,8 +41,13 @@ public class WareSkuController {
      * @reutrn 每一个商品的库存锁定结果
      */
     @PostMapping("/order/lockWare")
-    public WareLockResultVo orderLock(@RequestBody WareSkuLockVo skuLocks){
-        return  wareSkuService.orderLock(skuLocks);
+    public Result orderLock(@RequestBody WareSkuLockVo skuLocks){
+        try{
+            Boolean result = wareSkuService.orderLock(skuLocks);
+            return Result.ok();
+        }catch (NoStockException ex){
+            return Result.error(BizCodeEnum.NO_STOCK_EXCEPTION.getCode(), BizCodeEnum.NO_STOCK_EXCEPTION.getMsg());
+        }
     }
 
 }

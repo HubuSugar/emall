@@ -21,6 +21,11 @@ public interface WareSkuService extends IService<WareSkuEntity> {
      */
     Map<Long, Boolean> getSkuHasStockBySkuIds(List<Long> skuIds);
 
-    List<WareLockResultVo> orderLock(WareSkuLockVo skuLocks);
+    /**
+     * 为每个订单锁定库存
+     * @param skuLocks
+     * @return
+     */
+    Boolean orderLock(WareSkuLockVo skuLocks);
 
 }

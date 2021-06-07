@@ -565,7 +565,7 @@
 <!--</div>-->
 <!--</div>-->
 <!--主体部分-->
-<p class="p1">填写并核对订单信息 <span style="color: red" th:if="${msg!=null}" th:text="${msg}"></span> </p>
+<p class="p1">填写并核对订单信息</p>
 <div class="section">
     <!--收货人信息-->
     <div class="top-2">
@@ -718,6 +718,7 @@
 		<input id="addrInput" type="hidden" name="addrId" />
 		<input id="payPriceInput" type="hidden" name="payPrice">
         <input name="orderToken" th:value="${confirmOrderData.orderToken}" type="hidden"/>
+        <span style="color: red" th:if="${msg!=null}" th:text="${msg}"></span>
         <button class="tijiao" type="submit">提交订单</button>
     </form>
 </div>
