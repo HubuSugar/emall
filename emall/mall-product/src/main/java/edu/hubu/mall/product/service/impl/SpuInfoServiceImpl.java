@@ -191,7 +191,7 @@ public class SpuInfoServiceImpl extends ServiceImpl<SpuInfoDao, SpuInfoEntity> i
         Long spuId = skuInfo.getSpuId();
         SpuInfoEntity spuInfoEntity = this.getById(spuId);
         SpuInfoVo spuInfo = new SpuInfoVo();
-        BeanUtils.copyProperties(spuInfo,spuInfoEntity);
+        BeanUtils.copyProperties(spuInfoEntity,spuInfo);
         return spuInfo;
     }
 }

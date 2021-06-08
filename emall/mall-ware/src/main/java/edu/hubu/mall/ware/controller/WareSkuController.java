@@ -3,7 +3,7 @@ package edu.hubu.mall.ware.controller;
 import edu.hubu.mall.common.Result;
 import edu.hubu.mall.common.exception.BizCodeEnum;
 import edu.hubu.mall.common.ware.WareSkuLockVo;
-import edu.hubu.mall.ware.exception.NoStockException;
+import edu.hubu.mall.common.exception.NoStockException;
 import edu.hubu.mall.ware.service.WareSkuService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;

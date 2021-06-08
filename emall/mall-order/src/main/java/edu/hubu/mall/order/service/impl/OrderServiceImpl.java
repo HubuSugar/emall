@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import edu.hubu.mall.common.auth.MemberVo;
 import edu.hubu.mall.common.constant.OrderConstant;
 import edu.hubu.mall.common.enums.OrderStatus;
+import edu.hubu.mall.common.exception.NoStockException;
 import edu.hubu.mall.common.member.MemberReceiveAddressVo;
 import edu.hubu.mall.common.order.OrderItemVo;
 import edu.hubu.mall.common.product.SpuInfoVo;
@@ -26,6 +27,7 @@ import edu.hubu.mall.order.to.OrderCreatedTo;
 import edu.hubu.mall.order.to.OrderSubmitTo;
 import edu.hubu.mall.order.vo.OrderConfirmVo;
 import edu.hubu.mall.order.vo.OrderSubmitResultVo;
+import io.seata.spring.annotation.GlobalTransactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -175,6 +177,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderDao,OrderEntity> implemen
      * @param to 订单提交数据
      * @return 提交成功之后返回数据
      */
+    @GlobalTransactional
     @Transactional
     @Override
     public OrderSubmitResultVo submitOrder(OrderSubmitTo to) {
@@ -209,8 +212,8 @@ public class OrderServiceImpl extends ServiceImpl<OrderDao,OrderEntity> implemen
             OrderCreatedTo order = creareOrder();
             //2、开始验价
             BigDecimal userTotalPrice = to.getPayPrice();
-            BigDecimal totalAmount = order.getOrder().getTotalAmount();
-            if(Math.abs(totalAmount.subtract(userTotalPrice).doubleValue()) < OrderConstant.ORDER_PRICE_ALLOW_GAP){
+            BigDecimal paymentAmount = order.getOrder().getPayAmount();
+            if(Math.abs(paymentAmount.subtract(userTotalPrice).doubleValue()) < OrderConstant.ORDER_PRICE_ALLOW_GAP){
                 //3、价格误差允许，保存订单数据
                boolean result =  saveOrder(order);
                //4、保存成功就开始锁定库存，只要有异常就回滚订单数据
@@ -228,26 +231,32 @@ public class OrderServiceImpl extends ServiceImpl<OrderDao,OrderEntity> implemen
                 }).collect(Collectors.toList());
                 lockVo.setLocks(collect);
 
+                //TODO 1、如果此处异常,会导致创建的订单和订单项数据无法回滚
                 WareLockResultVo lockResult = wareFeignService.orderLock(lockVo);
                 if(lockResult.getCode() == 0){
                     //锁定成功
                     submitResultVo.setCode(0);
                     submitResultVo.setOrder(order.getOrder());
+
+                    //TODO 2、如果此处出现异常（如扣减积分异常，网络异常），那么抛出异常只能解决TODO1,无法回滚订单锁定的库存数据
+                    //TODO 解决方案：(1) 通过seata分布式事务；（加锁机制：对于电商系统这种高并发的项目并不合适） （2）通过柔性事务，消息队列保证最终的一致性
+                    //下面异常用来模拟扣减积分异常 (此时订单和订单项数据没有创建，但是库存依然锁定了)
+                     int i = 10 / 0;
+
                     return submitResultVo;
                 }else{
                     //库存锁定失败
-                    submitResultVo.setCode(3);
+//                    submitResultVo.setCode(3);
+                    //TODO 通过抛出异常，让整个事务回滚（包括创建的订单和订单项数据）（解决TODO1处的问题）
+                    throw new NoStockException("锁定库存异常");
                 }
-
             }else{
                  submitResultVo.setCode(2);
             }
-
         } else {
             //验证失败,令牌校验不通过
             submitResultVo.setCode(1);
         }
-
         return submitResultVo;
     }
 
@@ -262,8 +271,12 @@ public class OrderServiceImpl extends ServiceImpl<OrderDao,OrderEntity> implemen
         order.setCreateTime(new Date());
         this.save(order);
         List<OrderItemEntity> orderItems = creareOrder.getOrderItems();
+        //设置订单id
+        orderItems.forEach(item -> {
+            item.setOrderId(order.getId());
+        });
         orderItemService.saveBatch(orderItems);
-        return false;
+        return true;
     }
 
     //创建订单的方法
@@ -393,6 +406,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderDao,OrderEntity> implemen
 
         //设置用户的id
         entity.setMemberId(LoginRequireInterceptor.loginUser.get().getId());
+        entity.setMemberUsername(LoginRequireInterceptor.loginUser.get().getUsername());
         //设置订单号
         entity.setOrderSn(orderSn);
 

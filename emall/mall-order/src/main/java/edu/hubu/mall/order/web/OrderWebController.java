@@ -1,8 +1,6 @@
 package edu.hubu.mall.order.web;
 
-import edu.hubu.mall.common.auth.HostHolder;
-import edu.hubu.mall.order.Interceptor.LoginRequireInterceptor;
-import edu.hubu.mall.order.feign.MemberFeignService;
+import edu.hubu.mall.common.exception.NoStockException;
 import edu.hubu.mall.order.service.OrderService;
 import edu.hubu.mall.order.to.OrderSubmitTo;
 import edu.hubu.mall.order.vo.OrderConfirmVo;
@@ -54,26 +52,31 @@ public class OrderWebController {
      */
     @PostMapping("/submitOrder")
     public String submitOrder(OrderSubmitTo to, Model model, RedirectAttributes ra){
-        OrderSubmitResultVo submitResult = orderService.submitOrder(to);
-        if(submitResult.getCode() == 0){
-            //下单成功
-            model.addAttribute("orderSubmitResp",submitResult);
-            return "pay";
-        }else{
-            Integer code = submitResult.getCode();
-            String msg = "下单失败,";
-            switch (code){
-                case 1:
-                    msg += "订单校验失败，请重试";
-                    break;
-                case 2:
-                    msg += "购买的商品价格发生变化,请核对后在下单";
-                    break;
-                case 3:
-                    msg += "库存锁定失败";
-                    break;
+        try{
+            OrderSubmitResultVo submitResult = orderService.submitOrder(to);
+            if(submitResult.getCode() == 0){
+                //下单成功
+                model.addAttribute("orderSubmitResp",submitResult);
+                return "pay";
+            }else{
+                Integer code = submitResult.getCode();
+                String msg = "下单失败,";
+                switch (code){
+                    case 1:
+                        msg += "订单校验失败，请重试";
+                        break;
+                    case 2:
+                        msg += "购买的商品价格发生变化,请核对后在下单";
+                        break;
+                    case 3:
+                        msg += "库存锁定失败";
+                        break;
+                }
+                ra.addFlashAttribute("msg",msg);
+                return "redirect:http://order.emall.com/toTrade";
             }
-            ra.addFlashAttribute("msg",msg);
+        }catch (NoStockException e){
+            ra.addFlashAttribute("msg","锁定库存失败");
             return "redirect:http://order.emall.com/toTrade";
         }
     }

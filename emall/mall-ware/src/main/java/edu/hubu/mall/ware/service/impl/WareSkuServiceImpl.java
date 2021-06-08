@@ -3,7 +3,7 @@ package edu.hubu.mall.ware.service.impl;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import edu.hubu.mall.common.order.OrderItemVo;
 import edu.hubu.mall.common.ware.WareSkuLockVo;
-import edu.hubu.mall.ware.exception.NoStockException;
+import edu.hubu.mall.common.exception.NoStockException;
 import edu.hubu.mall.ware.vo.WareSkuStockVo;
 import edu.hubu.mall.ware.dao.WareSkuDao;
 import edu.hubu.mall.ware.entity.WareSkuEntity;

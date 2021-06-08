@@ -1,4 +1,4 @@
-package edu.hubu.mall.ware.exception;
+package edu.hubu.mall.common.exception;
 
 import lombok.Getter;
 import lombok.Setter;
