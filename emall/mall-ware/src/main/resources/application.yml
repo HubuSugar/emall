@@ -11,3 +11,8 @@ spring:
     username: huxiaoge
     password: ZWZmMGFmMmI0MGEwMGQ4MzQ2MTU4OTAw
 
+mybatis-plus:
+  global-config:
+    banner: false
+  mapper-locations: classpath:/mapper/**/*.xml
+

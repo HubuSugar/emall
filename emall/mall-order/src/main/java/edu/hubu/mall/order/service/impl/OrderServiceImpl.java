@@ -27,7 +27,6 @@ import edu.hubu.mall.order.to.OrderCreatedTo;
 import edu.hubu.mall.order.to.OrderSubmitTo;
 import edu.hubu.mall.order.vo.OrderConfirmVo;
 import edu.hubu.mall.order.vo.OrderSubmitResultVo;
-import io.seata.spring.annotation.GlobalTransactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -177,7 +176,6 @@ public class OrderServiceImpl extends ServiceImpl<OrderDao,OrderEntity> implemen
      * @param to 订单提交数据
      * @return 提交成功之后返回数据
      */
-    @GlobalTransactional
     @Transactional
     @Override
     public OrderSubmitResultVo submitOrder(OrderSubmitTo to) {
