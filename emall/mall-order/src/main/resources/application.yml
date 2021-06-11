@@ -37,6 +37,23 @@ spring:
     max-size: 200
     keep-alive-time: 10
 
+  hystrix:
+    command:
+      default:
+        execution:
+          isolation:
+            thread:
+              timeoutInMilliseconds: 6000
+
+    cloud:
+      loadbalancer:
+        retry:
+          enabled: true
+
+ribbon:
+  ReadTimeout: 60000
+  ConnectTimeout: 60000
+
 mybatis-plus:
   mapper-locations: classpath:/mapper/**/*.xml
 
@@ -44,3 +61,31 @@ mybatis-plus:
     db-config:
       id-type: auto
     banner: false
+
+seata:
+  registry:
+    nacos:
+      application: seata-server
+      server-addr: #:8060
+      group: SEATA_GROUP
+
+  config:
+    nacos:
+      namespace: ef28588f-643e-4466-a0ef-89b47f9e8572
+      server-addr: #:8060
+      group: SEATA_GROUP
+
+  service:
+    vgroup-mapping:
+      order-tx-group: default
+    disable-global-transaction: false
+    grouplist:
+      default: #:8091
+#  enable-auto-data-source-proxy: true
+  enabled: true
+  tx-service-group: order-tx-group
+  enableAutoDataSourceProxy: true
+#  use-jdk-proxy: true
+
+
+

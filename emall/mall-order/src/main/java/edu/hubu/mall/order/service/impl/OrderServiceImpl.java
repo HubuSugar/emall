@@ -27,6 +27,7 @@ import edu.hubu.mall.order.to.OrderCreatedTo;
 import edu.hubu.mall.order.to.OrderSubmitTo;
 import edu.hubu.mall.order.vo.OrderConfirmVo;
 import edu.hubu.mall.order.vo.OrderSubmitResultVo;
+import io.seata.spring.annotation.GlobalTransactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -176,7 +177,8 @@ public class OrderServiceImpl extends ServiceImpl<OrderDao,OrderEntity> implemen
      * @param to 订单提交数据
      * @return 提交成功之后返回数据
      */
-    @Transactional
+//    @GlobalTransactional
+//    @Transactional
     @Override
     public OrderSubmitResultVo submitOrder(OrderSubmitTo to) {
 
@@ -239,7 +241,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderDao,OrderEntity> implemen
                     //TODO 2、如果此处出现异常（如扣减积分异常，网络异常），那么抛出异常只能解决TODO1,无法回滚订单锁定的库存数据
                     //TODO 解决方案：(1) 通过seata分布式事务；（加锁机制：对于电商系统这种高并发的项目并不合适） （2）通过柔性事务，消息队列保证最终的一致性
                     //下面异常用来模拟扣减积分异常 (此时订单和订单项数据没有创建，但是库存依然锁定了)
-                     int i = 10 / 0;
+                     //int i = 10 / 0;
 
                     return submitResultVo;
                 }else{

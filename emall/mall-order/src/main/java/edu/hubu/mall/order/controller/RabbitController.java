@@ -19,9 +19,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class RabbitController {
 
     @Autowired
-    OrderService orderService;
-
-    @Autowired
     RabbitTemplate rabbitTemplate;
 
 

@@ -16,3 +16,26 @@ mybatis-plus:
     banner: false
   mapper-locations: classpath:/mapper/**/*.xml
 
+seata:
+  registry:
+    nacos:
+      application: seata-server
+      server-addr: #:8060
+      group: SEATA_GROUP
+
+  config:
+    nacos:
+      namespace: ef28588f-643e-4466-a0ef-89b47f9e8572
+      server-addr: #:8060
+      group: SEATA_GROUP
+
+  service:
+    vgroup-mapping:
+      order-tx-group: default
+    disable-global-transaction: false
+    grouplist:
+      default: #:8091
+  enableAutoDataSourceProxy: true
+  enabled: true
+  tx-service-group: order-tx-group
+#  use-jdk-proxy: true

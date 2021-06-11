@@ -40,6 +40,7 @@
         <springcloud.alibaba.version>2.2.3.RELEASE</springcloud.alibaba.version>
         <springboot.version>2.2.2.RELEASE</springboot.version>
         <springcloud.version>Hoxton.SR1</springcloud.version>
+        <seataAll.version>1.4.0</seataAll.version>
     </properties>
 
     <dependencyManagement>
@@ -112,7 +113,7 @@
             <dependency>
                 <groupId>com.alibaba.cloud</groupId>
                 <artifactId>spring-cloud-alibaba-dependencies</artifactId>
-                <version>${springcloud.alibaba.version}</version>
+                <version>2.2.3.RELEASE</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
@@ -125,6 +126,12 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
+            <!--   统一管理seata-boot的版本      -->
+            <dependency>
+                <groupId>io.seata</groupId>
+                <artifactId>seata-spring-boot-starter</artifactId>
+                <version>1.4.0</version>
+            </dependency>
 
             <!-- 统一管理spring boot版本 -->
             <dependency>
@@ -134,8 +141,6 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
-
-
         </dependencies>
     </dependencyManagement>
 
