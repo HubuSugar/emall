@@ -61,7 +61,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderDao,OrderEntity> implemen
     /**
      * 在同一个线程共享用户提交的订单数据
      */
-    private ThreadLocal<OrderSubmitTo> confirmOrderThreadLocal = new ThreadLocal<>();
+    private final ThreadLocal<OrderSubmitTo> confirmOrderThreadLocal = new ThreadLocal<>();
 
     @Autowired
     MemberFeignService memberFeignService;
@@ -173,15 +173,14 @@ public class OrderServiceImpl extends ServiceImpl<OrderDao,OrderEntity> implemen
 
     /**
      * 处理订单提交逻辑
-     *
+     * TODO 通过分布式事务保证数据一致性
      * @param to 订单提交数据
      * @return 提交成功之后返回数据
      */
 //    @GlobalTransactional
 //    @Transactional
-    @Override
-    public OrderSubmitResultVo submitOrder(OrderSubmitTo to) {
-
+//    @Override
+    public OrderSubmitResultVo submitOrderBySeata(OrderSubmitTo to) {
         /**
          * 在当前线程保存提交的订单数据
          */
@@ -252,6 +251,83 @@ public class OrderServiceImpl extends ServiceImpl<OrderDao,OrderEntity> implemen
                 }
             }else{
                  submitResultVo.setCode(2);
+            }
+        } else {
+            //验证失败,令牌校验不通过
+            submitResultVo.setCode(1);
+        }
+        return submitResultVo;
+    }
+
+    /**
+     * 使用消息队列实现数据最终一致性
+     * @param to
+     * @return
+     */
+    @Override
+    public OrderSubmitResultVo submitOrder(OrderSubmitTo to) {
+        /**
+         * 在当前线程保存提交的订单数据
+         */
+        confirmOrderThreadLocal.set(to);
+        OrderSubmitResultVo submitResultVo = new OrderSubmitResultVo();
+        //用户信息,如果能提交订单信息，说明是存在登录信息
+        MemberVo memberVo = LoginRequireInterceptor.loginUser.get();
+
+        //首先验证令牌
+        String orderTokenKey = OrderConstant.ORDER_TOKEN_PREFIX + memberVo.getId();
+        //用户提交的token和redis查到的token
+        String orderToken = to.getOrderToken();
+
+        //原子验证令牌并删除的lua脚本,返回0 - 1，0 表示失败；1 -- 表示失败
+        String redisScript = "if redis.call('get', KEYS[1]) == ARGV[1] then return redis.call('del', KEYS[1]) else return 0 end";
+        Long res = redisTemplate.execute(new DefaultRedisScript<>(redisScript, Long.class), Arrays.asList(orderTokenKey), orderToken);
+        if (res != 0) {
+            //1、创建订单，需要调用购物车微服务
+            OrderCreatedTo order = creareOrder();
+            //2、开始验价
+            BigDecimal userTotalPrice = to.getPayPrice();
+            BigDecimal paymentAmount = order.getOrder().getPayAmount();
+            if(Math.abs(paymentAmount.subtract(userTotalPrice).doubleValue()) < OrderConstant.ORDER_PRICE_ALLOW_GAP){
+                //3、价格误差允许，保存订单数据
+                boolean result =  saveOrder(order);
+                //4、保存成功就开始锁定库存，只要有异常就回滚订单数据
+                //订单号，订单项，哪一个商品，需要锁住多少件库存
+                WareSkuLockVo lockVo = new WareSkuLockVo();
+                lockVo.setOrderSn(order.getOrder().getOrderSn());
+
+                List<OrderItemEntity> orderItems = order.getOrderItems();
+                List<OrderItemVo> collect = orderItems.stream().map(item -> {
+                    OrderItemVo itemVo = new OrderItemVo();
+                    itemVo.setCount(item.getSkuQuantity());
+                    itemVo.setSkuId(item.getSkuId());
+                    itemVo.setTitle(item.getSkuName());
+                    return itemVo;
+                }).collect(Collectors.toList());
+                lockVo.setLocks(collect);
+
+                //调用库存微服务，锁定库存
+                //TODO 1、如果此处异常,会导致创建的订单和订单项数据无法回滚
+                WareLockResultVo lockResult = wareFeignService.orderLock(lockVo);
+                if(lockResult.getCode() == 0){
+                    //锁定成功
+                    submitResultVo.setCode(0);
+                    submitResultVo.setOrder(order.getOrder());
+
+                    //TODO 2、如果此处出现异常（如扣减积分异常，网络异常），那么抛出异常只能解决TODO1,无法回滚订单锁定的库存数据
+                    //TODO 解决方案：(1) 通过seata分布式事务；（加锁机制：对于电商系统这种高并发的项目并不合适） （2）通过柔性事务，消息队列保证最终的一致性
+                    //下面异常用来模拟扣减积分异常 (此时订单和订单项数据没有创建，但是库存依然锁定了)
+                    //int i = 10 / 0;
+
+                    return submitResultVo;
+                }else{
+                    //库存锁定失败
+//                    submitResultVo.setCode(3);
+                    //TODO 通过抛出异常，让整个事务回滚（包括创建的订单和订单项数据）（解决TODO1处的问题）
+                    throw new NoStockException("锁定库存异常");
+                }
+            }else{
+                submitResultVo.setCode(2);
             }
         } else {
             //验证失败,令牌校验不通过
@@ -333,7 +409,6 @@ public class OrderServiceImpl extends ServiceImpl<OrderDao,OrderEntity> implemen
 
         //应付总额，实际总额 + 运费
         orderEntity.setPayAmount(total.add(orderEntity.getFreightAmount()));
-
     }
 
 

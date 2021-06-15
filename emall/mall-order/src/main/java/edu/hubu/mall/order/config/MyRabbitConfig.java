@@ -1,5 +1,9 @@
 package edu.hubu.mall.order.config;
 
+import edu.hubu.mall.common.constant.OrderConstant;
+import org.springframework.amqp.core.Binding;
+import org.springframework.amqp.core.Queue;
+import org.springframework.amqp.core.TopicExchange;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.connection.CorrelationData;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
@@ -8,6 +12,9 @@ import org.springframework.amqp.support.converter.MessageConverter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @Description: mq配置
@@ -54,32 +61,61 @@ public class MyRabbitConfig {
          *  exchange：当时这个消息发给哪个交换机
          *  routingKey：当时这个消息用哪个路邮键
          */
-        rabbitTemplate.setReturnCallback((message,replyCode,replyText,exchange,routingKey)->{
-            System.out.println(message.toString() + replyCode + replyText + exchange + routingKey);
-        });
+//        rabbitTemplate.setReturnCallback((message,replyCode,replyText,exchange,routingKey)->{
+//            System.out.println(message.toString() + replyCode + replyText + exchange + routingKey);
+//        });
 
         return rabbitTemplate;
     }
 
-
-
-
+    /**
+     * 创建订单需要的mq配置
+     *  1、创建订单交换机
+     */
+    @Bean
+    public TopicExchange orderEventChange(){
+        return new TopicExchange(OrderConstant.ORDER_EVENT_EXCHANGE,true,false,new HashMap<>());
+    }
 
     /**
-     * 定制RabbitTemplate
-     * 1、服务收到消息就会回调
-     *      1、spring.rabbitmq.publisher-confirms: true
-     *      2、设置确认回调
-     * 2、消息正确抵达队列就会进行回调
-     *      1、spring.rabbitmq.publisher-returns: true
-     *         spring.rabbitmq.template.mandatory: true
-     *      2、设置确认回调ReturnCallback
-     *
-     * 3、消费端确认(保证每个消息都被正确消费，此时才可以broker删除这个消息)
-     *
+     * 2、创建死信队列
+     * @return
      */
+    @Bean
+    public Queue orderDelayQueue(){
+        Map<String,Object> delayArgs = new HashMap<>();
+        delayArgs.put("x-dead-letter-exchange",OrderConstant.ORDER_EVENT_EXCHANGE);
+        delayArgs.put("x-dead-letter-routing-key",OrderConstant.ORDER_RELEASE_ROUTE);
+        delayArgs.put("x-message-ttl",OrderConstant.ORDER_RELEASE_TIMEOUT);
+        return new Queue(OrderConstant.ORDER_DELAY_QUEUE,true,false,false,delayArgs);
+    }
 
+    /**
+     * 3、创建交换机和死信队列的绑定关系
+     * @return
+     */
+    @Bean
+    public Binding orderCreateBinding(){
+        return new Binding(OrderConstant.ORDER_DELAY_QUEUE, Binding.DestinationType.QUEUE,OrderConstant.ORDER_EVENT_EXCHANGE,
+                OrderConstant.ORDER_CREATE_ROUTE,new HashMap<>());
+    }
 
+    /**
+     * 创建创建订单释放后进入的队列
+     * @return
+     */
+    @Bean
+    public Queue orderReleaseQueue(){
+        return new Queue(OrderConstant.ORDER_RELEASE_QUEUE,true,false,false,null);
+    }
 
+    /**
+     * 创建订单从死信队列释放后的绑定关系
+     */
+    @Bean
+    public Binding orderReleaseBinding(){
+        return new Binding(OrderConstant.ORDER_RELEASE_QUEUE, Binding.DestinationType.QUEUE,OrderConstant.ORDER_EVENT_EXCHANGE,
+                OrderConstant.ORDER_RELEASE_ROUTE,new HashMap<>());
+    }
 
 }
