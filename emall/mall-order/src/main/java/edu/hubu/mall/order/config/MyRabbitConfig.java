@@ -1,18 +1,24 @@
 package edu.hubu.mall.order.config;
 
+import com.rabbitmq.client.Channel;
 import edu.hubu.mall.common.constant.OrderConstant;
+import edu.hubu.mall.order.entity.OrderEntity;
 import org.springframework.amqp.core.Binding;
+import org.springframework.amqp.core.Message;
 import org.springframework.amqp.core.Queue;
 import org.springframework.amqp.core.TopicExchange;
+import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.connection.CorrelationData;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.amqp.rabbit.listener.api.ChannelAwareBatchMessageListener;
 import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
 import org.springframework.amqp.support.converter.MessageConverter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -23,6 +29,12 @@ import java.util.Map;
  **/
 @Configuration
 public class MyRabbitConfig {
+
+    @RabbitListener(queues = OrderConstant.ORDER_RELEASE_QUEUE)
+    public void orderReleaseListener(OrderEntity order, Channel channel, Message message) throws IOException {
+        System.out.println("收到关闭订单请求，开始关闭订单..." + order.getOrderSn());
+        channel.basicAck(message.getMessageProperties().getDeliveryTag(),false);
+    }
 
     @Bean
     public MessageConverter messageConverter() {

@@ -1,6 +1,7 @@
 package edu.hubu.mall.order.controller;
 
 import cn.hutool.core.util.IdUtil;
+import edu.hubu.mall.common.constant.OrderConstant;
 import edu.hubu.mall.order.entity.OrderEntity;
 import edu.hubu.mall.order.entity.OrderReturnReasonEntity;
 import edu.hubu.mall.order.service.OrderService;
@@ -41,6 +42,14 @@ public class RabbitController {
         return "ok";
     }
 
+
+    @GetMapping("/test/createOrder")
+    public String createOrder(){
+        OrderEntity orderEntity = new OrderEntity();
+        orderEntity.setOrderSn(IdUtil.simpleUUID());
+        rabbitTemplate.convertAndSend(OrderConstant.ORDER_EVENT_EXCHANGE,OrderConstant.ORDER_CREATE_ROUTE,orderEntity);
+        return "ok";
+    }
 
 
 }
