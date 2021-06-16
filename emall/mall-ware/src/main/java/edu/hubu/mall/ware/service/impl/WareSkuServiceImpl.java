@@ -4,10 +4,13 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import edu.hubu.mall.common.order.OrderItemVo;
 import edu.hubu.mall.common.ware.WareSkuLockVo;
 import edu.hubu.mall.common.exception.NoStockException;
+import edu.hubu.mall.ware.entity.WareOrderTaskEntity;
+import edu.hubu.mall.ware.service.WareOrderTaskService;
 import edu.hubu.mall.ware.vo.WareSkuStockVo;
 import edu.hubu.mall.ware.dao.WareSkuDao;
 import edu.hubu.mall.ware.entity.WareSkuEntity;
 import edu.hubu.mall.ware.service.WareSkuService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
@@ -24,6 +27,9 @@ import java.util.stream.Collectors;
  **/
 @Service
 public class WareSkuServiceImpl extends ServiceImpl<WareSkuDao, WareSkuEntity> implements WareSkuService {
+
+    @Autowired
+    private WareOrderTaskService orderTaskService;
 
     /**
      * 根据skuIds查询库存数量
@@ -47,6 +53,14 @@ public class WareSkuServiceImpl extends ServiceImpl<WareSkuDao, WareSkuEntity> i
     @Transactional(rollbackFor = RuntimeException.class)
     @Override
     public Boolean orderLock(WareSkuLockVo skuLocks) {
+
+        /**
+         * 锁定库存时先保存工作单主数据的信息
+         */
+        WareOrderTaskEntity orderTaskEntity = new WareOrderTaskEntity();
+        orderTaskEntity.setOrderSn(skuLocks.getOrderSn());
+        orderTaskService.save(orderTaskEntity);
+
         //1、按照下单的收货地址，找到一个就近仓库，锁定库存
         //2、找到每个商品在哪个仓库都有库存
         List<OrderItemVo> locks = skuLocks.getLocks();
