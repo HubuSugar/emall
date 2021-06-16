@@ -20,11 +20,21 @@ public class WareConstant {
     /**
      * 路由
      */
-    public static final String WARE_EXCHANGE_DELAY_ROUTE = "stock.locked";
+    public static final String WARE_STOCK_LOCKED_ROUTE = "stock.locked";
 
     /**
      * 库存释放队列
      */
     public static final String WARE_RELEASE_QUEUE = "stock.release.queue";
+
+    /**
+     * 库存释放队列
+     */
+    public static final String WARE_STOCK_RELEASE_ROUTE = "stock.release";
+
+    /**
+     * 订单从死信队列释放的超时时间,单位ms(2分钟)
+     */
+    public static final Integer WARE_RELEASE_TIMEOUT = 1000 * 120;
 
 }
