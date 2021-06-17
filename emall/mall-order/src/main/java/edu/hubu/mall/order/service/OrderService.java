@@ -1,6 +1,7 @@
 package edu.hubu.mall.order.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import edu.hubu.mall.common.order.OrderVo;
 import edu.hubu.mall.order.entity.OrderEntity;
 import edu.hubu.mall.order.to.OrderSubmitTo;
 import edu.hubu.mall.order.vo.OrderConfirmVo;
@@ -19,4 +20,5 @@ public interface OrderService extends IService<OrderEntity> {
 
     OrderSubmitResultVo submitOrder(OrderSubmitTo to);
 
+    OrderVo queryInfoByOrderSn(String orderSn);
 }

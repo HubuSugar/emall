@@ -2,6 +2,7 @@ package edu.hubu.mall.order.service.impl;
 
 import cn.hutool.core.lang.Snowflake;
 import cn.hutool.core.util.IdUtil;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import edu.hubu.mall.common.auth.MemberVo;
 import edu.hubu.mall.common.constant.OrderConstant;
@@ -9,6 +10,7 @@ import edu.hubu.mall.common.enums.OrderStatus;
 import edu.hubu.mall.common.exception.NoStockException;
 import edu.hubu.mall.common.member.MemberReceiveAddressVo;
 import edu.hubu.mall.common.order.OrderItemVo;
+import edu.hubu.mall.common.order.OrderVo;
 import edu.hubu.mall.common.product.SpuInfoVo;
 import edu.hubu.mall.common.ware.FareVo;
 import edu.hubu.mall.common.ware.WareLockResultVo;
@@ -29,6 +31,7 @@ import edu.hubu.mall.order.vo.OrderConfirmVo;
 import edu.hubu.mall.order.vo.OrderSubmitResultVo;
 import io.seata.spring.annotation.GlobalTransactional;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.script.DefaultRedisScript;
@@ -334,6 +337,21 @@ public class OrderServiceImpl extends ServiceImpl<OrderDao,OrderEntity> implemen
             submitResultVo.setCode(1);
         }
         return submitResultVo;
+    }
+
+    /**
+     * 根据订单号查询订单信息
+     * @param orderSn
+     * @return
+     */
+    @Override
+    public OrderVo queryInfoByOrderSn(String orderSn) {
+        QueryWrapper<OrderEntity> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("order_sn",orderSn);
+        OrderEntity orderEntity = baseMapper.selectOne(queryWrapper);
+        OrderVo vo = new OrderVo();
+        BeanUtils.copyProperties(orderEntity,vo);
+        return vo;
     }
 
     /**

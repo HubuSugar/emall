@@ -5,8 +5,10 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
+import java.util.Date;
+
 /**
- * @Description: 库存锁定实体
+ * @Description: 库存工作单实体
  * @Author: huxiaoge
  * @Date: 2021-06-16
  **/
@@ -49,5 +51,21 @@ public class WareOrderTaskEntity {
      * 订单描述
      */
     private String orderBody;
+    /**
+     * 物流单号
+     */
+    private String trackingNo;
+    /**
+     * 创建时间
+     */
+    private Date createTime;
+    /**
+     * 库存id
+     */
+    private Long wareId;
+    /**
+     * 工作单备注
+     */
+    private String taskComment;
 
 }
