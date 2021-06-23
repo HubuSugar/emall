@@ -2,6 +2,7 @@ package edu.hubu.mall.ware.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import edu.hubu.mall.common.mq.StockLockTo;
+import edu.hubu.mall.common.order.OrderVo;
 import edu.hubu.mall.common.ware.WareLockResultVo;
 import edu.hubu.mall.common.ware.WareSkuLockVo;
 import edu.hubu.mall.ware.entity.WareSkuEntity;
@@ -30,9 +31,13 @@ public interface WareSkuService extends IService<WareSkuEntity> {
     Boolean orderLock(WareSkuLockVo skuLocks);
 
     /**
-     * 通过mq的消息解锁库存
+     * 通过mq的消息解锁库存（库存锁定类型）
      */
     void unlockStock(StockLockTo stockLockTo);
 
+    /**
+     * 通过mq的消息解锁库存(订单类型)
+     */
+    void unlockStock(OrderVo stockLockTo);
 
 }

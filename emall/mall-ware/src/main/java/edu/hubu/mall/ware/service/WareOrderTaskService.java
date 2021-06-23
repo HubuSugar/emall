@@ -9,4 +9,5 @@ import edu.hubu.mall.ware.entity.WareOrderTaskEntity;
  * @Description:
  **/
 public interface WareOrderTaskService extends IService<WareOrderTaskEntity> {
+    WareOrderTaskEntity getTaskInfoByOrderSn(String orderSn);
 }

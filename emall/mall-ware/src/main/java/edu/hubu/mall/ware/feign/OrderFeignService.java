@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 @FeignClient("mall-order")
 public interface OrderFeignService {
 
-    @GetMapping("/info/{orderSn}")
+    @GetMapping("/order/order/info/{orderSn}")
     OrderVo queryInfoByOrderSn(@PathVariable("orderSn") String orderSn);
 
 }

@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import edu.hubu.mall.common.auth.MemberVo;
 import edu.hubu.mall.common.constant.OrderConstant;
+import edu.hubu.mall.common.constant.WareConstant;
 import edu.hubu.mall.common.enums.OrderStatus;
 import edu.hubu.mall.common.exception.NoStockException;
 import edu.hubu.mall.common.member.MemberReceiveAddressVo;
@@ -31,6 +32,7 @@ import edu.hubu.mall.order.vo.OrderConfirmVo;
 import edu.hubu.mall.order.vo.OrderSubmitResultVo;
 import io.seata.spring.annotation.GlobalTransactional;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -86,6 +88,9 @@ public class OrderServiceImpl extends ServiceImpl<OrderDao,OrderEntity> implemen
 
     @Autowired
     OrderItemService orderItemService;
+
+    @Autowired
+    RabbitTemplate rabbitTemplate;
 
     /**
      * 查询订单确认页数据
@@ -263,10 +268,11 @@ public class OrderServiceImpl extends ServiceImpl<OrderDao,OrderEntity> implemen
     }
 
     /**
-     * 使用消息队列实现数据最终一致性
-     * @param to
+     * 使用消息队列实现数据最终一致性，保证本地事务，出现异常时订单创建回滚
+     * @param to,
      * @return
      */
+    @Transactional
     @Override
     public OrderSubmitResultVo submitOrder(OrderSubmitTo to) {
         /**
@@ -320,7 +326,11 @@ public class OrderServiceImpl extends ServiceImpl<OrderDao,OrderEntity> implemen
                     //TODO 2、如果此处出现异常（如扣减积分异常，网络异常），那么抛出异常只能解决TODO1,无法回滚订单锁定的库存数据
                     //TODO 解决方案：(1) 通过seata分布式事务；（加锁机制：对于电商系统这种高并发的项目并不合适） （2）通过柔性事务，消息队列保证最终的一致性
                     //下面异常用来模拟扣减积分异常 (此时订单和订单项数据没有创建，但是库存依然锁定了)
-                    //int i = 10 / 0;
+                    //锁定库存也成功了，锁定库存的消息已经发送到了消息队列，但是执行后面的业务逻辑出现了异常，模拟使用消息，释放库存
+                    // int i = 10 / 0;
+
+                    //TODO 订单创建成功，给mq发送消息
+                    rabbitTemplate.convertAndSend(OrderConstant.ORDER_EVENT_EXCHANGE,OrderConstant.ORDER_CREATE_ROUTE,order.getOrder());
 
                     return submitResultVo;
                 }else{
@@ -349,9 +359,38 @@ public class OrderServiceImpl extends ServiceImpl<OrderDao,OrderEntity> implemen
         QueryWrapper<OrderEntity> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("order_sn",orderSn);
         OrderEntity orderEntity = baseMapper.selectOne(queryWrapper);
+        if(orderEntity == null){
+            return null;
+        }
         OrderVo vo = new OrderVo();
         BeanUtils.copyProperties(orderEntity,vo);
         return vo;
+    }
+
+    /**
+     * 订单超过三十分钟自动关闭
+     * 关单之前查询订单状态，只有是新创建的订单才能关闭
+     * 因为此处的每一个订单消息都是从消息队列过来，有可能该订单已经被支付过了。。。
+     * @param order
+     */
+    @Override
+    public void closeOrder(OrderEntity order) {
+
+        OrderEntity entity = getById(order.getId());
+        if(OrderStatus.CREATE_NEW.getCode().equals(entity.getStatus())){
+            OrderEntity update = new OrderEntity();
+            update.setId(order.getId());
+            //将订单状态设置为4，库存服务收到库存消息时会触发库存解锁操作
+            update.setStatus(OrderStatus.CANCLED.getCode());
+            updateById(update);
+
+            //订单关单之后主动给库存释放队列发送一个解锁库存的消息
+            //TODO 防止订单消息卡顿，导致库存解锁消息比订单关单消息先消费
+            OrderVo vo = new OrderVo();
+            BeanUtils.copyProperties(order,vo);
+            rabbitTemplate.convertAndSend(WareConstant.WARE_RELEASE_QUEUE,OrderConstant.ORDER_RELEASE_OTHER_ROUTE,vo);
+        }
+
     }
 
     /**

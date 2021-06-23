@@ -1,9 +1,9 @@
 package edu.hubu.mall.order.Interceptor;
 
-import edu.hubu.mall.common.auth.HostHolder;
 import edu.hubu.mall.common.auth.MemberVo;
 import edu.hubu.mall.common.constant.AuthConstant;
 import org.springframework.stereotype.Component;
+import org.springframework.util.AntPathMatcher;
 import org.springframework.web.servlet.HandlerInterceptor;
 
 import javax.servlet.http.HttpServletRequest;
@@ -22,6 +22,13 @@ public class LoginRequireInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+
+        AntPathMatcher antPathMatcher = new AntPathMatcher();
+        boolean match = antPathMatcher.match("/order/order/info/**", request.getRequestURI());
+        if(match){
+            //如果其他外部请求查询订单信息，直接放行
+            return true;
+        }
 
         HttpSession session = request.getSession();
         MemberVo user = (MemberVo)session.getAttribute(AuthConstant.LOGIN_USER);

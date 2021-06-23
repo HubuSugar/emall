@@ -21,6 +21,9 @@ spring:
     publisher-returns: true
     template:
       mandatory: true
+    listener:
+      simple:
+        acknowledge-mode: manual
   redis:
     host: 127.0.0.1
     port: 6379

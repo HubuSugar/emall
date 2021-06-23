@@ -21,7 +21,7 @@ public class OrderController {
     @Autowired
     OrderService orderService;
 
-    @GetMapping("/info/{orderSn}")
+    @GetMapping("/order/info/{orderSn}")
     OrderVo queryInfoByOrderSn(@PathVariable("orderSn") String orderSn){
         return orderService.queryInfoByOrderSn(orderSn);
     }

@@ -2,6 +2,7 @@ package edu.hubu.mall.order.config;
 
 import com.rabbitmq.client.Channel;
 import edu.hubu.mall.common.constant.OrderConstant;
+import edu.hubu.mall.common.constant.WareConstant;
 import edu.hubu.mall.order.entity.OrderEntity;
 import org.springframework.amqp.core.Binding;
 import org.springframework.amqp.core.Message;
@@ -29,12 +30,6 @@ import java.util.Map;
  **/
 @Configuration
 public class MyRabbitConfig {
-
-    @RabbitListener(queues = OrderConstant.ORDER_RELEASE_QUEUE)
-    public void orderReleaseListener(OrderEntity order, Channel channel, Message message) throws IOException {
-        System.out.println("收到关闭订单请求，开始关闭订单..." + order.getOrderSn());
-        channel.basicAck(message.getMessageProperties().getDeliveryTag(),false);
-    }
 
     @Bean
     public MessageConverter messageConverter() {
@@ -128,6 +123,19 @@ public class MyRabbitConfig {
     public Binding orderReleaseBinding(){
         return new Binding(OrderConstant.ORDER_RELEASE_QUEUE, Binding.DestinationType.QUEUE,OrderConstant.ORDER_EVENT_EXCHANGE,
                 OrderConstant.ORDER_RELEASE_ROUTE,new HashMap<>());
+    }
+
+    /**
+     * 订单关闭后，向库存服务发送消息
+     * @return
+     */
+    @Bean
+    public Binding orderReleaseOtherBinding() {
+        return new Binding(WareConstant.WARE_RELEASE_QUEUE,
+                Binding.DestinationType.QUEUE,
+                OrderConstant.ORDER_EVENT_EXCHANGE,
+                OrderConstant.ORDER_RELEASE_OTHER_ROUTE,
+                null);
     }
 
 }

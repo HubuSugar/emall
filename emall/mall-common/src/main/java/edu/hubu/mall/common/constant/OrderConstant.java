@@ -53,6 +53,11 @@ public class OrderConstant {
     public static final String ORDER_RELEASE_ROUTE = "order.release.order";
 
     /**
+     * 将订单交换机和库存解锁释放队列绑定，解决订单关单消息比库存解锁消息后消费的问题
+     */
+    public static final String ORDER_RELEASE_OTHER_ROUTE = "order.release.other";
+
+    /**
      * 订单从死信队列释放的超时时间,单位ms
      */
     public static final Integer ORDER_RELEASE_TIMEOUT = 1000 * 60;
