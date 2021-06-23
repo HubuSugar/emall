@@ -1,3 +1,5 @@
+centos2g: #
+centos4g: #
 server:
   port: 15999
   servlet:
@@ -9,11 +11,11 @@ spring:
     name: mall-order
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://#:3306/emall_oms?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
+    url: jdbc:mysql://${centos2g}:3306/emall_oms?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
     username: huxiaoge
     password: ZWZmMGFmMmI0MGEwMGQ4MzQ2MTU4OTAw
   rabbitmq:
-    host: #
+    host: ${centos4g}
     port: 5672
     publisher-confirm-type: correlated
     publisher-returns: true
@@ -66,13 +68,13 @@ seata:
   registry:
     nacos:
       application: seata-server
-      server-addr: #:8060
+      server-addr: ${centos4g}:8060
       group: SEATA_GROUP
 
   config:
     nacos:
       namespace: ef28588f-643e-4466-a0ef-89b47f9e8572
-      server-addr: #:8060
+      server-addr: ${centos4g}:8060
       group: SEATA_GROUP
 
   service:
@@ -80,9 +82,9 @@ seata:
       order-tx-group: default
     disable-global-transaction: false
     grouplist:
-      default: #:8091
+      default: ${centos4g}:8091
 #  enable-auto-data-source-proxy: true
-  enabled: true
+  enabled: false
   tx-service-group: order-tx-group
   enableAutoDataSourceProxy: true
 #  use-jdk-proxy: true

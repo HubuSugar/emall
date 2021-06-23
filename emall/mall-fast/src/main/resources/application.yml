@@ -1,3 +1,4 @@
+centos2g: #
 server:
   port: 9999
   servlet:
@@ -6,7 +7,7 @@ server:
 spring:
   redis:
     database: 0
-    host: #
+    host: 127.0.0.1
     port: 6379
     lettuce:
       pool:
@@ -17,7 +18,7 @@ spring:
 
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://#:3306/emall_admin?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
+    url: jdbc:mysql://${centos2g}:3306/emall_admin?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
     username: huxiaoge
     password: ZWZmMGFmMmI0MGEwMGQ4MzQ2MTU4OTAw
 

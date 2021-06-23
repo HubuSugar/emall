@@ -1,7 +1,8 @@
+centos4g: #
 spring:
   cloud:
     nacos:
       config:
-        server-addr: # 8060
+        server-addr: ${centos4g}:8060
       discovery:
-        server-addr: # 8060
+        server-addr: ${centos4g}:8060
