@@ -388,7 +388,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderDao,OrderEntity> implemen
             //TODO 防止订单消息卡顿，导致库存解锁消息比订单关单消息先消费
             OrderVo vo = new OrderVo();
             BeanUtils.copyProperties(order,vo);
-            rabbitTemplate.convertAndSend(WareConstant.WARE_RELEASE_QUEUE,OrderConstant.ORDER_RELEASE_OTHER_ROUTE,vo);
+            rabbitTemplate.convertAndSend(WareConstant.WARE_EVENT_EXCHANGE,OrderConstant.ORDER_RELEASE_OTHER_ROUTE,vo);
         }
 
     }
