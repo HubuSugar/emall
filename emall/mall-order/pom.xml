@@ -106,8 +106,11 @@
 <!--            <artifactId>seata-spring-boot-starter</artifactId>-->
 <!--            <version>1.4.0</version>-->
 <!--        </dependency>-->
-
-
+        <!-- 引入阿里支付sdk        -->
+        <dependency>
+            <groupId>com.alipay.sdk</groupId>
+            <artifactId>alipay-sdk-java</artifactId>
+        </dependency>
 
     </dependencies>
 

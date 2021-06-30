@@ -36,6 +36,7 @@
         <redisson.version>3.14.1</redisson.version>
         <captcha.version>1.6.2</captcha.version>
         <shiro.version>1.6.0</shiro.version>
+        <alipay.version>4.15.0.ALL</alipay.version>
         <custom.seata.version>1.4.0</custom.seata.version>
         <springcloud.alibaba.version>2.2.3.RELEASE</springcloud.alibaba.version>
         <springboot.version>2.2.2.RELEASE</springboot.version>
@@ -101,6 +102,12 @@
                 <groupId>org.apache.shiro</groupId>
                 <artifactId>shiro-spring</artifactId>
                 <version>${shiro.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.alipay.sdk</groupId>
+                <artifactId>alipay-sdk-java</artifactId>
+                <version>${alipay.version}</version>
             </dependency>
             <!--   统一管理seata-boot的版本    -->
             <dependency>

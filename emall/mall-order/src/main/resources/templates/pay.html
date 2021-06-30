@@ -98,11 +98,11 @@
         <ul>
           <li>
             <img src="order/pay/img/weixin.png" alt="">
-            <a th:href="'http://order.emall.com/weixinPayOrder?orderSn='+${orderSubmitResp.order.orderSn}">微信支付</a>
+            <a th:href="'http://order.emall.com/pay/weixinPayOrder?orderSn='+${orderSubmitResp.order.orderSn}">微信支付</a>
           </li>
 		  <li>
             <img src="order/pay/img/zhifubao.png" style="weight:auto;height:30px;" alt="">
-            <a th:href="'http://order.emall.com/aliPayOrder?orderSn='+${orderSubmitResp.order.orderSn}">支付宝</a>
+            <a th:href="'http://order.emall.com/pay/aliPayOrder?orderSn='+${orderSubmitResp.order.orderSn}">支付宝</a>
           </li>
         </ul>
       </div>
