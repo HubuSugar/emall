@@ -1,10 +1,12 @@
 package edu.hubu.mall.common.order;
 
+import com.baomidou.mybatisplus.core.metadata.OrderItem;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 
 /**
  * @Description:
@@ -151,4 +153,6 @@ public class OrderVo {
     private Date receiveTime;
     private Date commentTime;
     private Date modifyTime;
+
+    private List<OrderItemVo> orderItems;
 }

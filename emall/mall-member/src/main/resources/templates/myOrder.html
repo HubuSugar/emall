@@ -198,7 +198,7 @@
             <div style="clear:both;"></div>
           </ul>
         </div>
-        <table class="table" th:each="order: ${pageUtil.list}">
+        <table class="table" th:each="order: ${orders.data.list}">
           <tr>
             <td colspan="7" style="background:#F7F7F7" >
               <span style="color:#AAAAAA" th:text="${order.createTime}">2017-12-09 20:50:10</span>
@@ -207,7 +207,7 @@
               <i class="table_i5 isShow"></i>
             </td>
           </tr>
-          <tr class="tr" th:each="item: ${order.items}">
+          <tr class="tr" th:each="item: ${order.orderItems}">
             <td colspan="3">
               <img style="height: 60px; width: 60px;" src="member/list/img/ding.jpg" th:src="${item.skuPic}" alt="" class="img">
               <div>

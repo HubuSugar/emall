@@ -60,5 +60,5 @@ public class OrderConstant {
     /**
      * 订单从死信队列释放的超时时间,单位ms
      */
-    public static final Integer ORDER_RELEASE_TIMEOUT = 1000 * 60;
+    public static final Integer ORDER_RELEASE_TIMEOUT = 1000 * 60 * 5;
 }

@@ -35,6 +35,6 @@ public class WareConstant {
     /**
      * 订单从死信队列释放的超时时间,单位ms(2分钟)
      */
-    public static final Integer WARE_RELEASE_TIMEOUT = 1000 * 120;
+    public static final Integer WARE_RELEASE_TIMEOUT = 1000 * 60 * 7;
 
 }
