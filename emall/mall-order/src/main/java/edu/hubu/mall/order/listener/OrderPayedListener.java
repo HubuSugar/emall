@@ -6,6 +6,7 @@ import edu.hubu.mall.order.config.AlipayTemplate;
 import edu.hubu.mall.order.service.OrderService;
 import edu.hubu.mall.order.vo.PayAsynVo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -29,7 +30,6 @@ public class OrderPayedListener {
 
     @PostMapping("/payed/notify")
     public String handleAliPayed(PayAsynVo payAsynVo, HttpServletRequest request) throws AlipayApiException {
-
         Map<String, String> params = new HashMap<>();
         Map<String, String[]> requestParams = request.getParameterMap();
         for (String name : requestParams.keySet()) {
@@ -43,6 +43,7 @@ public class OrderPayedListener {
             // valueStr = new String(valueStr.getBytes("ISO-8859-1"), "utf-8");
             params.put(name, valueStr);
         }
+
         boolean signVerified = AlipaySignature.rsaCheckV1(params, alipayTemplate.getAlipay_public_key(), alipayTemplate.getCharset(), alipayTemplate.getSign_type());
         if(signVerified){
            return  orderService.handleOrderPayed(payAsynVo);

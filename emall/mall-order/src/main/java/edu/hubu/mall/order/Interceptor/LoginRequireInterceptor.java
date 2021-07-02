@@ -25,8 +25,11 @@ public class LoginRequireInterceptor implements HandlerInterceptor {
 
         AntPathMatcher antPathMatcher = new AntPathMatcher();
         boolean match = antPathMatcher.match("/order/order/info/**", request.getRequestURI());
-        if(match){
-            //如果其他外部请求查询订单信息，直接放行
+        boolean match1 = antPathMatcher.match("/payed/notify", request.getRequestURI());
+        boolean match2 = antPathMatcher.match("/test", request.getRequestURI());
+
+        if(match || match1 || match2){
+            //如果其他外部请求查询订单信息，直接放行,支付宝通知订单支付结果也放行
             return true;
         }
 
