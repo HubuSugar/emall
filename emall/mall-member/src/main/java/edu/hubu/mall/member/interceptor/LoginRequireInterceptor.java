@@ -11,7 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 /**
- * @Description: 用户登录的拦截器
+ * @Description: 用户登录的拦截器，在这个服务加入这个拦截器的原因是，将用户的信息写到当前线程的缓存中，比如订单用户在
  * @Author: huxiaoge
  * @Date: 2021-06-04
  **/

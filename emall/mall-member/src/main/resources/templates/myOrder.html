@@ -19,8 +19,8 @@
     <nav>
 
       <div class="myjd">
-        <h3>我的谷粒商城</h3>
-        <button onclick="location.href='http://emall.com'">返回谷粒商城首页</button>
+        <h3>我的京东商城</h3>
+        <button onclick="location.href='http://emall.com'">返回京东商城首页</button>
       </div>
       <ul class="nav_ul">
         <li>首页</li>
@@ -202,20 +202,20 @@
           <tr>
             <td colspan="7" style="background:#F7F7F7" >
               <span style="color:#AAAAAA" th:text="${order.createTime}">2017-12-09 20:50:10</span>
-              <span><ruby style="color:#AAAAAA" th:text="${order.orderSn}">订单号:</ruby> 70207298274</span>
+              <span><ruby style="color:#AAAAAA" th:text="${order.orderSn}">订单号:</ruby> </span>
               <span>谷粒商城<i class="table_i"></i></span>
               <i class="table_i5 isShow"></i>
             </td>
           </tr>
           <tr class="tr" th:each="item: ${order.orderItems}">
             <td colspan="3">
-              <img style="height: 60px; width: 60px;" src="member/list/img/ding.jpg" th:src="${item.skuPic}" alt="" class="img">
+              <img style="height: 60px; width: 60px;" src="member/list/img/ding.jpg" th:src="${item.image}" alt="" class="img">
               <div>
-                <p th:text="${item.skuName}">MUXIWEIERPU皮手套男冬季加绒保暖户外骑<br />
+                <p th:text="${item.title}" style="width:350px">MUXIWEIERPU皮手套男冬季加绒保暖户外骑<br />
                 车开车触摸屏全指防寒全指手套 黑色 均码</p>
                 <div><i class="table_i4"></i>找搭配</div>
               </div>
-              <div style="margin-left:15px;">x[[${item.skuQuantity}]]</div>
+              <div style="margin-left:15px;">x[[${item.count}]]</div>
               <div style="clear:both"></div>
             </td>
             <td>[[${order.receiverName}]]<i><i class="table_i1"></i></i></td>

@@ -33,6 +33,9 @@ public class PageUtil<T> implements Serializable {
      */
     private List<T> list;
 
+    public PageUtil(){
+    }
+
     /**
      * 分页
      * @param list        列表数据
@@ -45,7 +48,7 @@ public class PageUtil<T> implements Serializable {
         this.totalCount = totalCount;
         this.pageSize = pageSize;
         this.currPage = currPage;
-        this.totalPage = (int)Math.ceil((double)totalCount/pageSize);
+        this.totalPage = (long)Math.ceil((double)totalCount/pageSize);
     }
 
     /**
@@ -53,10 +56,10 @@ public class PageUtil<T> implements Serializable {
      */
     public PageUtil(IPage<T> page) {
         this.list = page.getRecords();
-        this.totalCount = (int)page.getTotal();
-        this.pageSize = (int)page.getSize();
-        this.currPage = (int)page.getCurrent();
-        this.totalPage = (int)page.getPages();
+        this.totalCount = (long)page.getTotal();
+        this.pageSize = (long)page.getSize();
+        this.currPage = (long)page.getCurrent();
+        this.totalPage = (long)page.getPages();
     }
 
     public long getTotalCount() {

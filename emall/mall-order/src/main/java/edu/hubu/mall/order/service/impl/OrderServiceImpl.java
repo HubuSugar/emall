@@ -462,6 +462,8 @@ public class OrderServiceImpl extends ServiceImpl<OrderDao,OrderEntity> implemen
                 orderItemVo.setSkuId(itemVo.getSkuId());
                 orderItemVo.setTitle(itemVo.getSkuName());
                 orderItemVo.setPrice(itemVo.getSkuPrice());
+                orderItemVo.setImage(itemVo.getSkuPic());
+                orderItemVo.setCount(itemVo.getSkuQuantity());
                 return orderItemVo;
             }).collect(Collectors.toList());
 
