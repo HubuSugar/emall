@@ -3,7 +3,9 @@ package edu.hubu.mall.order.config;
 import com.alipay.api.AlipayApiException;
 import com.alipay.api.AlipayClient;
 import com.alipay.api.DefaultAlipayClient;
+import com.alipay.api.request.AlipayTradeCloseRequest;
 import com.alipay.api.request.AlipayTradePagePayRequest;
+import com.alipay.api.response.AlipayTradeCloseResponse;
 import edu.hubu.mall.order.vo.PayVo;
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -38,11 +40,17 @@ public class AlipayTemplate {
     private  String charset;
 
     //订单超时时间
-    private String timeout = "1m";
+    private String timeout = "10m";
 
     // 支付宝网关； https://openapi.alipaydev.com/gateway.do
     public String gatewayUrl;
 
+    /**
+     * 支付宝的收单接口，默认10分钟
+     * @param vo
+     * @return
+     * @throws AlipayApiException
+     */
     public  String pay(PayVo vo) throws AlipayApiException {
 
         //AlipayClient alipayClient = new DefaultAlipayClient(AlipayTemplate.gatewayUrl, AlipayTemplate.app_id, AlipayTemplate.merchant_private_key, "json", AlipayTemplate.charset, AlipayTemplate.alipay_public_key, AlipayTemplate.sign_type);
@@ -79,5 +87,25 @@ public class AlipayTemplate {
 
         return result;
 
+    }
+
+    /**
+     * 支付宝的关单接口
+     * @param payVo
+     * @return
+     * @throws AlipayApiException
+     */
+    public boolean close(PayVo payVo) throws AlipayApiException {
+        AlipayClient alipayClient = new DefaultAlipayClient(gatewayUrl,
+                app_id, merchant_private_key, "json",
+                charset, alipay_public_key, sign_type);
+        AlipayTradeCloseRequest request = new AlipayTradeCloseRequest();
+        request.setBizContent("{" +
+                "\"trade_no\":\""+  "\"," +
+                "\"out_trade_no\":\"" + payVo.getOut_trade_no()+ "\"," +
+                "\"operator_id\":\"" + "\"" +
+                "  }");
+        AlipayTradeCloseResponse response = alipayClient.execute(request);
+        return response.isSuccess();
     }
 }

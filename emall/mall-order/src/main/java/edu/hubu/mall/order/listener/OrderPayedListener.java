@@ -44,6 +44,7 @@ public class OrderPayedListener {
             params.put(name, valueStr);
         }
 
+        //收到支付宝的通知接口，调用支付宝提供的验签接口，然后保存流水记录，更新订单状态
         boolean signVerified = AlipaySignature.rsaCheckV1(params, alipayTemplate.getAlipay_public_key(), alipayTemplate.getCharset(), alipayTemplate.getSign_type());
         if(signVerified){
            return  orderService.handleOrderPayed(payAsynVo);
