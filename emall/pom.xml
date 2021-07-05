@@ -22,6 +22,8 @@
         <module>mall-test-ssoclient2</module>
         <module>mall-cart</module>
         <module>mall-order</module>
+        <module>mall-coupon</module>
+        <module>mall-seckill</module>
     </modules>
 
     <name>Maven</name>

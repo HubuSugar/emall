@@ -1,0 +1,14 @@
+centos2g: #
+
+server:
+  port: 9990
+spring:
+  application:
+    name: mall-coupon
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://${centos2g}:3306/emall_sms?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
+    username: huxiaoge
+    password: ZWZmMGFmMmI0MGEwMGQ4MzQ2MTU4OTAw
+
+
