@@ -8,6 +8,8 @@ import edu.hubu.mall.coupon.service.SeckillSessionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
+
 /**
  * @Description:
  * @Author: huxiaoge
@@ -27,6 +29,18 @@ public class SeckillSessionController {
         PageUtil<SeckillSessionEntity> pageData = seckillSessionService.queryPage(queryParam);
         ok.setData(pageData);
         return ok;
+    }
+
+    @PostMapping("/seckillSession/saveOrUpdate")
+    public Result<String> saveOrUpdateSeckillSession(@RequestBody SeckillSessionEntity seckillSession){
+        Result<String> ok = Result.ok();
+        boolean  res = seckillSessionService.saveOrUpdateSeckillSession(seckillSession);
+        if(res){
+            ok.setData("操作成功");
+        }else{
+            ok = Result.error(1,"操作失败");
+        }
+        return  ok;
     }
 
 

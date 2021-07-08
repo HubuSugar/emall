@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @Description:
@@ -44,5 +45,26 @@ public class SeckillSessionServiceImpl extends ServiceImpl<SeckillSessionDao, Se
 
         IPage<SeckillSessionEntity> page = this.page(new Query<SeckillSessionEntity>().getPage(pageMap),queryWrapper);
         return new PageUtil<>(page);
+    }
+
+    /**
+     * 保存或者修改场次信息
+     * @param seckillSession
+     * @return
+     */
+    @Override
+    public boolean saveOrUpdateSeckillSession(SeckillSessionEntity seckillSession) {
+        //新增操作
+        if(seckillSession.getId() == null){
+            this.save(seckillSession);
+        }else{
+            SeckillSessionEntity old = this.getById(seckillSession.getId());
+            if(old == null){
+                return false;
+            }
+            seckillSession.setId(old.getId());
+            this.updateById(seckillSession);
+        }
+        return true;
     }
 }
