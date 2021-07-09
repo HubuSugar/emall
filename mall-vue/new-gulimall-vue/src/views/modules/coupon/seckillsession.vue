@@ -101,8 +101,8 @@ export default {
         url: this.$http.adornUrl("/coupon/seckillsession/list"),
         method: "get",
         params: this.$http.adornParams({
-          page: this.pageIndex,
-          limit: this.pageSize,
+          pageNo: this.pageIndex,
+          pageSize: this.pageSize,
           key: this.dataForm.key
         })
       }).then(({ data }) => {

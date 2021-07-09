@@ -31,7 +31,7 @@ public class SeckillSessionController {
         return ok;
     }
 
-    @PostMapping("/seckillSession/saveOrUpdate")
+    @PostMapping("/saveOrUpdate")
     public Result<String> saveOrUpdateSeckillSession(@RequestBody SeckillSessionEntity seckillSession){
         Result<String> ok = Result.ok();
         boolean  res = seckillSessionService.saveOrUpdateSeckillSession(seckillSession);
@@ -42,8 +42,5 @@ public class SeckillSessionController {
         }
         return  ok;
     }
-
-
-
 
 }

@@ -91,7 +91,7 @@ export default {
         if (valid) {
           this.$http({
             url: this.$http.adornUrl(
-              `/coupon/seckillsession/${!this.dataForm.id ? "save" : "update"}`
+              "/coupon/seckillsession/saveOrUpdate"
             ),
             method: "post",
             data: this.$http.adornData({
@@ -103,6 +103,7 @@ export default {
               createTime: new Date()
             })
           }).then(({ data }) => {
+            console.log("data",data);
             if (data && data.code === 0) {
               this.$message({
                 message: "操作成功",
