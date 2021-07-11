@@ -6,6 +6,7 @@ import edu.hubu.mall.product.entity.SkuInfoEntity;
 import edu.hubu.mall.product.vo.SkuItemVo;
 
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.ExecutionException;
 
 /**
@@ -33,4 +34,7 @@ public interface SkuInfoService extends IService<SkuInfoEntity> {
      * @return
      */
     SkuInfoVo querySkuInfoById(Long skuId);
+
+    List<SkuInfoVo> querySkuInfos(Set<Long> ids);
+
 }

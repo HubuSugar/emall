@@ -1,6 +1,12 @@
 package edu.hubu.mall.seckill.scheduled;
 
+import edu.hubu.mall.seckill.service.SeckillService;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 /**
  * @Description: 上架秒杀商品的定时任务
@@ -15,9 +21,25 @@ import org.springframework.stereotype.Component;
  *        @EnableAsync 开启异步任务功能
  *        @Async 需要异步执行的方法
  **/
-@Component
+@Slf4j
+@Service
 public class SeckillSkuScheduled {
 
+    @Autowired
+    SeckillService seckillService;
+
+    @Async
+    @Scheduled(cron = "* * 3 * * ?")
+    public void uploadSeckillSkuLatest3Days(){
+
+        try{
+           seckillService.uploadSeckillSkuLatest3Days();
+        }catch (Exception e){
+
+        }finally {
+
+        }
+    }
 
 
 

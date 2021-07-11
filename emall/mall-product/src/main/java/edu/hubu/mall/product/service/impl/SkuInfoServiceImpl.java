@@ -13,14 +13,18 @@ import edu.hubu.mall.product.service.*;
 import edu.hubu.mall.product.vo.SkuItemSaleAttrVo;
 import edu.hubu.mall.product.vo.SkuItemVo;
 import edu.hubu.mall.product.vo.SpuItemAttrGroupVo;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ThreadPoolExecutor;
+import java.util.stream.Collectors;
 
 /**
  * @Author: huxiaoge
@@ -147,5 +151,26 @@ public class SkuInfoServiceImpl extends ServiceImpl<SkuInfoDao, SkuInfoEntity> i
         SkuInfoEntity skuInfo = this.baseMapper.selectById(skuId);
         String s = JSON.toJSONString(skuInfo);
         return JSON.parseObject(s,new TypeReference<SkuInfoVo>(){});
+    }
+
+    /**
+     * 根据ids批量查询skuInfo
+     * @param ids
+     * @return
+     */
+    @Override
+    public List<SkuInfoVo> querySkuInfos(Set<Long> ids) {
+        LambdaQueryWrapper<SkuInfoEntity> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.in(SkuInfoEntity::getSkuId, ids);
+        List<SkuInfoEntity> list = list(queryWrapper);
+        if(CollectionUtils.isEmpty(list)){
+            return null;
+        }
+        return list.stream().map(item -> {
+            SkuInfoVo skuInfoVo = new SkuInfoVo();
+            BeanUtils.copyProperties(item,skuInfoVo);
+            return skuInfoVo;
+        }).collect(Collectors.toList());
+
     }
 }
