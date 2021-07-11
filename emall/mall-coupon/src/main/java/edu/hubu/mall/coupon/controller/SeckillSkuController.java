@@ -29,7 +29,7 @@ public class SeckillSkuController {
      * @return
      */
     @GetMapping("/list")
-    public Result<PageUtil<SeckillSkuEntity>> querySeckillSkuList(@RequestParam QueryParam queryParam){
+    public Result<PageUtil<SeckillSkuEntity>> querySeckillSkuList(QueryParam queryParam){
         Result<PageUtil<SeckillSkuEntity>> result = Result.ok();
         PageUtil<SeckillSkuEntity> seckillSkus = seckillSkuService.querySeckillSkuList(queryParam);
         result.setData(seckillSkus);

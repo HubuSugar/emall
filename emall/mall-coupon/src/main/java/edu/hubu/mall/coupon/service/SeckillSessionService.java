@@ -1,10 +1,12 @@
 package edu.hubu.mall.coupon.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import edu.hubu.mall.common.seckill.SeckillSessionVo;
 import edu.hubu.mall.common.utils.PageUtil;
 import edu.hubu.mall.common.utils.QueryParam;
 import edu.hubu.mall.coupon.entity.SeckillSessionEntity;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -22,4 +24,6 @@ public interface SeckillSessionService extends IService<SeckillSessionEntity> {
      * @return
      */
     boolean saveOrUpdateSeckillSession(SeckillSessionEntity seckillSession);
+
+    List<SeckillSessionVo> getLatest3DaysSessions();
 }

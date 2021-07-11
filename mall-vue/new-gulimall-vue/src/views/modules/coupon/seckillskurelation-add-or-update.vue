@@ -113,9 +113,7 @@ export default {
         if (valid) {
           this.$http({
             url: this.$http.adornUrl(
-              `/coupon/seckillskurelation/${
-                !this.dataForm.id ? "save" : "update"
-              }`
+              "/coupon/seckillskurelation/saveOrUpdate"
             ),
             method: "post",
             data: this.$http.adornData({

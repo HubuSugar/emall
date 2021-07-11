@@ -22,19 +22,19 @@ spring:
           filters:
             - RewritePath=/api/(?<segment>/?.*),/$\{segment}
 
+        - id: mall-coupon
+          uri: lb://mall-coupon
+          predicates:
+            - Path=/api/coupon/**
+          filters:
+            - RewritePath=/api/(?<segment>.*), /$\{segment}
+
         - id: mall-fast
           uri: lb://mall-fast
           predicates:
             - Path=/api/**
           filters:
             - RewritePath=/api/(?<segment>.*), /mall-fast/$\{segment}
-
-        - id: mall-coupon
-          uri: lb://mall-coupon
-          predicates:
-            - Path=/api/**
-          filters:
-            - RewritePath=/api/(?<segment>.*), /$\{segment}
 
         - id: mall-auth
           uri: lb://mall-auth

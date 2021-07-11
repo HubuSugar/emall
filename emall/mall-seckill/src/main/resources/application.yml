@@ -1,0 +1,16 @@
+centos2g: #
+
+server:
+  port: 9998
+spring:
+  application:
+    name: mall-seckill
+  task:
+    execution:
+      pool:
+        core-size: 8
+        max-size: 50
+
+
+
+

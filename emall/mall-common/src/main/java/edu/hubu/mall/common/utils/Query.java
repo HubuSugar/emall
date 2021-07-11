@@ -26,10 +26,11 @@ public class Query<T> {
         long pageSize = Constant.DEFAULT_PAGE_SIZE;
 
         if(paramMap.containsKey(Constant.PAGE_NO)){
-            pageNo = Long.parseLong((String)paramMap.get(Constant.PAGE_NO));
+            Object pageNum = paramMap.get(Constant.PAGE_NO);
+            pageNo = Long.parseLong(String.valueOf(pageNum));
         }
         if(paramMap.containsKey(Constant.PAGE_SIZE)){
-            pageSize = Long.parseLong((String)paramMap.get(Constant.PAGE_SIZE));
+            pageSize = Long.parseLong(String.valueOf(paramMap.get(Constant.PAGE_SIZE)));
         }
 
         //分页对象

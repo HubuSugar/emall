@@ -15,10 +15,10 @@
         <el-input v-model="dataForm.name" placeholder="场次名称"></el-input>
       </el-form-item>
       <el-form-item label="每日开始时间" prop="startTime">
-        <el-date-picker type="datetime" placeholder="每日开始时间" v-model="dataForm.startTime"></el-date-picker>
+        <el-date-picker type="datetime" placeholder="每日开始时间" v-model="dataForm.startTime" value-format="yyyy-MM-dd HH:mm:ss"></el-date-picker>
       </el-form-item>
       <el-form-item label="每日结束时间" prop="endTime">
-        <el-date-picker type="datetime" placeholder="每日结束时间" v-model="dataForm.endTime"></el-date-picker>
+        <el-date-picker type="datetime" placeholder="每日结束时间" v-model="dataForm.endTime" value-format="yyyy-MM-dd HH:mm:ss"></el-date-picker>
       </el-form-item>
       <el-form-item label="启用状态" prop="status">
         <el-input v-model="dataForm.status" placeholder="启用状态"></el-input>
@@ -87,6 +87,7 @@ export default {
     },
     // 表单提交
     dataFormSubmit() {
+      console.log("dataForm",this.dataForm)
       this.$refs["dataForm"].validate(valid => {
         if (valid) {
           this.$http({

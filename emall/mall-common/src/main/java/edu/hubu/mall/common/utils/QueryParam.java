@@ -14,6 +14,8 @@ public class QueryParam {
 
     private Long promotionId;
 
+    private Long promotionSessionId;
+
     private String name;
 
     private Long pageNo;

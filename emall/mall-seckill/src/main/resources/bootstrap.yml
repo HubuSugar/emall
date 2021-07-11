@@ -1,0 +1,8 @@
+centos4g: #
+spring:
+  cloud:
+    nacos:
+      discovery:
+        server-addr: ${centos4g}:8060
+      config:
+        server-addr: ${centos4g}:8060

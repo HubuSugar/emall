@@ -15,6 +15,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import java.util.HashMap;
+import java.util.List;
+import java.util.Set;
 
 /**
  * @Description:
@@ -36,8 +38,8 @@ public class SeckillSkuServiceImpl extends ServiceImpl<SeckillSkuDao, SeckillSku
         if(queryParam.getKey() != null){
             queryWrapper.eq(SeckillSkuEntity::getId,queryParam.getKey());
         }
-        if(!StringUtils.isEmpty(queryParam.getPromotionId())){
-            queryWrapper.eq(SeckillSkuEntity::getPromotionId,queryParam.getPromotionId());
+        if(!StringUtils.isEmpty(queryParam.getPromotionSessionId())){
+            queryWrapper.eq(SeckillSkuEntity::getPromotionSessionId,queryParam.getPromotionSessionId());
         }
         HashMap<String, Object> pageMap = new HashMap<>();
         pageMap.put(Constant.PAGE_NO,queryParam.getPageNo());
@@ -66,5 +68,17 @@ public class SeckillSkuServiceImpl extends ServiceImpl<SeckillSkuDao, SeckillSku
             this.updateById(skuEntity);
         }
         return true;
+    }
+
+    /**
+     * 根据场次id 批量查询关联的商品信息
+     * @param sessionIds
+     * @return
+     */
+    @Override
+    public List<SeckillSkuEntity> querySeckillSkuByIds(Set<Long> sessionIds) {
+        LambdaQueryWrapper<SeckillSkuEntity> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.in(SeckillSkuEntity::getPromotionSessionId,sessionIds);
+        return list(queryWrapper);
     }
 }
