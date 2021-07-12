@@ -1,6 +1,7 @@
 package edu.hubu.mall.seckill.service.impl;
 
 import cn.hutool.core.util.IdUtil;
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import edu.hubu.mall.common.Result;
 import edu.hubu.mall.common.constant.SeckillConstant;
@@ -21,9 +22,7 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -72,6 +71,42 @@ public class SeckillServiceImpl implements SeckillService {
         //3、缓存活动关联的商品信息
         saveRelationSkus(records);
         log.info("秒杀商品上架完成！！！");
+    }
+
+    /**
+     * 根据当前时间查询秒杀的商品列表
+     * @return
+     */
+    @Override
+    public List<SeckillSkuTo> getCurrentSeckillSkus() {
+        //获取当前时间
+        long time = new Date().getTime();
+        //获取所有秒杀场次的键
+        Set<String> keys = redisTemplate.keys(SeckillConstant.SESSIONS_CACHE_PREFIX + "*");
+        if(CollectionUtils.isEmpty(keys)){
+            return null;
+        }
+        for (String key : keys) {
+            String replace = key.replace(SeckillConstant.SESSIONS_CACHE_PREFIX, "");
+            String[] s = replace.split("_");
+            long startTime = Long.parseLong(s[0]);
+            long endTime = Long.parseLong(s[1]);
+            if(time >= startTime && time <= endTime){
+                List<String> range = redisTemplate.opsForList().range(key, -100, 100);
+                BoundHashOperations<String, String, String> ops = redisTemplate.boundHashOps(SeckillConstant.SECKILL_SKU_CACHE_PREFIX);
+                if(CollectionUtils.isEmpty(range)){
+                    return null;
+                }
+                List<String> skus = ops.multiGet(range);
+                if(!CollectionUtils.isEmpty(skus)){
+                    return skus.stream().map(item -> {
+                        return JSON.parseObject(item.toString(), SeckillSkuTo.class);
+                    }).collect(Collectors.toList());
+                }
+                break;
+            }
+        }
+        return null;
     }
 
     /**
@@ -153,7 +188,7 @@ public class SeckillServiceImpl implements SeckillService {
             //如果已经上架过，就不再上架了
             if(hasKey != null && !hasKey && !CollectionUtils.isEmpty(seckillSkus)){
                 List<String>  skuIds = seckillSkus.stream().map(item -> {
-                    return item.getSkuId().toString();
+                    return item.getPromotionSessionId() + "_" + item.getSkuId();
                 }).collect(Collectors.toList());
                 redisTemplate.opsForList().leftPushAll(sessionKey,skuIds);
             }
