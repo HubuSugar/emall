@@ -33,11 +33,11 @@ public class SeckillSkuVo {
     /**
      * 总件数
      */
-    private BigDecimal seckillCount;
+    private Integer seckillCount;
     /**
      * 限购件数
      */
-    private BigDecimal seckillLimit;
+    private Integer seckillLimit;
     /**
      * 排序
      */

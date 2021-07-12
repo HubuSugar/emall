@@ -15,6 +15,16 @@ public class SeckillConstant {
     /**
      * 秒杀商品信息的前缀
      */
-    public static final String SECKILL_SKU_CACHE_PREFIX = "seckill:skus:";
+    public static final String SECKILL_SKU_CACHE_PREFIX = "seckill:skus";
+
+    /**
+     * 秒杀商品上架的锁
+     */
+    public static final String SECKILL_UPLOAD_KEY = "seckill:upload:lock";
+
+    /**
+     * 秒杀商品的库存信号量前缀
+     */
+    public static final String SECKILL_STOCK_PREFIX = "seckill:stock:";
 
 }

@@ -1,5 +1,6 @@
 package edu.hubu.mall.seckill.service.impl;
 
+import cn.hutool.core.util.IdUtil;
 import com.alibaba.fastjson.JSONObject;
 import edu.hubu.mall.common.Result;
 import edu.hubu.mall.common.constant.SeckillConstant;
@@ -11,6 +12,8 @@ import edu.hubu.mall.seckill.feign.ProductFeignService;
 import edu.hubu.mall.seckill.service.SeckillService;
 import edu.hubu.mall.seckill.to.SeckillSkuTo;
 import lombok.extern.slf4j.Slf4j;
+import org.redisson.api.RSemaphore;
+import org.redisson.api.RedissonClient;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.BoundHashOperations;
@@ -41,6 +44,9 @@ public class SeckillServiceImpl implements SeckillService {
     @Autowired
     StringRedisTemplate redisTemplate;
 
+    @Autowired
+    RedissonClient redissonClient;
+
 
     /**
      * 上架近三天的商品
@@ -65,7 +71,7 @@ public class SeckillServiceImpl implements SeckillService {
 
         //3、缓存活动关联的商品信息
         saveRelationSkus(records);
-
+        log.info("秒杀商品上架完成！！！");
     }
 
     /**
@@ -97,19 +103,38 @@ public class SeckillServiceImpl implements SeckillService {
                 skuInfos = skuInfoResult.getData();
             }
 
-            for (SeckillSkuVo item:session.getSeckillSkus()) {
-                SeckillSkuTo skuTo = new SeckillSkuTo();
-                List<SkuInfoVo> collect = skuInfos.stream().filter(skuItem -> item.getSkuId().equals(skuItem.getSkuId())).collect(Collectors.toList());
-                if(CollectionUtils.isEmpty(collect)){
-                    continue;
+            for (SeckillSkuVo item : seckillSkus) {
+                String redisKey = String.format("%s_%s",session.getId(),item.getSkuId());
+                Boolean hasKey = skuHashOps.hasKey(redisKey);
+                // 如果该场次的商品秒杀清单中没有这个商品
+                if(hasKey != null && !hasKey){
+                    SeckillSkuTo skuTo = new SeckillSkuTo();
+                    List<SkuInfoVo> collect = skuInfos.stream().filter(skuItem -> item.getSkuId().equals(skuItem.getSkuId())).collect(Collectors.toList());
+                    //如果当前场次关联的该商品不存在，那么不保存到redis
+                    if(CollectionUtils.isEmpty(collect)){
+                        continue;
+                    }
+                    //商品的基本信息
+                    skuTo.setSkuInfo(collect.get(0));
+
+                    //商品的秒杀属性
+                    BeanUtils.copyProperties(item,skuTo);
+
+                    //商品的开始、结束秒杀时间
+                    skuTo.setStartTime(session.getStartTime().getTime());
+                    skuTo.setEndTime(session.getEndTime().getTime());
+
+                    //商品的随机码(防止恶意攻击)
+                    String token = IdUtil.simpleUUID();
+                    skuTo.setRandomCode(token);
+                    //保存redis
+                    String s = JSONObject.toJSONString(skuTo);
+                    skuHashOps.put(redisKey,s);
+
+                    //设置每个商品可以秒杀的数量作为库存信号量
+                    RSemaphore semaphore = redissonClient.getSemaphore(SeckillConstant.SECKILL_STOCK_PREFIX + token);
+                    semaphore.trySetPermits(item.getSeckillCount());
                 }
-                //商品的基本信息
-                skuTo.setSkuInfo(collect.get(0));
-                //商品的秒杀属性
-                BeanUtils.copyProperties(item,skuTo);
-                //商品的随机码
-                String s = JSONObject.toJSONString(skuTo);
-                skuHashOps.put(String.valueOf(item.getSkuId()),s);
             }
         }
     }
@@ -124,13 +149,14 @@ public class SeckillServiceImpl implements SeckillService {
             long endTime = session.getEndTime().getTime();
             String sessionKey = SeckillConstant.SESSIONS_CACHE_PREFIX + String.format("%s_%s",startTime,endTime);
             List<SeckillSkuVo> seckillSkus = session.getSeckillSkus();
-            List<String> skuIds = new ArrayList<>();
-            if(!CollectionUtils.isEmpty(seckillSkus)){
-                skuIds = seckillSkus.stream().map(item -> {
+            Boolean hasKey = redisTemplate.hasKey(sessionKey);
+            //如果已经上架过，就不再上架了
+            if(hasKey != null && !hasKey && !CollectionUtils.isEmpty(seckillSkus)){
+                List<String>  skuIds = seckillSkus.stream().map(item -> {
                     return item.getSkuId().toString();
                 }).collect(Collectors.toList());
+                redisTemplate.opsForList().leftPushAll(sessionKey,skuIds);
             }
-            redisTemplate.opsForList().leftPushAll(sessionKey,skuIds);
         });
     }
 }

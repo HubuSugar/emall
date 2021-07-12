@@ -33,5 +33,21 @@ public class SeckillSkuTo {
 
     private Integer seckillSort;
 
+    /**
+     * 商品的详细信息
+     */
     private SkuInfoVo skuInfo;
+    /**
+     * 商品的秒杀开始时间
+     */
+    private Long startTime;
+    /**
+     * 商品的秒杀结束时间
+     */
+    private Long endTime;
+    /**
+     * 商品的秒杀随机码,到了秒杀时间才生成，保证秒杀商品的接口被刷
+     */
+    private String randomCode;
+
 }

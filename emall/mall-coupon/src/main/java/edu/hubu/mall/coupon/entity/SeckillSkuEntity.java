@@ -13,7 +13,7 @@ import java.math.BigDecimal;
  * @Date: 2021-07-09
  **/
 @Data
-@TableName("sms_seckill_sku")
+@TableName("sms_seckill_sku_relation")
 public class SeckillSkuEntity {
 
     @TableId(type = IdType.AUTO)
@@ -38,11 +38,11 @@ public class SeckillSkuEntity {
     /**
      * 总件数
      */
-    private BigDecimal seckillCount;
+    private Integer seckillCount;
     /**
      * 限购件数
      */
-    private BigDecimal seckillLimit;
+    private Integer seckillLimit;
     /**
      * 排序
      */

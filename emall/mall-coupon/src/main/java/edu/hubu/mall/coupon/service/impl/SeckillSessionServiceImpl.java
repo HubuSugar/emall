@@ -93,9 +93,10 @@ public class SeckillSessionServiceImpl extends ServiceImpl<SeckillSessionDao, Se
     public List<SeckillSessionVo> getLatest3DaysSessions() {
         LambdaQueryWrapper<SeckillSessionEntity> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.between(SeckillSessionEntity::getStartTime,startTime(),endTime());
+        queryWrapper.eq(SeckillSessionEntity::getStatus,1);
         List<SeckillSessionEntity> list = this.list(queryWrapper);
         //没有要参与秒杀的场次
-        if(!CollectionUtils.isEmpty(list)){
+        if(CollectionUtils.isEmpty(list)){
             return null;
         }
         Set<Long> sessionIds = list.stream().map(SeckillSessionEntity::getId).collect(Collectors.toSet());
