@@ -92,6 +92,7 @@ public class SeckillServiceImpl implements SeckillService {
             long startTime = Long.parseLong(s[0]);
             long endTime = Long.parseLong(s[1]);
             if(time >= startTime && time <= endTime){
+                //从当前时间对应到的场次中找到对应的秒杀场次
                 List<String> range = redisTemplate.opsForList().range(key, -100, 100);
                 BoundHashOperations<String, String, String> ops = redisTemplate.boundHashOps(SeckillConstant.SECKILL_SKU_CACHE_PREFIX);
                 if(CollectionUtils.isEmpty(range)){

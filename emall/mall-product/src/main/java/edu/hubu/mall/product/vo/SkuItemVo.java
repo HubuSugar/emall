@@ -45,6 +45,9 @@ public class SkuItemVo {
      */
     private List<SpuItemAttrGroupVo> groupAttrs;
 
+    /**
+     * 商品的秒杀信息
+     */
     private SeckillSkuVo  seckillSkuVo;
 
 }

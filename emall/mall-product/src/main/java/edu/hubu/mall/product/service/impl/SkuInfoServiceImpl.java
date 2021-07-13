@@ -129,6 +129,9 @@ public class SkuInfoServiceImpl extends ServiceImpl<SkuInfoDao, SkuInfoEntity> i
             return attrGroupService.getAttrGroupWithAttrsBySpuId(skuInfo.getSpuId(), skuInfo.getCatalogId());
         },executor);
 
+        //6.查询商品的秒杀信息
+
+
         //阻塞等待所有的任务执行完成
         CompletableFuture.allOf(imageFuture,saleAttrs,spuInfoFuture,groupAttrs);
 
