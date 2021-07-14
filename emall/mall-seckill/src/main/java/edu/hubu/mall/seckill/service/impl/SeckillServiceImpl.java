@@ -111,6 +111,42 @@ public class SeckillServiceImpl implements SeckillService {
     }
 
     /**
+     * 查询当前商品的秒杀信息
+     * @param skuId
+     * @return
+     */
+    @Override
+    public SeckillSkuVo querySeckillSkuInfo(Long skuId) {
+        BoundHashOperations<String, String, String> ops = redisTemplate.boundHashOps(SeckillConstant.SECKILL_SKU_CACHE_PREFIX);
+        Set<String> keys = ops.keys();
+        if(CollectionUtils.isEmpty(keys)){
+            return null;
+        }
+        String regx = "\\d_" + skuId;
+        SeckillSkuVo skuVo = new SeckillSkuVo();
+        for (String key : keys) {
+            if(key.matches(regx)){
+                //这里取出来的是，秒杀上架时的SeckillSkuTo对象
+                String sku = ops.get(key);
+                SeckillSkuTo seckillSkuTo = JSONObject.parseObject(sku, SeckillSkuTo.class);
+                if(seckillSkuTo != null)
+                BeanUtils.copyProperties(seckillSkuTo,skuVo);
+                long now = new Date().getTime();
+                long startTime =  seckillSkuTo.getStartTime();
+                long endTime = seckillSkuTo.getEndTime();
+                if(now < startTime || now > endTime){
+                    //说明当前商品没在秒杀中,那么将该商品的随机码置空，在秒杀时间段在开放
+                    skuVo.setRandomCode(null);
+                }
+                return  skuVo;
+
+            }
+
+        }
+        return null;
+    }
+
+    /**
      * 保存秒杀关联的商品信息
      * 使用redis的hash结构缓存数据
      * @param records

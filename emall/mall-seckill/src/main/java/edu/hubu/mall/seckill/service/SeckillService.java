@@ -1,5 +1,6 @@
 package edu.hubu.mall.seckill.service;
 
+import edu.hubu.mall.common.seckill.SeckillSkuVo;
 import edu.hubu.mall.seckill.to.SeckillSkuTo;
 
 import java.util.List;
@@ -14,4 +15,6 @@ public interface SeckillService {
     void uploadSeckillSkuLatest3Days();
 
     List<SeckillSkuTo> getCurrentSeckillSkus();
+
+    SeckillSkuVo querySeckillSkuInfo(Long skuId);
 }

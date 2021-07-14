@@ -1,5 +1,6 @@
 package edu.hubu.mall.product.vo;
 
+import edu.hubu.mall.common.seckill.SeckillSkuVo;
 import edu.hubu.mall.product.entity.SkuImgEntity;
 import edu.hubu.mall.product.entity.SkuInfoEntity;
 import edu.hubu.mall.product.entity.SpuInfoDescEntity;
@@ -48,6 +49,6 @@ public class SkuItemVo {
     /**
      * 商品的秒杀信息
      */
-    private SeckillSkuVo  seckillSkuVo;
+    private SeckillSkuVo seckillSkuVo;
 
 }
