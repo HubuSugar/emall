@@ -27,9 +27,9 @@ public class SeckillSkuTo {
 
     private BigDecimal seckillPrice;
 
-    private BigDecimal seckillCount;
+    private Integer seckillCount;
 
-    private BigDecimal seckillLimit;
+    private Integer seckillLimit;
 
     private Integer seckillSort;
 

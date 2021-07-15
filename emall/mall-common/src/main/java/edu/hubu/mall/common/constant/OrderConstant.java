@@ -61,4 +61,14 @@ public class OrderConstant {
      * 订单从死信队列释放的超时时间,单位ms
      */
     public static final Integer ORDER_RELEASE_TIMEOUT = 1000 * 60 * 5;
+
+    /**
+     * 秒杀服务创建订单的路由
+     */
+    public static final String ORDER_SECKILL_QUEUE = "order.seckill.order.queue";
+
+    /**
+     * 秒杀服务创建订单的路由
+     */
+    public static final String ORDER_SECKILL_ROUTE = "order.seckill.order";
 }

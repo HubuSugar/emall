@@ -27,4 +27,9 @@ public class SeckillConstant {
      */
     public static final String SECKILL_STOCK_PREFIX = "seckill:stock:";
 
+    /**
+     * 秒杀用户幂等性判断
+     */
+    public static final String SECKILL_USER_PREFIX = "seckill:user:";
+
 }

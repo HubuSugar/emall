@@ -10,7 +10,17 @@ spring:
       pool:
         core-size: 8
         max-size: 50
-
+  session:
+    store-type: redis
+  redis:
+    host: 127.0.0.1
+    port: 6379
+    lettuce:
+      pool:
+        max-idle: 30
+        max-active: 8
+        max-wait: 10000
+        min-idle: 10
 
 
 

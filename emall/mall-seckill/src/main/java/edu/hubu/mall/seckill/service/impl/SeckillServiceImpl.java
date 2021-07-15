@@ -1,28 +1,37 @@
 package edu.hubu.mall.seckill.service.impl;
 
+import cn.hutool.core.lang.Snowflake;
 import cn.hutool.core.util.IdUtil;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.baomidou.mybatisplus.core.toolkit.IdWorker;
 import edu.hubu.mall.common.Result;
+import edu.hubu.mall.common.auth.MemberVo;
+import edu.hubu.mall.common.constant.OrderConstant;
 import edu.hubu.mall.common.constant.SeckillConstant;
 import edu.hubu.mall.common.product.SkuInfoVo;
+import edu.hubu.mall.common.seckill.SeckillOrderTo;
 import edu.hubu.mall.common.seckill.SeckillSessionVo;
 import edu.hubu.mall.common.seckill.SeckillSkuVo;
 import edu.hubu.mall.seckill.feign.CouponFeignService;
 import edu.hubu.mall.seckill.feign.ProductFeignService;
+import edu.hubu.mall.seckill.interceptor.LoginRequireInterceptor;
 import edu.hubu.mall.seckill.service.SeckillService;
 import edu.hubu.mall.seckill.to.SeckillSkuTo;
 import lombok.extern.slf4j.Slf4j;
 import org.redisson.api.RSemaphore;
 import org.redisson.api.RedissonClient;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.BoundHashOperations;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 /**
@@ -45,6 +54,10 @@ public class SeckillServiceImpl implements SeckillService {
 
     @Autowired
     RedissonClient redissonClient;
+
+    @Autowired
+    RabbitTemplate rabbitTemplate;
+
 
 
     /**
@@ -144,6 +157,99 @@ public class SeckillServiceImpl implements SeckillService {
 
         }
         return null;
+    }
+
+    /**
+     * 执行秒杀逻辑
+     * 请求的合法性校验：
+     * 1、登录校验（拦截器实现）
+     * 2、随机码是否正确
+     * 3、幂等性校验（一个用户只能秒杀一次）
+     * 4、秒杀数量是否超过限制
+     * 5、是否在秒杀时间范围内
+     * @param killId
+     * @param key
+     * @param num
+     * @return
+     */
+    @Override
+    public String kill(String killId, String key, Integer num) {
+        long s1 = System.currentTimeMillis();
+        MemberVo memberVo = LoginRequireInterceptor.loginUser.get();
+        BoundHashOperations<String, String, String> ops = redisTemplate.boundHashOps(SeckillConstant.SECKILL_SKU_CACHE_PREFIX);
+        String json = ops.get(killId);
+        SeckillSkuTo skuTo = JSONObject.parseObject(json, SeckillSkuTo.class);
+        if(skuTo == null){
+            log.info("未查询到秒杀商品");
+            return null;
+        }
+        //校验时间的合法性：当前时间在秒杀时间范围内
+        long time = new Date().getTime();
+        long startTime = skuTo.getStartTime();
+        long endTime = skuTo.getEndTime();
+        if(time < startTime || time > endTime){
+            log.info("不在秒杀时间范围内");
+            return null;
+        }
+        //场次信息合法性校验
+        String kill = skuTo.getPromotionSessionId() + "_" + skuTo.getSkuId();
+        if(!killId.equals(kill)){
+            log.info("场次信息不符合");
+            return null;
+        }
+        //校验随机码
+        String randomCode = skuTo.getRandomCode();
+        if(!key.equals(randomCode)){
+            log.info("随机码不正确");
+            return null;
+        }
+        String stock = redisTemplate.opsForValue().get(SeckillConstant.SECKILL_STOCK_PREFIX + randomCode);
+        if(StringUtils.isEmpty(stock)){
+            log.info("库存异常");
+            return null;
+        }
+        int stockCount = Integer.parseInt(stock);
+        //数量校验
+        Integer limit = skuTo.getSeckillLimit();
+        //1、库存量大于0 2、秒杀数量小于限制的数量  3、秒杀的数量小于库存的数量
+        if(stockCount <= 0 || num > limit || num > stockCount){
+            log.info("数量不合法");
+            return null;
+        }
+        //TODO 开始进行秒杀，尝试获取信号量
+        String seckillUserKey = SeckillConstant.SECKILL_USER_PREFIX + String.format("%s_%s",memberVo.getId(),kill) ;
+        long ttl = endTime - System.currentTimeMillis();
+        Boolean aBoolean = redisTemplate.opsForValue().setIfAbsent(seckillUserKey, String.valueOf(num), ttl, TimeUnit.MILLISECONDS);
+        if(aBoolean != null && aBoolean){
+            RSemaphore semaphore = redissonClient.getSemaphore(SeckillConstant.SECKILL_STOCK_PREFIX + randomCode);
+            //尝试获取秒杀数量个信号量
+            boolean b = semaphore.tryAcquire(num);
+            if(b){
+                //创建订单号和订单信息发送给MQ
+                // 秒杀成功 快速下单 发送消息到 MQ 整个操作时间在 10ms 左右
+                Snowflake snowflake = IdUtil.createSnowflake(1, 1);
+                log.info("orderSn:{}", snowflake.nextId());
+                String orderSn = String.valueOf(snowflake.nextId());
+                SeckillOrderTo orderTo = new SeckillOrderTo();
+                orderTo.setOrderSn(orderSn);
+                orderTo.setMemberId(memberVo.getId());
+                orderTo.setNum(num);
+                orderTo.setPromotionSessionId(skuTo.getPromotionSessionId());
+                orderTo.setSkuId(skuTo.getSkuId());
+                orderTo.setSeckillPrice(skuTo.getSeckillPrice());
+                rabbitTemplate.convertAndSend(OrderConstant.ORDER_EVENT_EXCHANGE,OrderConstant.ORDER_SECKILL_ROUTE,orderTo);
+                long s2 = System.currentTimeMillis();
+                log.info("耗时..." + (s2 - s1));
+                return orderSn;
+            }else{
+                log.info("秒杀失败");
+                return null;
+            }
+        }else{
+            log.info("已经秒杀过该商品");
+            return null;
+        }
+
     }
 
     /**

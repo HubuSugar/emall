@@ -138,4 +138,21 @@ public class MyRabbitConfig {
                 null);
     }
 
+    /**
+     * 秒杀创建订单队列
+     */
+    @Bean
+    public Queue seckillOrderQueue(){
+        return new Queue(OrderConstant.ORDER_SECKILL_QUEUE,true,false,false,null);
+    }
+
+    /**
+     * 秒杀交换机和队列绑定
+     */
+    @Bean
+    public Binding seckillOrderBinding(){
+        return new Binding(OrderConstant.ORDER_SECKILL_QUEUE, Binding.DestinationType.QUEUE,OrderConstant.ORDER_EVENT_EXCHANGE,
+                OrderConstant.ORDER_SECKILL_ROUTE,null);
+    }
+
 }
