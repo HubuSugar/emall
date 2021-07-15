@@ -11,6 +11,8 @@ import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
+
 /**
  * @Description:
  * @Author: huxiaoge
@@ -25,8 +27,14 @@ public class OrderSeckillListener {
     OrderService orderService;
 
     @RabbitHandler
-    public void seckillOrderHandle(SeckillOrderTo orderTo, Message message, Channel channel){
+    public void seckillOrderHandle(SeckillOrderTo orderTo, Message message, Channel channel) throws IOException {
         log.info("秒杀下单成功，开始创建订单");
+        try{
+            orderService.createSeckillOrder(orderTo);
+            channel.basicAck(message.getMessageProperties().getDeliveryTag(),false);
+        }catch (IOException e) {
+            channel.basicReject(message.getMessageProperties().getDeliveryTag(),true);
+        }
 
     }
 }

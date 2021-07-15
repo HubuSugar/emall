@@ -124,6 +124,7 @@ public class SeckillServiceImpl implements SeckillService {
     }
 
     /**
+     * 商品详情页
      * 查询当前商品的秒杀信息
      * @param skuId
      * @return
@@ -142,7 +143,10 @@ public class SeckillServiceImpl implements SeckillService {
                 //这里取出来的是，秒杀上架时的SeckillSkuTo对象
                 String sku = ops.get(key);
                 SeckillSkuTo seckillSkuTo = JSONObject.parseObject(sku, SeckillSkuTo.class);
-                if(seckillSkuTo != null)
+                if(seckillSkuTo == null){
+                    return null;
+                }
+
                 BeanUtils.copyProperties(seckillSkuTo,skuVo);
                 long now = new Date().getTime();
                 long startTime =  seckillSkuTo.getStartTime();

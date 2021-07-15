@@ -2,6 +2,7 @@ package edu.hubu.mall.order.service.impl;
 
 import cn.hutool.core.lang.Snowflake;
 import cn.hutool.core.util.IdUtil;
+import com.alibaba.fastjson.TypeReference;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -16,6 +17,7 @@ import edu.hubu.mall.common.member.MemberReceiveAddressVo;
 import edu.hubu.mall.common.order.OrderItemVo;
 import edu.hubu.mall.common.order.OrderVo;
 import edu.hubu.mall.common.product.SpuInfoVo;
+import edu.hubu.mall.common.seckill.SeckillOrderTo;
 import edu.hubu.mall.common.utils.PageUtil;
 import edu.hubu.mall.common.utils.Query;
 import edu.hubu.mall.common.ware.FareVo;
@@ -510,6 +512,43 @@ public class OrderServiceImpl extends ServiceImpl<OrderDao,OrderEntity> implemen
     @Override
     public void updateOrderStatus(String orderSn,Integer orderStatus,Integer payType){
         this.baseMapper.updateOrderStatus(orderSn,orderStatus,payType);
+    }
+
+    /**
+     * 创建秒杀订单
+     * @param orderTo
+     */
+    @Override
+    public void createSeckillOrder(SeckillOrderTo orderTo) {
+        //TODO 保存订单信息
+        OrderEntity orderEntity = new OrderEntity();
+        orderEntity.setOrderSn(orderTo.getOrderSn());
+        orderEntity.setMemberId(orderTo.getMemberId());
+        orderEntity.setCreateTime(new Date());
+        BigDecimal totalPrice = orderTo.getSeckillPrice().multiply(BigDecimal.valueOf(orderTo.getNum()));
+        orderEntity.setPayAmount(totalPrice);
+        orderEntity.setStatus(OrderStatus.CREATE_NEW.getCode());
+
+        //保存订单
+        this.save(orderEntity);
+
+        //保存订单项信息
+        OrderItemEntity orderItem = new OrderItemEntity();
+        orderItem.setOrderSn(orderTo.getOrderSn());
+        orderItem.setRealAmount(totalPrice);
+
+        orderItem.setSkuQuantity(orderTo.getNum());
+
+        //保存商品的spu信息
+        SpuInfoVo spuInfoVo = productFeignService.querySpuInfoBySkuId(orderTo.getSkuId());
+
+        orderItem.setSpuId(spuInfoVo.getId());
+        orderItem.setSpuName(spuInfoVo.getSpuName());
+        orderItem.setSpuBrand(spuInfoVo.getBrandName());
+        orderItem.setCategoryId(spuInfoVo.getCatalogId());
+
+        //保存订单项数据
+        orderItemService.save(orderItem);
     }
 
     /**

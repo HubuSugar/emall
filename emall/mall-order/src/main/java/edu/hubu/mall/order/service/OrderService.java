@@ -2,6 +2,7 @@ package edu.hubu.mall.order.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import edu.hubu.mall.common.order.OrderVo;
+import edu.hubu.mall.common.seckill.SeckillOrderTo;
 import edu.hubu.mall.common.utils.PageUtil;
 import edu.hubu.mall.order.entity.OrderEntity;
 import edu.hubu.mall.order.to.OrderSubmitTo;
@@ -35,4 +36,6 @@ public interface OrderService extends IService<OrderEntity> {
     String handleOrderPayed(PayAsynVo payAsynVo);
 
     void updateOrderStatus(String orderSn,Integer orderStatus,Integer payTpe);
+
+    void createSeckillOrder(SeckillOrderTo orderTo);
 }
