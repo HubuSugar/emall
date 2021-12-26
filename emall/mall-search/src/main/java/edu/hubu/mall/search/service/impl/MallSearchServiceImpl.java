@@ -11,6 +11,7 @@ import edu.hubu.mall.search.vo.SearchParamVo;
 import edu.hubu.mall.search.vo.SearchResultVo;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.lucene.search.TotalHits;
 import org.apache.lucene.search.join.ScoreMode;
 import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.search.SearchResponse;
@@ -215,7 +216,8 @@ public class MallSearchServiceImpl implements MallSearchService {
         SearchResultVo result = new SearchResultVo();
         //查询到数据信息
         SearchHits hits = response.getHits();
-        long total = hits.getTotalHits();//总记录数
+        TotalHits totalHits = hits.getTotalHits();//总记录数
+        long total = totalHits.value;
         result.setTotal(total);
         //总页数
         int totalPages = (int)total % ElasticConstant.PRODUCT_ES_PAGESIZE == 0 ?

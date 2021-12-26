@@ -14,7 +14,7 @@ spring:
   session:
     store-type: redis
   redis:
-    host: 127.0.0.1
+    host: ${centos2g}
     port: 6379
     lettuce:
       pool:

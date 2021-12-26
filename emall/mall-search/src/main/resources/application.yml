@@ -1,9 +1,9 @@
-centos2g: #
+centos4g: #
 server:
   port: 9201
 
 elastic:
-  host: ${centos2g}
+  host: ${centos4g}
   port: 9200
 
 spring:

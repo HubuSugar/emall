@@ -51,6 +51,11 @@ spring:
           predicates:
             - Host=member.emall.com
 
+        - id: mall-seckill
+          uri: lb://mall-seckill
+          predicates:
+            - Host=seckill.emall.com
+
         - id: mall-search-web
           uri: lb://mall-search
           predicates:

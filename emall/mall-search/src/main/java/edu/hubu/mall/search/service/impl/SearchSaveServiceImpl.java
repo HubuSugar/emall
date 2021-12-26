@@ -42,17 +42,17 @@ public class SearchSaveServiceImpl implements SearchSaveService {
 
         BulkRequest bulkRequest = new BulkRequest();
         for (SkuEsModel vo:esModelList) {
-            IndexRequest indexRequest = new IndexRequest(ElasticConstant.PRODUCT_ES_INDEX,ElasticConstant.PRODUCT_ES_TYPE);
+            IndexRequest indexRequest = new IndexRequest(ElasticConstant.PRODUCT_ES_INDEX);
             indexRequest.id(String.valueOf(vo.getSkuId()));
             String esModelStr = JSON.toJSONString(vo);
             indexRequest.source(esModelStr,XContentType.JSON);
             bulkRequest.add(indexRequest);
         }
-//        System.out.println(bulkRequest);
+        System.out.println(bulkRequest);
         BulkResponse bulkResponse = restHighLevelClient.bulk(bulkRequest, MallElasticConfig.COMMON_OPTIONS);
 
         boolean b = bulkResponse.hasFailures();
-        List<String> collect = Arrays.asList(bulkResponse.getItems()).stream().map(BulkItemResponse::getId).collect(Collectors.toList());
+        List<String> collect = Arrays.stream(bulkResponse.getItems()).map(BulkItemResponse::getId).collect(Collectors.toList());
         log.info("商品上架完成 {}",collect);
         return b;
     }

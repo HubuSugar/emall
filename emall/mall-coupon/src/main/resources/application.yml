@@ -10,6 +10,8 @@ spring:
     url: jdbc:mysql://${centos2g}:3306/emall_sms?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
     username: huxiaoge
     password: ZWZmMGFmMmI0MGEwMGQ4MzQ2MTU4OTAw
+    hikari:
+      max-lifetime: 50000
 
 mybatis-plus:
   global-config:

@@ -48,7 +48,7 @@ public class SysLoginController {
     public Result<String> generateCaptcha(){
         Result<String> result = Result.ok();
         try{
-            SpecCaptcha captchaImg = captchaService.generateCaptcha(100, 38, 5);
+            SpecCaptcha captchaImg = captchaService.generateCaptcha(100, 38, 4);
             //获取验证码的数字，缓存到redis
             String verCode = captchaImg.text().toLowerCase();
             //随机生成UUID作为键

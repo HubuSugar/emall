@@ -13,8 +13,10 @@ spring:
     url: jdbc:mysql://${centos2g}:3306/emall_pms?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
     username: huxiaoge
     password: ZWZmMGFmMmI0MGEwMGQ4MzQ2MTU4OTAw
+    hikari:
+      max-lifetime: 50000
   redis:
-    host: 127.0.0.1
+    host: ${centos2g}
     port: 6379
     password:
     lettuce:

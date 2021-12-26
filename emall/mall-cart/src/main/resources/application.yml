@@ -1,3 +1,4 @@
+centos2g:
 server:
   port: 13344
 spring:
@@ -6,7 +7,7 @@ spring:
   thymeleaf:
     cache: false
   redis:
-    host: 127.0.0.1
+    host: ${centos2g}
     port: 6379
     lettuce:
       pool:

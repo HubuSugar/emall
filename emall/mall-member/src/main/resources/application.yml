@@ -10,7 +10,7 @@ spring:
     username: huxiaoge
     password: ZWZmMGFmMmI0MGEwMGQ4MzQ2MTU4OTAw
   redis:
-    host: 127.0.0.1
+    host: ${centos2g}
     port: 6379
     lettuce:
       pool:
