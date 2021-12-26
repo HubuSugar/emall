@@ -3,3 +3,6 @@ docker run --name elasticsearch -p 9200:9200 -p 9300:9300 -e "discovery.type=sin
 -v /data/mydata/elasticsearch/data:/usr/share/elasticsearch/data
 -v /data/mydata/elasticsearch/plugins:/usr/share/elasticsearch/plugins
 -d elasticsearch:7.4.2
+
+
+docker run --name kibana -e ELASTICSEARCH_HOSTS=http://172.17.0.1:9200 -p 5601:5601 -d kibana:7.4.2
