@@ -46,6 +46,7 @@
         <seataAll.version>1.4.0</seataAll.version>
     </properties>
 
+    <!--    -->
     <dependencyManagement>
         <dependencies>
             <!--  统一管理fastjson版本          -->
